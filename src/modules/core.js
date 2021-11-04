@@ -361,7 +361,7 @@
 							text = text.replace( /<\/template>/g, '}}' );
 							text = text.replace( /<part>/g, '|' );
 
-							// Expand embedded tags (like <nowiki>)
+							// Expand embedded tags (like nowiki)
 							text = text.replace( new RegExp( '<ext><name>(.*?)<\\/name>(?:<attr>.*?<\\/attr>)*' +
 								'<inner>(.*?)<\\/inner><close>(.*?)<\\/close><\\/ext>', 'g' ), '&lt;$1&gt;$2$3' );
 
@@ -826,7 +826,7 @@
 						} );
 					}
 
-					appendText += ' ~~' + '~~' + '~\n';
+					appendText += ' ~~~~~\n';
 
 					logPage.edit( {
 						contents: appendText,
