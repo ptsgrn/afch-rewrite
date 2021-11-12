@@ -13,7 +13,9 @@
   },
   "scripts": {
     "test": "grunt test",
-    "generate-certificates": "node scripts/generate-certificates.js"
+    "generate-certificates": "node scripts/generate-certificates.js",
+    "build": "grunt build",
+    "start": "node server.js"
   },
   "dependencies": {
     "hogan.js": "^3.0.2"
