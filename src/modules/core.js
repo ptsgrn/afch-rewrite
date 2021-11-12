@@ -51,7 +51,7 @@
 		setup: function () {
 			// Check requirements
 			if ( 'ajax' in $.support && !$.support.ajax ) {
-				AFCH.error = 'AFCH requires AJAX';
+				AFCH.error = 'AFCH จำเป็นต้องใช้ AJAX';
 				return false;
 			}
 
@@ -129,9 +129,9 @@
 					// offer a one-click "disable" link
 					if ( mw.user.options.get( 'gadget-afchelper' ) === '1' ) {
 						$howToDisable = $( '<span>' )
-							.append( 'If you wish to disable the helper script, ' )
+							.append( 'หากคุณต้องการปิดใช้งานสคริปต์ ' )
 							.append( $( '<a>' )
-								.text( 'click here' )
+								.text( 'กดที่นี่' )
 								.click( function () {
 									// Submit the API request to disable the gadget.
 									// Note: We don't use `AFCH.api` here, because AFCH has already
@@ -140,37 +140,34 @@
 										action: 'options',
 										change: 'gadget-afchelper=0'
 									} ).done( function ( data ) {
-										mw.notify( 'AFCH has been disabled successfully. If you wish to re-enable it in the ' +
-											'future, you can do so via your Preferences by checking "Yet Another AFC Helper Script".' );
+										mw.notify( 'AFCH ถูกปิดเรียบร้อย หากต้องการเปิดอีกครั้งกรุณาไปที่การตั้งเก็ดเจต' );
 									} );
 								} )
-							)
-							.append( '. ' );
+							);
 
 					// Otherwise, AFCH is probably installed via common.js/skin.js:
 					// offer links for easy access.
 					} else {
 						$howToDisable = $( '<span>' )
-							.append( 'If you wish to disable the helper script, you will need to manually ' +
-								'remove it from your ' )
+							.append( 'หากคุณต้องการปิดใช้งานสคริปต์ช่วยเหลือ คุณจำเป็นต้องลบสคริปต์ออกเองจากหน้า ' )
 							.append( AFCH.makeLinkElementToPage( 'Special:MyPage/common.js', 'common.js' ) )
-							.append( ' or your ' )
+							.append( ' หรือ ' )
 							.append( AFCH.makeLinkElementToPage( 'Special:MyPage/skin.js', 'skin.js' ) )
-							.append( 'page. ' );
+							.append( ' ของคุณ' );
 					}
 
 					// Finally, make and push the notification, then explode AFCH
 					mw.notify(
 						$( '<div>' )
-							.append( 'AFCH could not be loaded because "' + user + '" is not listed on ' )
+							.append( 'AFCH ไม่สามารถโหลดได เนื่องจาก "' + user + '" ไม่ได้อยู่ในรายการที่ ' )
 							.append( AFCH.makeLinkElementToPage( whitelist.rawTitle ) )
-							.append( '. You can request access to the AfC helper script there. ' )
+							.append( ' โปรดส่งคำขอก่อนเพื่อใช้งาน ' )
 							.append( $howToDisable )
-							.append( 'If you have any questions or concerns, please ' )
-							.append( AFCH.makeLinkElementToPage( 'WT:AFCH', 'get in touch' ) )
+							.append( ' หากพบัญหาหรือมีข้อสงสัย ' )
+							.append( AFCH.makeLinkElementToPage( 'WT:AFCH', 'โปรดแจ้ง' ) )
 							.append( '!' ),
 						{
-							title: 'AFCH error: user not listed',
+							title: 'ข้อผิดพลาด AFCH: ผู้ใช้ไม่ได้อยู่ในรายชื่อ',
 							autoHide: false
 						}
 					);
@@ -228,11 +225,11 @@
 				bugsListLink: 'https://en.wikipedia.org/w/index.php?title=Wikipedia_talk:WikiProject_Articles_for_creation/Helper_script'
 			} );
 			$( '<span>' )
-				.text( linkText || 'Give feedback!' )
+				.text( linkText || 'ให้ข้อเสนอแนะ' )
 				.addClass( 'feedback-link link' )
 				.click( function () {
 					feedback.launch( {
-						subject: '[' + AFCH.consts.version + '] ' + ( type ? 'Feedback about ' + type : 'AFCH feedback' )
+						subject: '[' + AFCH.consts.version + '] ' + ( type ? 'ข้อเสนอแนะเกี่ยวกับ ' + type : 'ข้อเสนอแนะ AFCH' )
 					} );
 				} )
 				.appendTo( $element );
@@ -413,7 +410,7 @@
 				}
 
 				this._revisionApiRequest( true ).done( function () {
-					var catRegex = new RegExp( '\\[\\[' + ( includeCategoryLinks ? ':?' : '' ) + 'Category:(.*?)\\s*\\]\\]', 'gi' ),
+					var catRegex = new RegExp( '\\[\\[' + ( includeCategoryLinks ? ':?' : '' ) + 'หมวดหมู่:(.*?)\\s*\\]\\]', 'gi' ),
 						match = catRegex.exec( text ),
 						categories = [];
 
@@ -575,7 +572,7 @@
 
 							rev = data.query.pages[ id ].revisions[ 0 ];
 							deferred.resolve( rev[ '*' ], rev );
-							status.update( 'Got $1' );
+							status.update( 'ได้ $1 แล้ว' );
 						} else {
 							deferred.reject( data );
 							// FIXME: get detailed error info from API result
@@ -653,25 +650,25 @@
 							deferred.resolve( data );
 
 							if ( data.edit.hasOwnProperty( 'nochange' ) ) {
-								status.update( 'No changes made to $1' );
+								status.update( 'ไม่มีการเปลี่ยนแปลงใน $1' );
 								return;
 							}
 
 							// Create a link to the diff of the edit
 							$diffLink = AFCH.makeLinkElementToPage(
-								'Special:Diff/' + data.edit.oldrevid + '/' + data.edit.newrevid, '(diff)'
+								'Special:Diff/' + data.edit.oldrevid + '/' + data.edit.newrevid, '(แตกต่าง)'
 							).addClass( 'text-smaller' );
 
-							status.update( 'Saved $1 ' + AFCH.jQueryToHtml( $diffLink ) );
+							status.update( 'บันทึก $1 แล้ว' + AFCH.jQueryToHtml( $diffLink ) );
 						} else {
 							deferred.reject( data );
 							// FIXME: get detailed error info from API result??
-							status.update( 'Error while saving $1: ' + JSON.stringify( data ) );
+							status.update( 'เกิดข้อผิดพลาดขณะบันทึกหน้า $1: ' + JSON.stringify( data ) );
 						}
 					} )
 					.fail( function ( err ) {
 						deferred.reject( err );
-						status.update( 'Error while saving $1: ' + JSON.stringify( err ) );
+						status.update( 'เกิดข้อผิดพลาดขณะบันทีกหน้า $1: ' + JSON.stringify( err ) );
 					} );
 
 				return deferred;
@@ -727,16 +724,16 @@
 				AFCH.api.postWithToken( 'edit', request ) // Move token === edit token
 					.done( function ( data ) {
 						if ( data && data.move ) {
-							status.update( 'Moved $1 to $2' );
+							status.update( 'ย้าย $1 ไปเป็น $2 แล้ว' );
 							deferred.resolve( data.move );
 						} else {
 							// FIXME: get detailed error info from API result??
-							status.update( 'Error moving $1 to $2: ' + JSON.stringify( data.error ) );
+							status.update( 'เกิดข้อผิดพลาดขณะย้าย $1 ไป $2: ' + JSON.stringify( data.error ) );
 							deferred.reject( data.error );
 						}
 					} )
 					.fail( function ( err ) {
-						status.update( 'Error moving $1 to $2: ' + JSON.stringify( err ) );
+						status.update( 'เกิดข้อผิดพลาดขณะย้าย $1 ไป $2: ' + JSON.stringify( err ) );
 						deferred.reject( err );
 					} );
 
@@ -761,10 +758,10 @@
 
 				userTalkPage.exists().done( function ( exists ) {
 					userTalkPage.edit( {
-						contents: ( exists ? '' : '{{Talk header}}' ) + '\n\n' + options.message,
-						summary: options.summary || 'Notifying user',
+						contents: ( exists ? '' : '{{อธิบายหน้าพูดคุย}}' ) + '\n\n' + options.message,
+						summary: options.summary || 'แจ้งผู้ใช้',
 						mode: 'appendtext',
-						statusText: 'Notifying',
+						statusText: 'กำลังเตือน',
 						hide: options.hide
 					} )
 						.done( function () {
@@ -790,8 +787,8 @@
 			 */
 			logCSD: function ( options ) {
 				var deferred = $.Deferred(),
-					logPage = new AFCH.Page( 'User:' + mw.config.get( 'wgUserName' ) + '/' +
-						( window.Twinkle && window.Twinkle.getPref( 'speedyLogPageName' ) || 'CSD log' ) );
+					logPage = new AFCH.Page( 'ผู้ใช้:' + mw.config.get( 'wgUserName' ) + '/' +
+						( window.Twinkle && window.Twinkle.getPref( 'speedyLogPageName' ) || 'ปูม CSD' ) );
 
 				// Abort if user disabled in preferences
 				if ( !AFCH.prefs.logCsd ) {
@@ -801,7 +798,8 @@
 				logPage.getText().done( function ( logText ) {
 					var status,
 						date = new Date(),
-						monthNames = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+						monthNames = [ 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+							'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม' ],
 						headerRe = new RegExp( '^==+\\s*' + monthNames[ date.getMonth() ] + '\\s+' + date.getUTCFullYear() + '\\s*==+', 'm' ),
 						appendText = '';
 
@@ -819,7 +817,7 @@
 					appendText += '\n# [[:' + options.title + ']]: ' + options.reason;
 
 					if ( options.usersNotified && options.usersNotified.length ) {
-						appendText += '; notified {{user|1=' + options.usersNotified.shift() + '}}';
+						appendText += '; แจ้ง {{user|1=' + options.usersNotified.shift() + '}}';
 
 						$.each( options.usersNotified, function ( _, user ) {
 							appendText += ', {{user|1=' + user + '}}';
@@ -831,8 +829,8 @@
 					logPage.edit( {
 						contents: appendText,
 						mode: 'appendtext',
-						summary: 'Logging speedy deletion nomination of [[' + options.title + ']]',
-						statusText: 'Logging speedy deletion nomination to'
+						summary: 'บันทึกการแจ้งลบทันทีไปที่ [[' + options.title + ']]',
+						statusText: 'บันทึกการแจ้งลบทันทีไปที่'
 					} ).done( function ( data ) {
 						deferred.resolve( data );
 					} ).fail( function ( data ) {
@@ -869,14 +867,14 @@
 
 				AFCH.api.postWithToken( 'patrol', request ).done( function ( data ) {
 					if ( data.patrol && data.patrol.rcid ) {
-						status.update( 'Patrolled $1' );
+						status.update( 'ตรวจตรา $1 แล้ว' );
 						deferred.resolve( data );
 					} else {
-						status.update( 'Failed to patrol $1: ' + JSON.stringify( data.patrol ) );
+						status.update( 'เกิดข้อผิดพลาดขณะตรวจตรา $1: ' + JSON.stringify( data.patrol ) );
 						deferred.reject( data );
 					}
 				} ).fail( function ( data ) {
-					status.update( 'Failed to patrol $1: ' + JSON.stringify( data ) );
+					status.update( 'เกิดข้อผิดพลาดขณะตรวจตรา $1: ' + JSON.stringify( data ) );
 					deferred.reject( data );
 				} );
 
@@ -1248,8 +1246,7 @@
 				AFCH.userData.set( 'preferences', this.prefStore ).done( function () {
 					// When we're done, close the dialog and notify the user
 					prefs.$dialog.dialog( 'close' );
-					mw.notify( 'AFCH: Preferences saved successfully! They will take effect when the current page is ' +
-						'reloaded or when you browse to another page.' );
+					mw.notify( 'AFCH: การตั้งค่าถูกบันทึกเรียบร้อย การตั้งค่าจะมีผลเมื่อรีโหลดหน้าหรือเปิดลิงก์ไปหน้าอื่น' );
 				} );
 			};
 
@@ -1261,7 +1258,7 @@
 			 */
 			this.initLink = function ( $element, linkText ) {
 				$( '<span>' )
-					.text( linkText || 'Update preferences' )
+					.text( linkText || 'อัปเดตการตั้งค่า' )
 					.addClass( 'preferences-link link' )
 					.appendTo( $element )
 					.click( function () {
@@ -1457,7 +1454,7 @@
 				linkText = displayTitle || pagename.replace( /_/g, ' ' ),
 				request = {
 					action: 'query',
-					titles: 'Category:' + pagename,
+					titles: 'หมวดหมู่:' + pagename,
 					prop: 'categoryinfo'
 				},
 				linkSpan = $( '<span>' ).append( linkElement ),
@@ -1530,29 +1527,24 @@
 
 			if ( elapsed < msPerMinute ) {
 				amount = Math.round( elapsed / 1000 );
-				unit = 'second';
+				unit = 'วินาที';
 			} else if ( elapsed < msPerHour ) {
 				amount = Math.round( elapsed / msPerMinute );
-				unit = 'minute';
+				unit = 'นาที';
 			} else if ( elapsed < msPerDay ) {
 				amount = Math.round( elapsed / msPerHour );
-				unit = 'hour';
+				unit = 'ชั่วโมง';
 			} else if ( elapsed < msPerMonth ) {
 				amount = Math.round( elapsed / msPerDay );
-				unit = 'day';
+				unit = 'วัน';
 			} else if ( elapsed < msPerYear ) {
 				amount = Math.round( elapsed / msPerMonth );
-				unit = 'month';
+				unit = 'เดือน';
 			} else {
 				amount = Math.round( elapsed / msPerYear );
-				unit = 'year';
+				unit = 'ปี';
 			}
-
-			if ( amount !== 1 ) {
-				unit += 's';
-			}
-
-			return [ amount, unit, 'ago' ].join( ' ' );
+			return [ amount, unit + 'ก่อน' ].join( ' ' );
 		},
 
 		/**
@@ -1605,17 +1597,20 @@
 		 */
 		parseForTimestamp: function ( string, mwstyle ) {
 			var exp, match, date;
-
+			// 22:22, 13 ตุลาคม 2563 (+07)
 			exp = new RegExp( '(\\d{1,2}):(\\d{2}), (\\d{1,2}) ' +
-				'(January|February|March|April|May|June|July|August|September|October|November|December) ' +
-				'(\\d{4}) \\(UTC\\)', 'g' );
+				'(มกราคม|กุมภาพันธ์|มีนาคม|เมษายน|พฤษภาคม|มิถุนายน|กรกฎาคม|สิงหาคม|กันยายน|ตุลาคม|พฤศจิกายน|ธันวาคม) ' +
+				'(\\d{4}) \\(+07\\)', 'g' );
 
 			match = exp.exec( string );
 
 			if ( !match ) {
 				return false;
 			}
-
+			// if thai year, convert to b.e.
+			if ( match[ 5 ] > 2483 ) {
+				match[ 5 ] -= 543;
+			}
 			date = new Date();
 			date.setUTCFullYear( match[ 5 ] );
 			date.setUTCMonth( mw.config.get( 'wgMonthNames' ).indexOf( match[ 4 ] ) - 1 ); // stupid javascript
@@ -1697,8 +1692,8 @@
 		getReason: function ( code ) {
 			var deferred = $.Deferred();
 
-			$.post( 'https://en.wikipedia.org/api/rest_v1/transform/wikitext/to/html',
-				'wikitext={{AFC submission/comments|' + code + '}}&body_only=true',
+			$.post( 'https://th.wikipedia.org/api/rest_v1/transform/wikitext/to/html',
+				'wikitext={{AfC submission/comments|' + code + '}}&body_only=true',
 				function ( data ) {
 					deferred.resolve( data );
 				}

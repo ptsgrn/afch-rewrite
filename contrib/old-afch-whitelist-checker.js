@@ -2,12 +2,13 @@
 // users from using the *old* helper script.
 ( function ( $, mw ) {
 	mw.loader.using( [ 'mediawiki.api', 'mediawiki.notify' ], function () {
+		// TODO: Is this should be used? wait for consensus.
 		var whitelistTitle = 'Wikipedia:WikiProject Articles for creation/Participants';
 
 		function showNotListedError( user ) {
 			mw.notify(
 				$( '<div>' )
-					.append( 'AFCH could not be loaded because "' + user + '" is not listed on ' )
+					.append( 'AFCH ไม่สามารถโหลดได้เนื่องจาก "' + user + '" ไม่ได้มีชื่ออยู่ใน ' )
 					.append(
 						$( '<a>' )
 							.attr( 'href', mw.util.getUrl( whitelistTitle ) )
@@ -15,9 +16,9 @@
 							.text( whitelistTitle )
 							.attr( 'target', '_blank' )
 					)
-					.append( '. You can request access to the AfC helper script there.' ),
+					.append( ' คุณสามารถส่งคำขอใช้สคริปต์ได้ที่นั่น' ),
 				{
-					title: 'AFCH error: user not listed',
+					title: 'ข้อผิดพลาด AFCH: ผู้ใช้ไม่ได้รับอนุญาติ',
 					autoHide: false
 				}
 			);

@@ -228,7 +228,7 @@
 
 		// Submission templates go first
 		$.each( this.templates, function ( _, template ) {
-			var tout = '{{AFC submission|' + template.status,
+			var tout = '{{AfC submission|' + template.status,
 				paramKeys = [];
 
 			// FIXME: Think about if we really want this elaborate-ish
@@ -299,14 +299,14 @@
 			}
 
 			// Finally, add the timestamp and a warning about removing the template
-			tout += '|ts=' + template.timestamp + '}} <!-- Do not remove this line! -->';
+			tout += '|ts=' + template.timestamp + '}} <!-- กรุณาอย่าลบบรรทัดนี้! -->';
 
 			output.push( tout );
 		} );
 
 		// Then comment templates
 		$.each( this.comments, function ( _, comment ) {
-			output.push( '\n{{AFC comment|1=' + comment.text + '}}' );
+			output.push( '\n{{AfC comment|1=' + comment.text + '}}' );
 		} );
 
 		// If there were comments, add a horizontal rule beneath them
@@ -509,19 +509,21 @@
 
 		if ( isAccept ) {
 			// Remove {{Draft categories}}
-			text = text.replace( /\{\{Draft categories\s*\|((?:\s*\[\[:?Category:[ \S]+?\]\]\s*)*)\s*\}\}/gi, '$1' );
+			text = text.replace( /\{\{(Draft categories|หมวดหมู่ฉบับร่าง)\s*\|((?:\s*\[\[:?(หมวดหมู่|Category):[ \S]+?\]\]\s*)*)\s*\}\}/gi, '$1' );
 
 			// Remove {{Draft article}} (and {{Draft}}).
 			// Not removed if the |text= parameter is present, which could contain
 			// arbitrary wikitext and therefore makes the end of the template harder
 			// to detect
 			text = text.replace( /\{\{Draft(?!\|\s*text\s*=)(?: article(?!\|\s*text\s*=)(?:\|(?:subject=)?[^\|]+)?|\|(?:subject=)?[^\|]+)?\}\}/gi, '' );
+			text = text.replace( /\{\{ฉบับร่าง(?!\|\s*text\s*=)(?:บทความ(?!\|\s*text\s*=)(?:\|(?:subject=)?[^\|]+)?|\|(?:subject=)?[^\|]+)?\}\}/gi, '' );
+			text = text.replace( /\{\{บทความ(?:ฉบับร่าง(?!\|\s*text\s*=)(?:\|(?:subject=)?[^\|]+)?|\|(?:subject=)?[^\|]+)?\}\}/gi, '' );
 
 			// Uncomment cats and templates
-			text = text.replace( /\[\[:Category:/gi, '[[Category:' );
+			text = text.replace( /\[\[:(Category|หมวดหมู่):/gi, '[[หมวดหมู่:' );
 			text = text.replace( /\{\{(tl|tlx|tlg)\|(.*?)\}\}/ig, '{{$2}}' );
 
-			// Strip the AFC G13 postponement template
+			// Strip the AFC ท10 postponement template
 			text = text.replace( /\{\{AfC postpone G13(?:\|\d*)?\}\}\n*/gi, '' );
 
 			// Remove draft topics template
@@ -550,7 +552,7 @@
 
 		// Remove empty section at the end (caused by "Resubmit" button on "declined" template)
 		// Section may have categories after it - keep them there
-		text = text.replace( /\n+==.+?==((?:\[\[:?Category:.+?\]\]|\s+)*)$/, '$1' );
+		text = text.replace( /\n+==.+?==((?:\[\[:?(Category|หมวดหมู่):.+?\]\]|\s+)*)$/, '$1' );
 
 		// Assemble a master regexp and remove all now-unneeded comments (commentsToRemove)
 		commentRegex = new RegExp( '<!-{2,}\\s*(' + commentsToRemove.join( '|' ) + ')\\s*-{2,}>', 'gi' );
@@ -561,9 +563,10 @@
 
 		// Remove sandbox templates
 		text = text.replace( /\{\{(userspacedraft|userspace draft|user sandbox|Please leave this line alone \(sandbox heading\))(?:\{\{[^{}]*\}\}|[^}{])*\}\}/ig, '' );
+		text = text.replace( /\{\{(กระบะทรายผู้ใช้|กรุณาอย่าแก้ไขบรรทัดนี้ \(ส่วนหัวหน้าทดลองเขียน\))(?:\{\{[^{}]*\}\}|[^}{])*\}\}/ig, '' );
 
 		// Remove html comments (<!--) that surround categories
-		text = text.replace( /<!--\s*((\[\[:{0,1}(Category:.*?)\]\]\s*)+)-->/gi, '$1' );
+		text = text.replace( /<!--\s*((\[\[:{0,1}((Category|หมวดหมู่):.*?)\]\]\s*)+)-->/gi, '$1' );
 
 		// Remove spaces/commas between <ref> tags
 		text = text.replace( /\s*(<\/\s*ref\s*\>)\s*[,]*\s*(<\s*ref\s*(name\s*=|group\s*=)*\s*[^\/]*>)[ \t]*$/gim, '$1$2' );
@@ -659,14 +662,14 @@
 		// two adjacent categories, only the first would get deleted
 		var catIndex, match,
 			text = this.text,
-			categoryRegex = /\[\[:?Category:.*?\s*\]\]/i,
+			categoryRegex = /\[\[:?(Category|หมวดหมู่):.*?\s*\]\]/i,
 			newCategoryCode = '\n';
 
 		// Create the wikicode block
 		$.each( categories, function ( _, category ) {
 			var trimmed = $.trim( category );
 			if ( trimmed ) {
-				newCategoryCode += '\n[[Category:' + trimmed + ']]';
+				newCategoryCode += '\n[[หมวดหมู่:' + trimmed + ']]';
 			}
 		} );
 
@@ -693,12 +696,12 @@
 	};
 
 	// Add the launch link
-	$afchLaunchLink = $( mw.util.addPortletLink( AFCH.prefs.launchLinkPosition, '#', 'Review (AFCH beta)',
-		'afch-launch', 'Review submission using afch-rewrite', '1' ) );
+	$afchLaunchLink = $( mw.util.addPortletLink( AFCH.prefs.launchLinkPosition, '#', 'ทบทวน (AFCH beta)',
+		'afch-launch', 'ทบทวนฉบับร่างโดยใช้ afch-rewrite', '1' ) );
 
 	if ( AFCH.prefs.autoOpen &&
 		// Don't autoload in userspace -- too many false positives
-		AFCH.consts.pagename.indexOf( 'User:' ) !== 0 &&
+		AFCH.consts.pagename.indexOf( 'ผู้ใช้:' ) !== 0 &&
 		// Only autoload if viewing or editing the page
 		[ 'view', 'edit', null ].indexOf( AFCH.getParam( 'action' ) ) !== -1 &&
 		!AFCH.getParam( 'diff' ) && !AFCH.getParam( 'oldid' ) ) {
@@ -710,7 +713,7 @@
 	}
 
 	// Mark launch link for the old helper script as "old" if present on page
-	$( '#p-cactions #ca-afcHelper > a' ).append( ' (old)' );
+	$( '#p-cactions #ca-afcHelper > a' ).append( ' (เก่า)' );
 
 	// If AFCH is destroyed via AFCH.destroy(),
 	// remove the $afch window and the launch link
@@ -739,7 +742,7 @@
 						$( '<div>' )
 							.addClass( 'back-link' )
 							.html( '&#x25c0; back to options' ) // back arrow
-							.attr( 'title', 'Go back' )
+							.attr( 'title', 'ย้อนกลับ' )
 							.addClass( 'hidden' )
 							.click( function () {
 								// Reload the review panel
@@ -776,7 +779,7 @@
 					.append(
 						$( '<div>' )
 							.addClass( 'initial-header' )
-							.text( 'Loading AFCH v' + AFCH.consts.version + '...' )
+							.text( 'กำลังโหลด AFCH v' + AFCH.consts.version + '...' )
 					)
 			);
 
@@ -870,7 +873,7 @@
 				}
 			} );
 
-			// Get G13 eligibility and when known, display relevant buttons...
+			// Get ท10 eligibility and when known, display relevant buttons...
 			// but don't hold up the rest of the loading to do so
 			submission.isG13Eligible().done( function ( eligible ) {
 				$afch.find( '.g13-related' ).toggleClass( 'hidden', !eligible );
@@ -905,7 +908,7 @@
 			if ( actionMessage !== false ) {
 				$action = $( '<a>' )
 					.addClass( 'link' )
-					.text( actionMessage || 'Edit page' )
+					.text( actionMessage || 'แก้ไขหน้า' )
 					.appendTo( $warning );
 
 				if ( typeof onAction === 'function' ) {
@@ -943,13 +946,13 @@
 
 				// Uneven (/unclosed) <ref> and </ref> tags
 				if ( refBeginMatches.length !== refEndMatches.length ) {
-					addWarning( 'The submission contains ' +
-						( refBeginMatches.length > refEndMatches.length ? 'unclosed' : 'unbalanced' ) + ' <ref> tags.' );
+					addWarning( 'ฉบับร่างนี้มี <ref>' +
+						( refBeginMatches.length > refEndMatches.length ? 'ที่ไม่ได้ปิด' : 'ที่ไม่สมดุลunbalanced' ) );
 				}
 
 				// <ref>1<ref> instead of <ref>1</ref> detection
 				if ( malformedRefs.length ) {
-					addWarning( 'The submission contains malformed <ref> tags.', 'View details', function () {
+					addWarning( 'ฉบับร่างมีการใช้ <ref> ที่ไม่ถูกต้อง', 'ดูรายละเอียด', function () {
 						var $toggleLink = $( this ).addClass( 'malformed-refs-toggle' ),
 							$warningDiv = $( this ).parent();
 						$malformedRefWrapper = $( '<div>' )
@@ -965,7 +968,7 @@
 						} );
 
 						// Now change the "View details" link to behave as a normal toggle for .malformed-refs
-						AFCH.makeToggle( '.malformed-refs-toggle', '.malformed-refs', 'View details', 'Hide details' );
+						AFCH.makeToggle( '.malformed-refs-toggle', '.malformed-refs', 'ดูรายละเอียด', 'ซ่อนรายละเอียด' );
 
 						return false;
 					} );
@@ -1130,12 +1133,12 @@
 	 * Stores useful strings to AFCH.msg
 	 */
 	function setMessages() {
-		var headerBegin = '== Your submission at [[Wikipedia:Articles for creation|Articles for creation]]: ';
+		var headerBegin = '== การส่งฉบับร่างของคุณกับ [[Wikipedia:Articles for creation|AfC]]: ';
 		AFCH.msg.set( {
 			// $1 = article name
 			// $2 = article class or '' if not available
 			'accepted-submission': headerBegin +
-				'[[$1]] has been accepted ==\n{{subst:Afc talk|$1|class=$2|sig=~~' + '~~}}',
+				'หน้า [[$1]] ได้รับการยอมรับแล้ว ==\n{{subst:Afc talk|$1|class=$2|sig=~~' + '~~}}',
 
 			// $1 = full submission title
 			// $2 = short title
@@ -2448,8 +2451,8 @@
 			afchSubmission.getSubmitter().done( function ( submitter ) {
 				AFCH.actions.logCSD( {
 					title: afchPage.rawTitle,
-					reason: declineReason === 'cv' ? '[[WP:G12]] ({{tl|db-copyvio}})' :
-						'{{tl|db-reason}} ([[WP:AFC|Articles for creation]])',
+					reason: declineReason === 'cv' ? '[[WP:G12]] ({{tl|copyvio}})' :
+						'{{tl|ลบ}} ([[WP:AFC|Articles for creation]])',
 					usersNotified: data.notifyUser ? [ submitter ] : []
 				} );
 			} );
@@ -2466,7 +2469,7 @@
 
 		afchPage.edit( {
 			contents: text.get(),
-			summary: 'Commenting on submission'
+			summary: 'แสดงความเห็นในฉบับร่าง'
 		} );
 
 		if ( data.notifyUser ) {
@@ -2474,7 +2477,7 @@
 				AFCH.actions.notifyUser( submitter, {
 					message: AFCH.msg.get( 'comment-on-submission',
 						{ $1: AFCH.consts.pagename } ),
-					summary: 'Notification: I\'ve commented on [[' + AFCH.consts.pagename + '|your Articles for Creation submission]]'
+					summary: 'แจ้งเตือน: ฉันได้แสดงความเห็นไว้ที่[[' + AFCH.consts.pagename + '|ฉบับร่างของคุณ]]'
 				} );
 			} );
 		}
@@ -2506,7 +2509,7 @@
 
 			afchPage.edit( {
 				contents: text.get(),
-				summary: 'Submitting'
+				summary: 'ส่ง'
 			} );
 
 		} );
@@ -2528,13 +2531,13 @@
 			afchPage.edit( {
 				contents: text.get(),
 				minor: true,
-				summary: 'Cleaning up submission'
+				summary: 'เก็บกวาดฉบับร่าง'
 			} );
 		} );
 	}
 
 	function handleMark( unmark ) {
-		var actionText = ( unmark ? 'Unmarking' : 'Marking' );
+		var actionText = ( unmark ? 'เลิกทำเครื่องหมาย' : 'ทำเครื่องหมาย' );
 
 		prepareForProcessing( actionText, 'mark' );
 
@@ -2555,7 +2558,7 @@
 
 			afchPage.edit( {
 				contents: text.get(),
-				summary: actionText + ' submission as under review'
+				summary: actionText + 'ว่ากำลังตรวจฉบับร่าง'
 			} );
 		} );
 	}
@@ -2566,7 +2569,7 @@
 		var gotCreator = afchPage.getCreator();
 
 		// Update the display
-		prepareForProcessing( 'Requesting', 'g13' );
+		prepareForProcessing( 'ส่งคำขอ', 'g13' );
 
 		// Get the page text and the last modified date (cached!) and tag the page
 		$.when(
@@ -2576,13 +2579,13 @@
 			var text = new AFCH.Text( rawText );
 
 			// Add the deletion tag and clean up for good measure
-			text.prepend( '{{db-g13|ts=' + AFCH.dateToMwTimestamp( lastModified ) + '}}\n' );
+			text.prepend( '{{ลบ|g10|ts=' + AFCH.dateToMwTimestamp( lastModified ) + '}}\n' );
 			text.cleanUp();
 
 			afchPage.edit( {
 				contents: text.get(),
-				summary: 'Tagging abandoned [[Wikipedia:Articles for creation|Articles for creation]] draft ' +
-					'for speedy deletion under [[WP:G13|G13]]'
+				summary: 'ทำเครื่องหมายฉบับร่าง[[WP:AFC|AfC]] ' +
+					'สำหรับการลบทันทีในเงื่อนไข [[WP:ท10|ท10]]'
 			} );
 
 			// Now notify the page creator as well as any and all previous submitters
@@ -2600,14 +2603,14 @@
 					AFCH.actions.notifyUser( user, {
 						message: AFCH.msg.get( 'g13-submission',
 							{ $1: AFCH.consts.pagename } ),
-						summary: 'Notification: [[WP:G13|G13]] speedy deletion nomination of [[' + AFCH.consts.pagename + ']]'
+						summary: 'แจ้งเตือน: การแจ้งลบในเงื่อนไข [[WP:ท10|ท10]] ของฉบับร่าง [[' + AFCH.consts.pagename + ']]'
 					} );
 				} );
 
 				// And finally log the CSD nomination once all users have been notified
 				AFCH.actions.logCSD( {
 					title: afchPage.rawTitle,
-					reason: '[[WP:G13]] ({{tl|db-afc}})',
+					reason: '[[WP:G10]]: ฉบับร่างทำไม่ได้ทำต่อ',
 					usersNotified: usersToNotify
 				} );
 			} );
@@ -2645,7 +2648,7 @@
 
 		afchPage.edit( {
 			contents: text.get(),
-			summary: 'Postponing [[WP:G13|G13]] speedy deletion'
+			summary: 'Postponing [[WP:ท10|ท10]] speedy deletion'
 		} );
 	}
 

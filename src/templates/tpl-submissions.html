@@ -9,19 +9,19 @@
 	</div>
 	<div class="warnings hidden"></div>
 	<div class="button-wrapper">
-		{{#accept}}<a id="afchAccept" class="accept afch-button gradient-button">Accept</a>{{/accept}}
-		{{#decline}}<a id="afchDecline" class="decline afch-button gradient-button">Decline/Reject</a>{{/decline}}
-		{{#comment}}<a id="afchComment" class="comment afch-button gradient-button">Comment</a>{{/comment}}
-		{{#submit}}<a id="afchSubmit" class="submit afch-button gradient-button">Submit</a>{{/submit}}
-		<a id="afchG13" class="g13 afch-button gradient-button g13-related {{^g13}}hidden{{/g13}}">Request G13 deletion</a>
-		<a id="afchPostponeG13" class="postpone-g13 afch-button gradient-button g13-related {{^g13}}hidden{{/g13}}">Postpone G13</a>
+		{{#accept}}<a id="afchAccept" class="accept afch-button gradient-button">ให้ผ่าน</a>{{/accept}}
+		{{#decline}}<a id="afchDecline" class="decline afch-button gradient-button">ตีกลับ/ปัดตก</a>{{/decline}}
+		{{#comment}}<a id="afchComment" class="comment afch-button gradient-button">แสดงความเห็น</a>{{/comment}}
+		{{#submit}}<a id="afchSubmit" class="submit afch-button gradient-button">บันทึก</a>{{/submit}}
+		<a id="afchG13" class="g13 afch-button gradient-button g13-related {{^g13}}hidden{{/g13}}">ส่ง CSD ท10</a>
+		<a id="afchPostponeG13" class="postpone-g13 afch-button gradient-button g13-related {{^g13}}hidden{{/g13}}">เลื่อน ท10 ก่อน</a>
 		<div id="afchExtra" class="extra afch-button">
 			<div class="wrapper">
 				<div class="open" title="View additional options">«</div>
 				<div class="links">
 					<a id="afchClean" class="link">Clean submission</a>
 					<a id="afchMark" class="link">
-						{{#alreadyUnderReview}}Unmark{{/alreadyUnderReview}}{{^alreadyUnderReview}}Mark{{/alreadyUnderReview}} as under review
+						{{#alreadyUnderReview}}เลิกทำเครื่องหมาย{{/alreadyUnderReview}}{{^alreadyUnderReview}}ทำเครื่องหมาย{{/alreadyUnderReview}}ว่ากำลังตรวจ
 					</a>
 				</div>
 			</div>
@@ -38,7 +38,7 @@
 			<td class="timestamp"><span title="{{timestamp}}">{{relativeTimestamp}}</span>:</td>
 			<td class="detail">
 				<span class="reason">{{{reason}}}</span>
-				<span class="actor">(deleted by <a href="{{deletorLink}}">{{deletor}}</a>)</span>
+				<span class="actor">(ถูกลบโดย <a href="{{deletorLink}}">{{deletor}}</a>)</span>
 			</td>
 		</tr>
 		{{/deletions}}
@@ -50,49 +50,48 @@
 <div class="review-panel {{actionClass}}">
 	<div class="header">{{actionTitle}}...</div>
 	<div id="afchContent" class="content centered">
-		<div id="afchSubmitForm" data-running="Working..." class="gradient-button button-centered {{actionClass}}">Working...</div>
+		<div id="afchSubmitForm" data-running="Working..." class="gradient-button button-centered {{actionClass}}">โปรดคอย...</div>
 	</div>
 </div>
 <!-- /quick-action-processing -->
 
 <!-- accept -->
 <div class="review-panel accept">
-	<div class="header">Accepting...</div>
+	<div class="header">กำลังให้ผ่าน...</div>
 	<div id="afchContent" class="content">
 
 		<div id="newTitleWrapper">
-			<label for="newTitle" class="afch-label">New title</label>
-			<input type="text" id="newTitle" class="afch-input afch-textfield" placeholder="Target page name"
+			<label for="newTitle" class="afch-label">ชื่อเรื่องใหม่</label>
+			<input type="text" id="newTitle" class="afch-input afch-textfield" placeholder="ชื่อหน้าปลายทาง"
 				{{#newTitle}}value="{{newTitle}}"{{/newTitle}} />
 			<span id="titleStatus"></span>
 		</div>
 
 		<div id="assessmentWrapper">
-			<label for="newAssessment" class="afch-label">Article assessment</label>
+			<label for="newAssessment" class="afch-label">ระดับบทความ</label>
 			<select id="newAssessment" class="afch-input">
 				<option value="" selected></option>
-				<option value="B">B-class</option>
-				<option value="C">C-class</option>
-				<option value="start">Start-class</option>
-				<option value="stub">Stub-class</option>
-				<option value="list">List-class</option>
-				<option value="disambig">Disambig-class</option>
-				<option value="template">Template-class</option>
-				<option value="redirect">Redirect-class</option>
-				<option value="portal">Portal-class</option>
-				<option value="project">Project-class</option>
-				<option value="na">NA-class</option>
+				<option value="ดี">ดี</option>
+				<option value="พอใช้">พอใช้</option>
+				<option value="โครง">โครง</option>
+				<option value="รายชื่อ">รายชื่อ</option>
+				<option value="แก้ความกำกวม">แก้ความกำกวม</option>
+				<option value="แม่แบบ">แม่แบบ</option>
+				<option value="เปลี่ยนทาง">เปลี่ยนทาง</option>
+				<option value="สถานีย่อย">สถานีย่อย</option>
+				<option value="โครงการ">โครงการ</option>
+				<option value="na">ไม่มี</option>
 			</select>
 		</div>
 
 		<div id="stubSorterWrapper" class="hidden">
-			<label class="afch-label" for="stub-sorter-select">Add stub tag</label>
+			<label class="afch-label" for="stub-sorter-select">เพิ่มแม่แบบโครง</label>
 			<div id="stubSorterContainer"></div>
 		</div>
 
 		{{#hasWikiProjects}}
 		<div id="wikiProjectWrapper">
-			<label for="newWikiProjects" class="afch-label">Add WikiProjects</label>
+			<label for="newWikiProjects" class="afch-label">เพิ่มโครงการวิกิ</label>
 			<select id="newWikiProjects" class="afch-input" multiple>
 				{{#wikiProjects}}
 				<option value="{{templateName}}" {{#alreadyOnPage}} selected {{/alreadyOnPage}}>{{displayName}}</option>
@@ -102,7 +101,7 @@
 		{{/hasWikiProjects}}
 
 		<div id="categoryWrapper">
-			<label for="newCategories" class="afch-label">Add categories</label>
+			<label for="newCategories" class="afch-label">เพิ่มหมวดหมู่</label>
 			<select id="newCategories" class="afch-input" multiple>
 				{{#categories}}
 				<option value="{{.}}" selected>{{.}}</option>
@@ -111,50 +110,50 @@
 		</div>
 
 		<div id="isBiographyWrapper">
-			<label for="isBiography" class="afch-label">Is the article a biography?</label>
+			<label for="isBiography" class="afch-label">เป็นบทความชีวะประวัติหรือไม่?</label>
 			<input type="checkbox" id="isBiography" class="afch-input"/>
 		</div>
 
 		<div id="bioOptionsWrapper" class="hidden">
 
 			<div id="subjectNameWrapper">
-				<label for="subjectName" class="afch-label">Subject name (last, first)</label>
+				<label for="subjectName" class="afch-label">ชื่อหัวเรื่อง (ตามหลัก default sort อาจเป็นชื่อ ตามด้วยนามสกุล)</label>
 				<input type="text" id="subjectName" class="afch-input afch-textfield" placeholder="Magellan, Ferdinand"/>
 			</div>
 
 			<div id="subjectDescriptionWrapper">
-				<label for="subjectDescription" class="afch-label">Description of the subject</label>
-				<input type="text" id="subjectDescription" class="afch-input afch-textfield" placeholder="Sea explorer"/>
+				<label for="subjectDescription" class="afch-label">คำอธิบายย่อของหัวเรื่อว</label>
+				<input type="text" id="subjectDescription" class="afch-input afch-textfield" placeholder="นักภจญสมุทร"/>
 			</div>
 
 			<div id="birthYearWrapper">
-				<label for="birthYear" class="afch-label">Year of birth</label>
+				<label for="birthYear" class="afch-label">ปีเกิด</label>
 				<input type="text" id="birthYear" class="afch-input afch-textfield" placeholder="1901"/>
 			</div>
 
 			<div id="birthMonthDayWrapper" class="hidden">
-				<label for="birthMonthDay" class="afch-label">Month and day of birth</label>
+				<label for="birthMonthDay" class="afch-label">เดือนและวันที่เกิด</label>
 				<input type="text" id="birthMonthDay" class="afch-input afch-textfield" placeholder="November 2"/>
 			</div>
 
 			<div id="birthPlaceWrapper">
-				<label for="birthPlace" class="afch-label">Place of birth</label>
+				<label for="birthPlace" class="afch-label">ที่เกิด</label>
 				<input type="text" id="birthPlace" class="afch-input afch-textfield" placeholder="Memphis, Tennessee"/>
 			</div>
 
 			<div id="lifeStatusWrapper">
-				<label for="lifeStatus" class="afch-label">Is the subject alive?</label>
+				<label for="lifeStatus" class="afch-label">ยังมีชีวิตอยู่หรือไม่?</label>
 				<select id="lifeStatus" class="afch-input">
-					<option value="unknown" selected>Unknown</option>
-					<option value="living">Living</option>
-					<option value="dead">Dead</option>
+					<option value="unknown" selected>ไม่ทราบ</option>
+					<option value="living">ยังมีชีวิตอยู่</option>
+					<option value="dead">เสียชีวิตแล้ว</option>
 				</select>
 			</div>
 
 			<div id="deathWrapper" class="hidden">
 
 				<div id="deathYearWrapper">
-					<label for="deathYear" class="afch-label">Year of death</label>
+					<label for="deathYear" class="afch-label">ปีที่เสียชีวิต</label>
 					<input type="text" id="deathYear" class="afch-input afch-textfield" placeholder="1999"/>
 				</div>
 

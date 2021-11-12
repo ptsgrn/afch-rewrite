@@ -8,7 +8,8 @@
 ///////////////////////////////////////////////
 
 ( function ( mw, importScript ) {
-	if ( /^(?:User:|Draft:|Wikipedia(?:_talk)?:Articles_for_creation)/.test( mw.config.get( 'wgPageName' ) ) ) {
+	if ( /^(?:ผู้ใช้:|ฉบับร่าง:|(?:คุยเรื่อง)?วิกิพีเดีย:หน้าชั่วคราว)/.test( mw.config.get( 'wgPageName' ) ) ) {
+		// not work! since thwiki is not implemented importScript yet.
 		importScript( 'MediaWiki:Gadget-afchelper.js' );
 	}
 }( mediaWiki, importScript ) );
