@@ -122,7 +122,7 @@
 			</div>
 
 			<div id="subjectDescriptionWrapper">
-				<label for="subjectDescription" class="afch-label">คำอธิบายย่อของหัวเรื่อว</label>
+				<label for="subjectDescription" class="afch-label">คำอธิบายย่อของหัวเรื่อง</label>
 				<input type="text" id="subjectDescription" class="afch-input afch-textfield" placeholder="นักภจญสมุทร"/>
 			</div>
 
@@ -158,13 +158,13 @@
 				</div>
 
 				<div id="deathMonthDayWrapper" class="hidden">
-					<label for="deathMonthDay" class="afch-label">Month and day of death</label>
-					<input type="text" id="deathMonthDay" class="afch-input afch-textfield" placeholder="December 13"/>
+					<label for="deathMonthDay" class="afch-label">เดือนและปีที่เสียชีวิต</label>
+					<input type="text" id="deathMonthDay" class="afch-input afch-textfield" placeholder="13 ธันวาคม"/>
 				</div>
 
 				<div id="deathPlaceWrapper">
 					<label for="deathPlace" class="afch-label">Place of death</label>
-					<input type="text" id="deathPlace" class="afch-input afch-textfield" placeholder="London, England"/>
+					<input type="text" id="deathPlace" class="afch-input afch-textfield" placeholder="ลอนดอน ประเทศอังกฤษ"/>
 				</div>
 
 			</div>
@@ -173,17 +173,17 @@
 
 		{{#showPatrolOption}}
 		<div id="patrolPageWrapper">
-			<label for="patrolPage" class="afch-label">Mark page as patrolled</label>
+			<label for="patrolPage" class="afch-label">ทำเครื่องหมายว่าตรวจตราแล้ว</label>
 			<input type="checkbox" id="patrolPage" class="afch-input"/>
 		</div>
 		{{/showPatrolOption}}
 
 		<div id="notifyWrapper">
-			<label for="notifyUser" class="afch-label">Notify submitter</label>
+			<label for="notifyUser" class="afch-label">แจ้งผู้ส่ง</label>
 			<input type="checkbox" id="notifyUser" class="afch-input" checked/>
 		</div>
 
-		<div id="afchSubmitForm" data-running="Accepting submission..." class="gradient-button accept">Accept &amp; publish</div>
+		<div id="afchSubmitForm" data-running="กำลังรับฉบับร่างไว้..." class="gradient-button accept">ให้ผ่าน &amp; เผยแพร่</div>
 
 	</div>
 </div>
@@ -191,69 +191,69 @@
 
 <!-- decline -->
 <div class="review-panel decline">
-	<div class="header">Declining...</div>
+	<div class="header">กำลังตีกลับ...</div>
 	<div id="afchContent" class="content centered">
 
 		<fieldset id="declineRejectWrapper" class="radioContainer afch-input" name="declineReject">
 			<input type="radio" id="declineRejectDecline" name="declineReject" value="decline" checked />
-			<label for="declineRejectDecline"><b>Decline</b> (for later improvement &amp; resubmission)</label>
+			<label for="declineRejectDecline"><b>ตีกลับ</b> (มีการให้โอกาสปรับปรุงเพิ่มเติมและส่งใหม่ได้ในอนาคต)</label>
 			&emsp;
 			<input type="radio" id="declineRejectReject" name="declineReject" value="reject" />
-			<label for="declineRejectReject"><b>Reject</b> (unsuitable topic; no option to resubmit)</label>
+			<label for="declineRejectReject"><b>ปัดตก</b> (หัวข้อไม่เหมาะสมกับวิกิพีเดีย ไม่ให้สามารถส่งใหม่อีกครั้ง)</label>
 		</fieldset>
 
 		<div id="declineReasonWrapper">
 			<select id="declineReason" class="afch-input text-left" multiple="multiple">
 				<option value=""></option>
-				<optgroup label="Notability">
-					<option value="neo">neo - Submission is about a neologism not yet shown to meet notability guidelines</option>
-					<option value="web">web - Submission is about web content not yet shown to meet notability guidelines</option>
-					<option value="prof">prof - Submission is about a professor not yet shown to meet notability guidelines</option>
-					<option value="athlete">athlete - Submission is about an athlete not yet shown to meet notability guidelines</option>
-					<option value="music">music - Submission is about a musician or musical work not yet shown to meet notability guidelines</option>
-					<option value="film">film - Submission is about a film not yet shown to meet notability guidelines</option>
-					<option value="corp">corp - Submission is about a company or organization not yet shown to meet notability guidelines</option>
-					<option value="bio">bio - Submission is about a person not yet shown to meet notability guidelines</option>
-					<option value="nn">nn - Submission is about a topic not yet shown to meet general notability guidelines (be more specific if possible)</option>
+				<optgroup label="ความโดดเด่น">
+					<option value="neo">neo - ฉบับร่างเป็นคำใหม่ที่ไม่เข้าเงื่อนไขความโดดเด่น</option>
+					<option value="web">web - ฉบับร่างเกี่ยวกับเนื้อหาบนเว็บที่ไม่เช้าเงื่อนไขความโดดเด่น</option>
+					<option value="prof">prof - ฉบับร่างเกี่ยวกับศาสตราจารย์ที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
+					<option value="athlete">athlete - ฉบับร่างเกี่ยวกับนักกีฬาที่ยังไม่เช้าเงื่อนไขความโดดเด่น</option>
+					<option value="music">music - ฉบับร่างเกี่ยวกับดนตรีที่ยังไม่เช้าเงื่อนไขความโดดเด่น</option>
+					<option value="film">film - ฉบับร่างเกี่ยวกับภาพยนต์ที่ยังไม่เช้าเงื่อนไขความโดดเด่น</option>
+					<option value="corp">corp - ฉบับร่างเกี่ยวกับบริษัทและองค์กรที่ยังไม่เช้าเงื่อนไขความโดดเด่น</option>
+					<option value="bio">bio - ฉบับร่างเกี่ยวกับบุคคลที่ยังไม่เช้าเงื่อนไขความโดดเด่น</option>
+					<option value="nn">nn - ฉบับร่างเกี่ยวกับหัวข้อที่ยังไม่เช้าเงื่อนไขความโดดเด่น (จะอธิบายเพิ่มเติมภายหลัง)</option>
 				</optgroup>
-				<optgroup label="Invalid submissions">
-					<option value="blank">blank - Submission is blank</option>
-					<option value="lang">lang - Submission is not in English</option>
-					<option value="test">test - Submission appears to be a test edit</option>
-					<option value="redirect">redirect - Submission is a redirect request</option>
+				<optgroup label="การส่งที่ไม่ถูกต้อง">
+					<option value="blank">blank - ฉบับร่างเปล่า</option>
+					<option value="lang">lang - ฉบับร่างไม่ใช่ภาษาไทย</option>
+					<option value="test">test - ฉบับร่างที่ดูเหมือนเป็นการทดลองแก้ไข</option>
+					<option value="redirect">redirect - ฉบับร่างเป็นการเปลี่ยนทาง</option>
 				</optgroup>
-				<optgroup label="BLP &amp; vandalism">
-					<option value="van">van - Submission is vandalism, a negative unsourced BLP, or an attack page</option>
-					<option value="ilc">ilc - Submission is a BLP that does not meet minimum inline citation requirements</option>
-					<option value="blp">blp - BLP contains unsourced, possibly defamatory claims (AGF and wait for sources)</option>
+				<optgroup label="บุคคลที่ยังมีชีวิตอยู่ &amp; การก่อกวน">
+					<option value="van">van - ฉบับร่างนี้เป็นการก่อกวน มีการโจมตีในด้านลบโดยไม่มีแหล่งอ้างอิงในบทความ BLP หรือหน้าที่สร้างเพื่อโจมตีอย่างเดียว</option>
+					<option value="ilc">ilc - ฉบับร่างที่เป็น BLP แต่ไม่มีการอ้างอิงในบรรทัดที่เหมาะสมเพียงพอ</option>
+					<option value="blp">blp - ฉบับร่าง BLP ที่ไม่มีอ้างอิง และอาจเป็นการหมิ่นประมาท</option>
 				</optgroup>
-				<optgroup label="Submission content">
-					<option value="cv">cv - Submission is a copyright violation</option>
-					<option value="v">v - Submission is improperly sourced</option>
-					<option value="not">not - Submission fails [[Wikipedia:What Wikipedia is not]]</option>
-					<option value="news">news - Submission appears to be a news story of a single event</option>
-					<option value="dict">dict - Submission is a dictionary definition</option>
-					<option value="plot">plot - Submission consists mostly of a plot summary</option>
-					<option value="joke">joke - Submission appears to be a joke or hoax</option>
+				<optgroup label="เกี่ยวกับเนื้อหาของฉบับร่าง">
+					<option value="cv">cv - มีการละเมิดลิขสิทธิ์</option>
+					<option value="v">v - มีการอ้างอิงไม่ถูกต้อง</option>
+					<option value="not">not - ไม่เข้าเงื่อนไข [[วิกิพีเดีย:อะไรที่ไม่ใช่วิกิพีเดีย]]</option>
+					<option value="news">news - ฉบับร่างเป็นข่าวของเหตุการณ์หนึ่ง ๆ</option>
+					<option value="dict">dict - ฉบับร่างนี้เป็นเหมือนพจนานุกรม</option>
+					<option value="plot">plot - ฉบับร่างประกอบไปด้วยเรื่องย่อเพียงอย่างเดียว</option>
+					<option value="joke">joke - ฉบับร่างนี้เป็นเรื่องขำขันหรือการหลอกลวง</option>
 				</optgroup>
-				<optgroup label="Prose issues">
-					<option value="essay">essay - Submission reads like an essay</option>
-					<option value="npov">npov - Submission is not written in a formal, neutral encyclopedic tone</option>
-					<option value="adv">adv - Submission reads like an advertisement</option>
+				<optgroup label="ปัญหาในเนื้อความ">
+					<option value="essay">essay - อ่านแล้วเหมือนเรียงความ</option>
+					<option value="npov">npov - ฉบับร่างไม่ได้เขียนเป็นภาษาทางการ เป็นกลาง หรืออ่านเป็นสารานุกรมมากพอ</option>
+					<option value="adv">adv - ฉบับร่างเป็นเหมือนการโฆษณา</option>
 				</optgroup>
-				<optgroup label="Duplicate articles">
-					<option value="exists">exists - Submission is duplicated by another article already in mainspace</option>
-					<option value="dup">dup - Submission is a duplicate of another existing submission</option>
+				<optgroup label="ซ้ำกับบทความ">
+					<option value="exists">exists - ฉบับร่างซ้ำซ้อนกับบทความที่มีอยู่แล้ว</option>
+					<option value="dup">dup - ฉบับร่างซ้ำซ้อนกับฉบับร่างอื่นอีกที</option>
 				</optgroup>
-				<optgroup label="Other">
-					<option value="reason">custom - Enter decline reason in the box below</option>
-					<option value="context">context - Submission provides insufficient context</option>
-					<option value="mergeto">mergeto - Submission should be merged into an existing article</option>
+				<optgroup label="อื่น ๆ">
+					<option value="reason">custom - ใส่เหตุผลที่ปัดตกด้านล่าง</option>
+					<option value="context">context - ฉบับร่างให้บริบทไม่เพียงพอ</option>
+					<option value="mergeto">mergeto - ฉบับร่างควรถูกรวมเข้ากับบทความอื่น</option>
 				</optgroup>
 			</select>
 
 			<div id="previewWrapper">
-				<a id="previewTrigger" class="link" role="button">(preview)</a>
+				<a id="previewTrigger" class="link" role="button">(ดูตัวอย่าง)</a>
 				<div id="previewContainer"></div>
 			</div>
 		</div>
@@ -261,8 +261,8 @@
 		<div id="rejectReasonWrapper" class="hidden">
 			<select id="rejectReason" class="afch-input text-left" multiple="multiple">
 				<option value=""></option>
-				<option value="n">n - Topic is not notable</option>
-				<option value="e">e - Topic is contrary to the purpose of Wikipedia</option>
+				<option value="n">n - หัวเรื่องไม่โดเด่นเพียงพอ</option>
+				<option value="e">e - หัวเรื่องไม่ตรงกับวัตถุประสงค์ของวิกิพีเดีย</option>
 			</select>
 		</div>
 
@@ -279,40 +279,41 @@
 			</div>
 
 			<div id="cvUrlWrapper" class="afch-option hidden">
-				<label for="cvUrlTextarea" class="afch-label">Original URLs (one per line)</label>
+				<label for="cvUrlTextarea" class="afch-label">ลิงก์ต้นทาง (หนึ่งลิงก์ต่อบรรทัด)</label>
 				<textarea id="cvUrlTextarea" class="afch-input afch-textfield afch-textarea"
-					placeholder="Enter original URLs here, one per line."
+					placeholder="ใส่ลิงก์ต้นทางที่นี่ หนึ่งลิงก์ต่อบรรทัด"
 					cols="110" rows="3"></textarea>
 			</div>
 
 			<textarea id="declineTextarea" class="afch-input afch-textfield afch-textarea hidden"
-				placeholder="Elaborate on your decline reason here using wikicode syntax."
+				placeholder="ใส่เหตุผลที่ปัดตกที่นี่ ใช้โค้ดวิกิได้"
 				cols="100" rows="5"></textarea>
 
 			<div id="csdWrapper" class="afch-option hidden">
 				<input type="checkbox" id="csdSubmission" class="afch-input"/>
-				<label for="csdSubmission" class="afch-label">Nominate the submission for speedy deletion</label>
+				<label for="csdSubmission" class="afch-label">แจ้งลบทันที</label>
 			</div>
 		</div>
 
 		<div id="rejectInputWrapper" class="hidden">
 			<textarea id="rejectTextarea" class="afch-input afch-textfield afch-textarea hidden"
-				placeholder="Elaborate on your reject reason here using wikicode syntax."
+				placeholder="ขยายความสาเหตุการปัดตกของคุณ ใช้โค้ดวิกิได้"
 				cols="100" rows="5"></textarea>
 		</div>
 
 		<div id="notifyWrapper" class="hidden">
 			<div class="afch-option">
 				<input type="checkbox" id="notifyUser" class="afch-input" checked/>
-				<label for="notifyUser" class="afch-label">Notify submitter</label>
+				<label for="notifyUser" class="afch-label">แจ้งผู้ส่ง</label>
 			</div>
-			<div class="afch-option">
+			<!-- Thai wikipedia didn't have a Teahouse -->
+			<!-- <div class="afch-option">
 				<input type="checkbox" id="inviteToTeahouse" class="afch-input" checked/>
 				<label for="inviteToTeahouse" class="afch-label">Invite submitter to Teahouse <small>(if they haven't been invited yet)</small></label>
-			</div>
+			</div> -->
 		</div>
 
-		<div id="afchSubmitForm" data-running="Declining submission..." class="gradient-button button-centered decline hidden">Decline submission</div>
+		<div id="afchSubmitForm" data-running="กำลังตีกลับฉบับร่าง..." class="gradient-button button-centered decline hidden">ตีกลับฉบับร่าง</div>
 
 	</div>
 </div>
@@ -320,19 +321,19 @@
 
 <!-- comment -->
 <div class="review-panel comment">
-	<div class="header">Commenting...</div>
+	<div class="header">ให้ความเห็น</div>
 	<div id="afchContent" class="content centered">
 
 		<textarea id="commentText" class="afch-input afch-textfield afch-textarea"
-			placeholder="Enter your comment about the submission using wikicode syntax. Your signature will be added automatically."
+			placeholder="ใส่ความเห็นของคุณเกี่ยวกับฉบับร่างที่นี่ ใช้โค้ดวิกิได้ ลายเซ็นของคุณจะถูกเพิ่มโดยอัตโนมัติ"
 			cols="100" rows="5"></textarea>
 
 	<div class="afch-option">
 		<input type="checkbox" id="notifyUser" class="afch-input" {{#notifyByDefault}}checked{{/notifyByDefault}} />
-		<label for="notifyUser" class="afch-label">Notify submitter</label>
+		<label for="notifyUser" class="afch-label">แจ้งผู้ส่ง</label>
 	</div>
 
-		<div id="afchSubmitForm" data-running="Commenting on submission..." class="gradient-button button-centered comment">Post comment</div>
+		<div id="afchSubmitForm" data-running="กำลังแจ้งผู้ส่ง..." class="gradient-button button-centered comment">โพสต์ความเห็น</div>
 
 	</div>
 </div>
@@ -340,24 +341,24 @@
 
 <!-- submit -->
 <div class="review-panel submit">
-	<div class="header">Submitting...</div>
+	<div class="header">ส่งฉบับร่างตรวจ</div>
 	<div id="afchContent" class="content centered">
-		<label for="submitType" class="afch-label">Submit as</label>
+		<label for="submitType" class="afch-label">ส่งในฐานะ</label>
 		<select id="submitType" class="afch-input">
 			{{#customSubmitters}}
 			<option value="{{name}}" {{#selected}}selected{{/selected}}>{{description}}</option>
 			{{/customSubmitters}}
-			<option value="creator">Page creator</option>
-			<option value="self">Yourself</option>
-			<option value="other">Someone else</option>
+			<option value="creator">ผู้สร้างหน้านี้</option>
+			<option value="self">ตัวคุณเอง</option>
+			<option value="other">คนอื่น</option>
 		</select>
 
 		<div id="submitterNameWrapper" class="hidden">
-			<input type="text" id="submitterName" class="afch-input afch-textfield" placeholder="Username" />
+			<input type="text" id="submitterName" class="afch-input afch-textfield" placeholder="ชื่อผู้ใช้" />
 			<div id="submitterNameStatus" class="error"></div>
 		</div>
 
-		<div id="afchSubmitForm" data-running="Submitting..." class="gradient-button button-centered submit">Submit</div>
+		<div id="afchSubmitForm" data-running="กำลังบันทึก..." class="gradient-button button-centered submit">บันทึก</div>
 
 	</div>
 </div>
@@ -365,14 +366,14 @@
 
 <!-- postpone-g13 -->
 <div class="review-panel postpone-g13">
-	<div class="header">Postponing...</div>
+	<div class="header">ยืดการลบออกไปก่อน</div>
 	<div id="afchContent" class="content centered">
 		<textarea id="commentText" class="afch-input afch-textfield afch-textarea"
-			placeholder="Enter your rationale for postponing deletion, which will be added to the submission as a new comment."
+			placeholder="ใส่เหตุผลว่าเพราะเหตุใดจึงต้องการยืดเวลาการลบ ซึ่งจะเพิ่มในแม่แบบด้วย"
 			cols="100" rows="5"></textarea>
 
-		<div id="afchSubmitForm" data-running="Postponing..." class="gradient-button button-centered postpone-g13">
-			Postpone deletion
+		<div id="afchSubmitForm" data-running="ยืดระยะเวลาการลบ..." class="gradient-button button-centered postpone-g13">
+			ยืดระยะเวลาการลบ
 		</div>
 
 	</div>
