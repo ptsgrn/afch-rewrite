@@ -1,3 +1,4 @@
+/* eslint-disable no-tabs */
 //<nowiki>
 ( function ( AFCH, $, mw ) {
 	var $afchLaunchLink, $afch, $afchWrapper,
@@ -1235,15 +1236,15 @@
 				);
 
 			// Show a link to the next random submissions
-			new AFCH.status.Element( 'Continue to next $1, $2, or $3 &raquo;', {
-				$1: AFCH.makeLinkElementToCategory( 'Pending AfC submissions', 'random submission' ),
-				$2: AFCH.makeLinkElementToCategory( 'AfC pending submissions by age/0 days ago', 'zero-day-old submission' ),
-				$3: AFCH.makeLinkElementToCategory( 'AfC pending submissions by age/Very old', 'very old submission' )
+			new AFCH.status.Element( 'ดูฉบับร่างต่อโดยไปที่ $1, $2, or $3 &raquo;', {
+				$1: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจ', 'สุ่มฉบับร่าง' ),
+				$2: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจเรียงตามอายุ/0 วันก่อน', 'ฉบับร่างอายุ 0 วัน' ),
+				$3: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจเรียงตามอายุ/เก่ามาก', 'ฉบับร่างที่เก่ามาก' )
 			} );
 
 			// Also, automagically reload the page in place
 			$( '#mw-content-text' ).load( AFCH.consts.pagelink + ' #mw-content-text', function () {
-				$afch.find( '#reloadLink' ).text( '(reloaded automatically)' );
+				$afch.find( '#reloadLink' ).text( '(รีโหลดแล้วโดยอัตโนมัติ)' );
 				// Fire the hook for new page content
 				mw.hook( 'wikipage.content' ).fire( $( '#mw-content-text' ) );
 			} );
@@ -1354,7 +1355,9 @@
 				deferred.resolve( wikiProjects );
 			} else {
 				$.ajax( {
-					url: mw.config.get( 'wgServer' ) + '/w/index.php?title=Wikipedia:WikiProject_Articles_for_creation/WikiProject_templates.json&action=raw&ctype=text/json',
+					url: mw.config.get( 'wgServer' ) + '/w/index.php?title=%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%B4%E0%B8%9E%E0%B8%B5%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2:' +
+						'%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%B4/%E0%B9%81%E0%B8%A1%E0%B9%88%E0%B9%81%E0%B8' +
+						'%9A%E0%B8%9A%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%B4.json&action=raw&ctype=text/json',
 					dataType: 'json'
 				} ).done( function ( projectData ) {
 					$.each( projectData, function ( display, template ) {
@@ -1369,13 +1372,13 @@
 						try {
 							window.localStorage[ lsKey ] = JSON.stringify( wikiProjects );
 						} catch ( e ) {
-							AFCH.log( 'Unable to cache WikiProject list: ' + e.message );
+							AFCH.log( 'ไม่สามารถแคชรายชื่อโครงการวิกิได้: ' + e.message );
 						}
 					}
 
 					deferred.resolve( wikiProjects );
 				} ).fail( function ( jqxhr, textStatus, errorThrown ) {
-					console.error( 'Could not parse WikiProject list: ', textStatus, errorThrown );
+					console.error( 'ไม่สามารถ parse รายการโครงการวิกิได้: ', textStatus, errorThrown );
 				} );
 			}
 
@@ -1924,7 +1927,7 @@
 				$afch.find( '#declineTextarea' ).val( prevDeclineComment );
 
 				// If the user wants a preview, show it
-				if ( $( '#previewTrigger' ).text() == '(hide preview)' ) {
+				if ( $( '#previewTrigger' ).text() == '(ซ่อนตัวอย่าง)' ) {
 					$( '#previewContainer' )
 						.empty()
 						.append( $.createSpinner( {
@@ -1955,7 +1958,7 @@
 			// Attach the preview event listener
 			$afch.find( '#previewTrigger' ).click( function () {
 				var reason = $afch.find( '#declineReason' ).val();
-				if ( this.textContent == '(preview)' && reason ) {
+				if ( this.textContent == '(แสดงตัวอย่าง)' && reason ) {
 					$( '#previewContainer' )
 						.empty()
 						.append( $.createSpinner( {
@@ -1968,10 +1971,10 @@
 							.html( Array.prototype.slice.call( arguments )
 								.join( '<hr />' ) );
 					} );
-					this.textContent = '(hide preview)';
+					this.textContent = '(ซ่อนตัวอย่าง)';
 				} else {
 					$( '#previewContainer' ).empty();
-					this.textContent = '(preview)';
+					this.textContent = '(แสดงตัวอย่าง)';
 				}
 			} );
 
@@ -2001,7 +2004,7 @@
 		$.each( afchSubmission.submitters, function ( index, submitter ) {
 			customSubmitters.push( {
 				name: submitter,
-				description: submitter + ( index === 0 ? ' (most recent submitter)' : ' (past submitter)' ),
+				description: submitter + ( index === 0 ? ' (ผู้ส่งคนล่าสุด)' : ' (ผู้ส่งในอดีต)' ),
 				selected: index === 0
 			} );
 		} );
@@ -2016,7 +2019,7 @@
 				$afch.find( '#submitterNameStatus' ).text( '' );
 				$afch.find( '#afchSubmitForm' )
 					.removeClass( 'disabled' )
-					.text( 'Submit' );
+					.text( 'ส่งตรวจ' );
 			}
 
 			// Show the other textbox when `other` is selected in the menu
@@ -2048,12 +2051,12 @@
 					}
 
 					// Check if the user string starts with "User:", because Template:AFC submission dies horribly if it does
-					if ( submitter.lastIndexOf( 'User:', 0 ) === 0 ) {
+					if ( submitter.lastIndexOf( 'ผู้ใช้:', 0 ) === 0 ) {
 						field.addClass( 'bad-input' );
-						status.text( 'Remove "User:" from the beginning.' );
+						status.text( 'ลบ "ผู้ใช้:" จากข้อความเริ่มต้น' );
 						submitButton
 							.addClass( 'disabled' )
-							.text( 'Invalid user name' );
+							.text( 'ชื่อผู้ใช้ไม่ถูกต้อง' );
 						return;
 					}
 
@@ -2065,10 +2068,10 @@
 					} ).done( function ( data ) {
 						if ( data.query.users[ 0 ].missing !== undefined ) {
 							field.addClass( 'bad-input' );
-							status.text( 'No user named "' + submitter + '".' );
+							status.text( 'ไม่พบผู้ใช้ชื่อ "' + submitter + '"' );
 							submitButton
 								.addClass( 'disabled' )
-								.text( 'No such user' );
+								.text( 'ไม่พบผู้ใช้' );
 						}
 					} );
 				} );
@@ -2090,7 +2093,7 @@
 		var newText = data.afchText;
 
 		AFCH.actions.movePage( afchPage.rawTitle, data.newTitle,
-			'Publishing accepted [[Wikipedia:Articles for creation|Articles for creation]] submission',
+			'กำลังเผยแพร่ฉบับร่าง [[Wikipedia:Articles for creation|Articles for creation]] ที่ได้รับการยอมรับแล้ว',
 			{ movetalk: true } ) // Also move associated talk page if exists (e.g. `Draft_talk:`)
 			.done( function ( moveData ) {
 				var $patrolLink,
@@ -2113,7 +2116,7 @@
 
 					// {{subst:L}}, which generates DEFAULTSORT as well as
 					// adds the appropriate birth/death year categories
-					newText.append( '\n{{subst:L' +
+					newText.append( '\n{{subst:Lifetime' +
 						'|1=' + data.birthYear +
 						'|2=' + ( data.deathYear || '' ) +
 						'|3=' + data.subjectName + '}}'
@@ -2129,7 +2132,7 @@
 
 				newPage.edit( {
 					contents: newText,
-					summary: 'Cleaning up accepted [[Wikipedia:Articles for creation|Articles for creation]] submission'
+					summary: 'เก็บกวาดฉบับร่าง [[Wikipedia:Articles for creation|Articles for creation]] ที่ได้รับการยอมรับ'
 				} );
 
 				// Patrol the new page if desired
@@ -2146,73 +2149,74 @@
 				// TALK PAGE
 				// ---------
 
-				talkPage.getText().done( function ( talkText ) {
-					var talkTextPrefix = '';
+				// not compatible with thwiki - yet
+				// talkPage.getText().done( function ( talkText ) {
+				// 	var talkTextPrefix = '';
 
-					// Add the AFC banner
-					talkTextPrefix += '{{subst:WPAFC/article|class=' + data.newAssessment +
-						( afchPage.additionalData.revId ? '|oldid=' + afchPage.additionalData.revId : '' ) + '}}';
+				// 	// Add the AFC banner
+				// 	talkTextPrefix += '{{subst:WPAFC/article|class=' + data.newAssessment +
+				// 		( afchPage.additionalData.revId ? '|oldid=' + afchPage.additionalData.revId : '' ) + '}}';
 
-					// Add biography banner if specified
-					if ( data.isBiography ) {
-						// Ensure we don't have duplicate biography tags
-						AFCH.removeFromArray( data.newWikiProjects, 'WikiProject Biography' );
+				// 	// Add biography banner if specified
+				// 	if ( data.isBiography ) {
+				// 		// Ensure we don't have duplicate biography tags
+				// 		AFCH.removeFromArray( data.newWikiProjects, 'WikiProject Biography' );
 
-						talkTextPrefix += ( '\n{{WikiProject Biography|living=' +
-							( data.lifeStatus !== 'unknown' ? ( data.lifeStatus === 'living' ? 'yes' : 'no' ) : '' ) +
-							'|class=' + data.newAssessment + '|listas=' + data.subjectName + '}}' );
-					}
+				// 		talkTextPrefix += ( '\n{{WikiProject Biography|living=' +
+				// 			( data.lifeStatus !== 'unknown' ? ( data.lifeStatus === 'living' ? 'yes' : 'no' ) : '' ) +
+				// 			'|class=' + data.newAssessment + '|listas=' + data.subjectName + '}}' );
+				// 	}
 
-					if ( data.newAssessment === 'disambig' &&
-						$.inArray( 'WikiProject Disambiguation', data.newWikiProjects ) === -1 ) {
-						data.newWikiProjects.push( 'WikiProject Disambiguation' );
-					}
+				// 	if ( data.newAssessment === 'disambig' &&
+				// 		$.inArray( 'WikiProject Disambiguation', data.newWikiProjects ) === -1 ) {
+				// 		data.newWikiProjects.push( 'WikiProject Disambiguation' );
+				// 	}
 
-					// Add and remove WikiProjects
-					var wikiProjectsToAdd = data.newWikiProjects.filter( function ( newTemplateName ) {
-						return !data.existingWikiProjects.some( function ( existingTplObj ) {
-							return existingTplObj.templateName === newTemplateName;
-						} );
-					} );
-					var wikiProjectsToRemove = data.existingWikiProjects.filter( function ( existingTplObj ) {
-						return !data.newWikiProjects.some( function ( newTemplateName ) {
-							return existingTplObj.templateName === newTemplateName;
-						} );
-					} ).map( function ( templateObj ) {
-						return templateObj.realTemplateName || templateObj.templateName;
-					} );
-					if ( data.alreadyHasWPBio && !data.isBiography ) {
-						wikiProjectsToRemove.push( data.existingWPBioTemplateName || 'wikiproject biography' );
-					}
+				// 	// Add and remove WikiProjects
+				// 	var wikiProjectsToAdd = data.newWikiProjects.filter( function ( newTemplateName ) {
+				// 		return !data.existingWikiProjects.some( function ( existingTplObj ) {
+				// 			return existingTplObj.templateName === newTemplateName;
+				// 		} );
+				// 	} );
+				// 	var wikiProjectsToRemove = data.existingWikiProjects.filter( function ( existingTplObj ) {
+				// 		return !data.newWikiProjects.some( function ( newTemplateName ) {
+				// 			return existingTplObj.templateName === newTemplateName;
+				// 		} );
+				// 	} ).map( function ( templateObj ) {
+				// 		return templateObj.realTemplateName || templateObj.templateName;
+				// 	} );
+				// 	if ( data.alreadyHasWPBio && !data.isBiography ) {
+				// 		wikiProjectsToRemove.push( data.existingWPBioTemplateName || 'wikiproject biography' );
+				// 	}
 
-					$.each( wikiProjectsToAdd, function ( _index, templateName ) {
-						talkTextPrefix += '\n{{' + templateName + '|class=' + data.newAssessment + '}}';
-					} );
-					$.each( wikiProjectsToRemove, function ( _index, templateName ) {
-						// Regex from https://stackoverflow.com/a/5306111/1757964
-						var sanitizedTemplateName = templateName.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&' );
-						talkText = talkText.replace( new RegExp( '\\n?\\{\\{\\s*' + sanitizedTemplateName + '\\s*.+?\\}\\}', 'is' ), '' );
-					} );
+				// 	$.each( wikiProjectsToAdd, function ( _index, templateName ) {
+				// 		talkTextPrefix += '\n{{' + templateName + '|class=' + data.newAssessment + '}}';
+				// 	} );
+				// 	$.each( wikiProjectsToRemove, function ( _index, templateName ) {
+				// 		// Regex from https://stackoverflow.com/a/5306111/1757964
+				// 		var sanitizedTemplateName = templateName.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&' );
+				// 		talkText = talkText.replace( new RegExp( '\\n?\\{\\{\\s*' + sanitizedTemplateName + '\\s*.+?\\}\\}', 'is' ), '' );
+				// 	} );
 
-					// We prepend the text so that talk page content is not removed
-					// (e.g. pages in `Draft:` namespace with discussion)
-					talkText = talkTextPrefix + '\n\n' + talkText;
+				// 	// We prepend the text so that talk page content is not removed
+				// 	// (e.g. pages in `Draft:` namespace with discussion)
+				// 	talkText = talkTextPrefix + '\n\n' + talkText;
 
-					var summary = 'Placing [[Wikipedia:Articles for creation|Articles for creation]] banner';
-					if ( wikiProjectsToAdd.length > 0 ) {
-						summary += ', adding ' + wikiProjectsToAdd.length +
-							' WikiProject banner' + ( ( wikiProjectsToAdd.length === 1 ) ? '' : 's' );
-					}
-					if ( wikiProjectsToRemove.length > 0 ) {
-						summary += ', removing ' + wikiProjectsToRemove.length +
-							' WikiProject banner' + ( ( wikiProjectsToRemove.length === 1 ) ? '' : 's' );
-					}
+				// 	var summary = 'Placing [[Wikipedia:Articles for creation|Articles for creation]] banner';
+				// 	if ( wikiProjectsToAdd.length > 0 ) {
+				// 		summary += ', adding ' + wikiProjectsToAdd.length +
+				// 			' WikiProject banner' + ( ( wikiProjectsToAdd.length === 1 ) ? '' : 's' );
+				// 	}
+				// 	if ( wikiProjectsToRemove.length > 0 ) {
+				// 		summary += ', removing ' + wikiProjectsToRemove.length +
+				// 			' WikiProject banner' + ( ( wikiProjectsToRemove.length === 1 ) ? '' : 's' );
+				// 	}
 
-					talkPage.edit( {
-						contents: talkText,
-						summary: summary
-					} );
-				} );
+				// 	talkPage.edit( {
+				// 		contents: talkText,
+				// 		summary: summary
+				// 	} );
+				// } );
 
 				// NOTIFY SUBMITTER
 				// ----------------
@@ -2222,7 +2226,7 @@
 						AFCH.actions.notifyUser( submitter, {
 							message: AFCH.msg.get( 'accepted-submission',
 								{ $1: newPage, $2: data.newAssessment } ),
-							summary: 'Notification: Your [[Wikipedia:Articles for creation|Articles for creation]] submission has been accepted'
+							summary: 'แจ้งเตือน: ฉบับร่างของคุณได้ถูกสร้างเป็นบทความจริงแล้ว'
 						} );
 					} );
 				}
@@ -2246,7 +2250,7 @@
 
 						recentPage.edit( {
 							contents: newRecentText,
-							summary: 'Adding [[' + newPage + ']] to list of recent AfC creations'
+							summary: 'เพิ่มหน้า [[' + newPage + ']] ไปยังรายการบทความที่เพิ่งสร้าง'
 						} );
 					} );
 			} );

@@ -63,11 +63,11 @@
 
 			// Must be defined above the larger $.extend block
 			// because AFCH.consts.summaryAd depends on it
-			AFCH.consts.version = '0.9.2-beta';
+			AFCH.consts.version = '0.9.3-alpha';
 
 			// Add more constants -- don't overwrite those already set, though
 			AFCH.consts = $.extend( AFCH.consts, {
-				versionName: 'Imperial Julia',
+				versionName: 'Imperial Kane',
 
 				// If true, the script will NOT modify actual wiki content and
 				// will instead mock all such API requests (success assumed)
@@ -90,7 +90,7 @@
 
 				// Require users to be on whitelist to use the script
 				// Testwiki users don't need to be on it
-				whitelistRequired: mw.config.get( 'wgDBname' ) !== 'testwiki',
+				whitelistRequired: false, // mw.config.get( 'wgDBname' ) !== 'testwiki',
 
 				// Name of the whitelist page for reviewers
 				whitelistTitle: 'Wikipedia:WikiProject Articles for creation/Participants'

@@ -5,7 +5,7 @@
 	<div class="initial-header">
 		<span>AFCH v<span title="{{versionName}}">{{version}}</span>&nbsp;
 		(<!-- Disabled due to issue #71 <span class="feedback-wrapper"></span> | --><span class="preferences-wrapper"></span>)</span>
-		Reviewing "{{title}}"
+		กำลังตรวจ "{{title}}"
 	</div>
 	<div class="warnings hidden"></div>
 	<div class="button-wrapper">
@@ -17,11 +17,11 @@
 		<a id="afchPostponeG13" class="postpone-g13 afch-button gradient-button g13-related {{^g13}}hidden{{/g13}}">เลื่อน ท10 ก่อน</a>
 		<div id="afchExtra" class="extra afch-button">
 			<div class="wrapper">
-				<div class="open" title="View additional options">«</div>
+				<div class="open" title="ดูตัวเลือกเพิ่มเติม">«</div>
 				<div class="links">
-					<a id="afchClean" class="link">Clean submission</a>
+					<a id="afchClean" class="link">เก็บกวาดฉบับร่าง</a>
 					<a id="afchMark" class="link">
-						{{#alreadyUnderReview}}เลิกทำเครื่องหมาย{{/alreadyUnderReview}}{{^alreadyUnderReview}}ทำเครื่องหมาย{{/alreadyUnderReview}}ว่ากำลังตรวจ
+						{{#alreadyUnderReview}}เลิกทำเครื่องหมาย{{/alreadyUnderReview}}{{^alreadyUnderReview}}ทำเครื่องหมาย{{/alreadyUnderReview}}ว่ากำลังตรวจฉบับร่าง
 					</a>
 				</div>
 			</div>
@@ -50,14 +50,14 @@
 <div class="review-panel {{actionClass}}">
 	<div class="header">{{actionTitle}}...</div>
 	<div id="afchContent" class="content centered">
-		<div id="afchSubmitForm" data-running="Working..." class="gradient-button button-centered {{actionClass}}">โปรดคอย...</div>
+		<div id="afchSubmitForm" data-running="กำลังทำงาน..." class="gradient-button button-centered {{actionClass}}">โปรดคอย...</div>
 	</div>
 </div>
 <!-- /quick-action-processing -->
 
 <!-- accept -->
 <div class="review-panel accept">
-	<div class="header">กำลังให้ผ่าน...</div>
+	<div class="header">ให้ผ่าน</div>
 	<div id="afchContent" class="content">
 
 		<div id="newTitleWrapper">
@@ -110,7 +110,7 @@
 		</div>
 
 		<div id="isBiographyWrapper">
-			<label for="isBiography" class="afch-label">เป็นบทความชีวะประวัติหรือไม่?</label>
+			<label for="isBiography" class="afch-label">เป็นบทความชีวประวัติหรือไม่?</label>
 			<input type="checkbox" id="isBiography" class="afch-input"/>
 		</div>
 
@@ -118,7 +118,7 @@
 
 			<div id="subjectNameWrapper">
 				<label for="subjectName" class="afch-label">ชื่อหัวเรื่อง (ตามหลัก default sort อาจเป็นชื่อ ตามด้วยนามสกุล)</label>
-				<input type="text" id="subjectName" class="afch-input afch-textfield" placeholder="Magellan, Ferdinand"/>
+				<input type="text" id="subjectName" class="afch-input afch-textfield" placeholder="มาเจลลัน, เฟอร์ดินานด์ "/>
 			</div>
 
 			<div id="subjectDescriptionWrapper">
@@ -127,7 +127,7 @@
 			</div>
 
 			<div id="birthYearWrapper">
-				<label for="birthYear" class="afch-label">ปีเกิด</label>
+				<label for="birthYear" class="afch-label">ปีเกิด (ค.ศ.)</label>
 				<input type="text" id="birthYear" class="afch-input afch-textfield" placeholder="1901"/>
 			</div>
 
@@ -163,7 +163,7 @@
 				</div>
 
 				<div id="deathPlaceWrapper">
-					<label for="deathPlace" class="afch-label">Place of death</label>
+					<label for="deathPlace" class="afch-label">สถานที่เสียชีวิต</label>
 					<input type="text" id="deathPlace" class="afch-input afch-textfield" placeholder="ลอนดอน ประเทศอังกฤษ"/>
 				</div>
 
@@ -199,7 +199,7 @@
 			<label for="declineRejectDecline"><b>ตีกลับ</b> (มีการให้โอกาสปรับปรุงเพิ่มเติมและส่งใหม่ได้ในอนาคต)</label>
 			&emsp;
 			<input type="radio" id="declineRejectReject" name="declineReject" value="reject" />
-			<label for="declineRejectReject"><b>ปัดตก</b> (หัวข้อไม่เหมาะสมกับวิกิพีเดีย ไม่ให้สามารถส่งใหม่อีกครั้ง)</label>
+			<label for="declineRejectReject"><b>ปัดตก</b> (หัวข้อไม่เหมาะสมกับวิกิพีเดีย ไม่สามารถส่งใหม่อีกครั้ง)</label>
 		</fieldset>
 
 		<div id="declineReasonWrapper">
