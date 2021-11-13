@@ -1,7 +1,7 @@
 afch-rewrite [![Build Status](https://travis-ci.org/WPAFC/afch-rewrite.png)](https://travis-ci.org/WPAFC/afch-rewrite) [![Release](https://img.shields.io/github/release/wpafc/afch-rewrite.svg)](https://github.com/WPAFC/afch-rewrite/releases)
 ============
 
-**v0.9.1 Imperial Ibex**
+**v0.9.3-alpha Imperial Kane**
 
 A tool for reviewing Articles for Creation submissions on the English Wikipedia, rewritten using clear, object-oriented JavaScript with a focus on killing bloat while adding value.
 
@@ -33,6 +33,7 @@ New versions of the script can be released through `scripts/release.py`, which a
 
 ### Version history
 
+* 0.9.3-alpha Imperial Kane (13 November 2021)
 * 0.9.1 Imperial Ibex (05 December 2018)
 * 0.9 Hatted Hamster (8 November 2014)
 * 0.8 Wandering Walrus (18 May 2014)
