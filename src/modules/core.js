@@ -1169,17 +1169,17 @@
 				this.$dialog.dialog( {
 					width: 500,
 					autoOpen: false,
-					title: 'AFCH Preferences',
+					title: 'การตั้งค่า AFCH',
 					modal: true,
 					buttons: [
 						{
-							text: 'Cancel',
+							text: 'ยกเลิก',
 							click: function () {
 								prefs.$dialog.dialog( 'close' );
 							}
 						},
 						{
-							text: 'Save preferences',
+							text: 'บันทึกการตั้งค่า',
 							click: function () {
 								prefs.save();
 								prefs.$dialog.empty().append( $spinner );

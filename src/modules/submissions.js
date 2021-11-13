@@ -742,7 +742,7 @@
 						// Back link appears on the left based on context
 						$( '<div>' )
 							.addClass( 'back-link' )
-							.html( '&#x25c0; back to options' ) // back arrow
+							.html( '&#x25c0; กลับไปที่ตัวเลือก' ) // back arrow
 							.attr( 'title', 'ย้อนกลับ' )
 							.addClass( 'hidden' )
 							.click( function () {
@@ -852,7 +852,7 @@
 			// Add feedback and preferences links
 			// FIXME: Feedback temporarily disabled due to https://github.com/WPAFC/afch-rewrite/issues/71
 			// AFCH.initFeedback( $afch.find( 'span.feedback-wrapper' ), '[your topic here]', 'give feedback' );
-			AFCH.preferences.initLink( $afch.find( 'span.preferences-wrapper' ), 'preferences' );
+			AFCH.preferences.initLink( $afch.find( 'span.preferences-wrapper' ), 'การตั้งค่า' );
 
 			// Set up click handlers
 			$afch.find( '#afchAccept' ).click( function () { spinnerAndRun( showAcceptOptions ); } );
@@ -1387,7 +1387,7 @@
 
 		var existingWikiProjectsPromise = $.when(
 			loadWikiProjectList(),
-			new AFCH.Page( 'Draft talk:' + afchSubmission.shortTitle ).getTemplates()
+			new AFCH.Page( 'คุยเรื่องฉบับร่าง:' + afchSubmission.shortTitle ).getTemplates()
 		).then( function ( wikiProjects, templates ) {
 			var templateNames = templates.map( function ( template ) {
 				return template.target.trim().toLowerCase();
@@ -1425,7 +1425,7 @@
 
 			// If any templates weren't in the WikiProject map, check if they were redirects
 			if ( otherTemplates.length > 0 ) {
-				var titles = otherTemplates.map( function ( n ) { return 'Template:' + n; } ).join( '|' );
+				var titles = otherTemplates.map( function ( n ) { return 'แม่แบบ:' + n; } ).join( '|' );
 				return AFCH.api.get( {
 					action: 'query',
 					titles: titles,
@@ -1435,11 +1435,12 @@
 					if ( data.query && data.query.redirects && data.query.redirects.length > 0 ) {
 						var redirs = data.query.redirects;
 						for ( var redirIdx = 0; redirIdx < redirs.length; redirIdx++ ) {
-							var redir = redirs[ redirIdx ].to.substring( 'Template:'.length ).toLowerCase();
-							var originalName = redirs[ redirIdx ].from.substring( 'Template:'.length );
+							var redir = redirs[ redirIdx ].to.substring( 'แม่แบบ:'.length ).toLowerCase();
+							var originalName = redirs[ redirIdx ].from.substring( 'แม่แบบ:'.length );
 							if ( wikiProjectMap.hasOwnProperty( redir ) ) {
 								wikiProjectMap[ redir ].alreadyOnPage = true;
 								wikiProjectMap[ redir ].realTemplateName = originalName;
+								// TODO: thwiki did not has this
 							} else if ( redir === 'wikiproject biography' ) {
 								alreadyHasWPBio = true;
 								existingWPBioTemplateName = originalName;
@@ -1476,7 +1477,7 @@
 			} );
 			var hasWikiProjects = Object.keys( wikiProjectMap ).length > 0;
 			if ( !hasWikiProjects ) {
-				mw.notify( 'Could not load WikiProject list!' );
+				mw.notify( 'ไม่สามารถโหลดรายการโครงการวิกิได้' );
 			}
 			var wikiProjectObjs = Object.keys( wikiProjectMap ).map( function ( key ) { return wikiProjectMap[ key ]; } );
 
@@ -1493,7 +1494,7 @@
 					allow_single_deselect: true,
 					disable_search: true,
 					width: '140px',
-					placeholder_text_single: 'Click to select'
+					placeholder_text_single: 'กดเพื่อเลือกClick to select'
 				} );
 
 				// If draft is assessed as stub, show stub sorting
@@ -1503,8 +1504,9 @@
 					$afch.find( '#stubSorterWrapper' ).toggleClass( 'hidden', !isClassStub );
 					if ( isClassStub ) {
 						if ( mw.config.get( 'wgDBname' ) !== 'enwiki' ) {
-							console.warn( 'no stub sorting script available for this language wiki' );
+							// we kown that stubsorter is only available on enwiki
 							return;
+							// console.warn( 'no stub sorting script available for this language wiki' );
 						}
 
 						if ( $afch.find( '#stubSorterContainer' ).html() === '' ) {
@@ -1532,8 +1534,8 @@
 				} );
 
 				$afch.find( '#newWikiProjects' ).chosen( {
-					placeholder_text_multiple: 'Start typing to filter WikiProjects...',
-					no_results_text: 'Whoops, no WikiProjects matched in database!',
+					placeholder_text_multiple: 'พิมพ์ชื่อโครงการวิกิเพื่อกรอง...',
+					no_results_text: 'ไม่พบโครงการวิกินี้ในฐานข้อมูล',
 					width: '350px'
 				} );
 
@@ -1550,10 +1552,10 @@
 					if ( $noResults.length ) {
 						$( '<div>' )
 							.appendTo( $noResults.empty() )
-							.text( 'Whoops, no WikiProjects matched in database! ' )
+							.text( 'ไม่พบโครงการวิกิที่ตรงกันในฐานข้อมูล ' )
 							.append(
 								$( '<a>' )
-									.text( 'Click to manually add {{' + newProject + '}} to the page\'s WikiProject list.' )
+									.text( 'กดที่นี่เพื่อเพิ่ม {{' + newProject + '}} ด้วยมือที่หน้ารายการโครงการวิกิ' )
 									.click( function () {
 										var $wikiprojects = $afch.find( '#newWikiProjects' );
 
@@ -1571,7 +1573,7 @@
 				} );
 
 				$afch.find( '#newCategories' ).chosen( {
-					placeholder_text_multiple: 'Start typing to add categories...',
+					placeholder_text_multiple: 'พิมพ์ชื่อหมวดหมู่ที่นี่...',
 					width: '350px'
 				} );
 
@@ -1678,7 +1680,7 @@
 					$status.text( '' );
 					$submitButton
 						.removeClass( 'disabled' )
-						.text( 'Accept & publish' );
+						.text( 'ยอมรับและเผยแพร่' );
 
 					// If there is no value, die now, because otherwise mw.Title
 					// will throw an exception due to an invalid title
@@ -1693,7 +1695,7 @@
 						titles: 'Talk:' + page.rawTitle
 					} ).done( function ( data ) {
 						if ( !data.query.pages.hasOwnProperty( '-1' ) ) {
-							$status.html( 'The talk page for "' + linkToPage + '" exists.' );
+							$status.html( 'หน้าพูดคุย "' + linkToPage + '" มีอยู่แล้ว' );
 						}
 					} );
 
@@ -1719,8 +1721,8 @@
 
 						// If the page already exists, display an error
 						if ( !data.query.pages.hasOwnProperty( '-1' ) ) {
-							errorHtml = 'Whoops, the page "' + linkToPage + '" already exists.';
-							buttonText = 'The proposed title already exists';
+							errorHtml = 'ว้า ดูเหมือนว่าบทความ "' + linkToPage + '" จะมีอยู่แล้ว';
+							buttonText = 'ชื่อบทความที่เสนอมามีอยู่แล้ว';
 						} else {
 							// If the page doesn't exist but IS create-protected and the
 							// current reviewer is not an admin, also display an error
@@ -1728,8 +1730,8 @@
 							$.each( data.query.pages[ '-1' ].protection, function ( _, entry ) {
 								if ( entry.type === 'create' && entry.level === 'sysop' &&
 									$.inArray( 'sysop', mw.config.get( 'wgUserGroups' ) ) === -1 ) {
-									errorHtml = 'Darn it, "' + linkToPage + '" is create-protected. You will need to request unprotection before accepting.';
-									buttonText = 'The proposed title is create-protected';
+									errorHtml = 'แย่แล้ว บทความ "' + linkToPage + '" ถูกล็อกสร้าง คุณจำเป็นต้องส่งคำขอยกเลิกการป้องกันสร้างหน้า';
+									buttonText = 'ชื่อหน้าที่เสนอมาถูกล็อกสร้าง';
 								}
 							} );
 						}
@@ -1738,8 +1740,8 @@
 						// don't bother showing this one too
 						blacklistResult = blacklistResult.titleblacklist;
 						if ( !errorHtml && blacklistResult.result === 'blacklisted' ) {
-							errorHtml = 'Shoot! ' + blacklistResult.reason.replace( /\s+/g, ' ' );
-							buttonText = 'The proposed title is blacklisted';
+							errorHtml = '?!!??! ' + blacklistResult.reason.replace( /\s+/g, ' ' );
+							buttonText = 'ชื่อบทความที่เสนอมาตรงกับบัญชีดำห้ามสร้าง';
 						}
 
 						if ( !errorHtml ) {
@@ -1811,7 +1813,7 @@
 
 				$reasons = $afch.find( '#declineReason' );
 				$commonSection = $( '<optgroup>' )
-					.attr( 'label', 'Frequently used' )
+					.attr( 'label', 'ใช้บ่อย' )
 					.insertBefore( $reasons.find( 'optgroup' ).first() );
 
 				// Show the 5 most used options
@@ -1823,8 +1825,8 @@
 
 			// Set up jquery.chosen for the decline reason
 			$afch.find( '#declineReason' ).chosen( {
-				placeholder_text_single: 'Select a decline reason...',
-				no_results_text: 'Whoops, no reasons matched your search. Type "custom" to add a custom rationale instead.',
+				placeholder_text_single: 'เลือกเหตุผลที่ตีกลับที่นี่...',
+				no_results_text: 'ไม่พบเหตุผลที่ตรงกับที่คุณค้นหา พิมพ์ "custom" เพื่อระบุเหตุผลด้วยตัวเอง',
 				search_contains: true,
 				inherit_select_classes: true,
 				max_selected_options: 2
@@ -1832,7 +1834,7 @@
 
 			// Set up jquery.chosen for the reject reason
 			$afch.find( '#rejectReason' ).chosen( {
-				placeholder_text_single: 'Select a reject reason...',
+				placeholder_text_single: 'กรุณาเลือกเหตุผลที่ปัดตก...',
 				search_contains: true,
 				inherit_select_classes: true,
 				max_selected_options: 2
@@ -1860,17 +1862,17 @@
 									$( this ).removeClass( 'bad-input' );
 									submitButton
 										.removeClass( 'disabled' )
-										.text( 'Decline submission' );
+										.text( 'ตีกลับฉบับร่าง' );
 								} else {
 									$( this ).addClass( 'bad-input' );
 									submitButton
 										.addClass( 'disabled' )
-										.text( 'Please enter between one and three URLs!' );
+										.text( 'กรุณาใส่หนึ่งถึงสามลิงก์' );
 								}
 							} );
 
 							// Check if there's an OTRS notice
-							new AFCH.Page( 'Draft talk:' + afchSubmission.shortTitle ).getText( /* usecache */ false ).done( function ( text ) {
+							new AFCH.Page( 'คุยเรื่องฉบับร่าง:' + afchSubmission.shortTitle ).getText( /* usecache */ false ).done( function ( text ) {
 								if ( /ConfirmationOTRS/.test( text ) ) {
 									$afch.find( '#declineInputWrapper' ).append(
 										$( '<div>' )
@@ -1885,29 +1887,29 @@
 						},
 
 						dup: function ( pos ) {
-							updateTextfield( 'Title of duplicate submission (no namespace)', 'Articles for creation/Fudge', candidateDupeName, pos );
+							updateTextfield( 'ชื่อของฉบับร่าวที่ซ้ำ (ไม่ต้องใส่เนมสเปซ)', 'Articles for creation/Fudge', candidateDupeName, pos );
 						},
 
 						mergeto: function ( pos ) {
-							updateTextfield( 'Article which submission should be merged into', 'Milkshake', candidateDupeName, pos );
+							updateTextfield( 'ชื่อบทความที่ฉบับร่างนี้ควรรวมเข้าไป', 'ชีสเบอร์เกอร์', candidateDupeName, pos );
 						},
 
 						lang: function ( pos ) {
-							updateTextfield( 'Language of the submission if known', 'German', '', pos );
+							updateTextfield( 'ชื่อภาษาที่ฉบับร่างนี้ใช้ถ้าทราบ', 'เยอรมัน', '', pos );
 						},
 
 						exists: function ( pos ) {
-							updateTextfield( 'Title of existing article', 'Chocolate chip cookie', candidateDupeName, pos );
+							updateTextfield( 'ชื่อของบทความที่มีอยู่แล้ว', 'ผัดไทย', candidateDupeName, pos );
 						},
 
 						plot: function ( pos ) {
-							updateTextfield( 'Title of existing related article, if one exists', 'Charlie and the Chocolate Factory', candidateDupeName, pos );
+							updateTextfield( 'ชื่อของบทความที่เกี่ยวข้อง ถ้ามี', 'ชาร์ลี กับ โรงงานช็อกโกแลต', candidateDupeName, pos );
 						},
 
 						// Custom decline rationale
 						reason: function () {
 							$afch.find( '#declineTextarea' )
-								.attr( 'placeholder', 'Enter your decline reason here using wikicode syntax.' );
+								.attr( 'placeholder', 'ใส่เหตุผลที่ตีกลับของคุณที่นี่โดยใช้โค้ดวิกิ' );
 						}
 					};
 
@@ -2053,7 +2055,7 @@
 					// Check if the user string starts with "User:", because Template:AFC submission dies horribly if it does
 					if ( submitter.lastIndexOf( 'ผู้ใช้:', 0 ) === 0 ) {
 						field.addClass( 'bad-input' );
-						status.text( 'ลบ "ผู้ใช้:" จากข้อความเริ่มต้น' );
+						status.text( 'ลบ "ผู้ใช้:" ออกจากข้อความเริ่มต้น' );
 						submitButton
 							.addClass( 'disabled' )
 							.text( 'ชื่อผู้ใช้ไม่ถูกต้อง' );
@@ -2093,7 +2095,7 @@
 		var newText = data.afchText;
 
 		AFCH.actions.movePage( afchPage.rawTitle, data.newTitle,
-			'กำลังเผยแพร่ฉบับร่าง [[Wikipedia:Articles for creation|Articles for creation]] ที่ได้รับการยอมรับแล้ว',
+			'กำลังเผยแพร่ฉบับร่าง [[Wikipedia:Articles for creation|AfC]] ที่ได้รับการยอมรับแล้ว',
 			{ movetalk: true } ) // Also move associated talk page if exists (e.g. `Draft_talk:`)
 			.done( function ( moveData ) {
 				var $patrolLink,
@@ -2132,7 +2134,7 @@
 
 				newPage.edit( {
 					contents: newText,
-					summary: 'เก็บกวาดฉบับร่าง [[Wikipedia:Articles for creation|Articles for creation]] ที่ได้รับการยอมรับ'
+					summary: 'เก็บกวาดฉบับร่าง [[Wikipedia:Articles for creation|AfC]] ที่ได้รับการยอมรับ'
 				} );
 
 				// Patrol the new page if desired
@@ -2331,7 +2333,7 @@
 					urlParam += '|url3=' + cvUrls[ 2 ];
 				}
 			}
-			text.prepend( '{{db-g12|url=' + urlParam + ( afchPage.additionalData.revId ? '|oldid=' + afchPage.additionalData.revId : '' ) + '}}\n' );
+			text.prepend( '{{copyvios|url=' + urlParam + ( afchPage.additionalData.revId ? '|oldid=' + afchPage.additionalData.revId : '' ) + '}}\n' );
 
 			// Include the URLs in the decline template
 			if ( declineReason === 'cv' ) {
@@ -2352,7 +2354,7 @@
 		text.cleanUp();
 
 		// Build edit summary
-		var editSummary = ( isDecline ? 'Declining' : 'Rejecting' ) + ' submission: ',
+		var editSummary = ( isDecline ? 'ตีกลับ' : 'ปัดตก' ) + 'ฉบับร่าง: ',
 			lengthLimit = declineReason2 ? 120 : 180;
 		if ( declineReason === 'reason' ) {
 
@@ -2391,6 +2393,7 @@
 
 				// Check categories on the page to ensure that if the user has already been
 				// invited to the Teahouse, we don't invite them again.
+				// TODO thwiki did not have teahouse, this is not implemented yet
 				if ( data.inviteToTeahouse ) {
 					userTalk.getCategories( /* useApi */ true ).done( function ( categories ) {
 						var hasTeahouseCat = false,
@@ -2443,7 +2446,7 @@
 
 					AFCH.actions.notifyUser( submitter, {
 						message: message,
-						summary: 'Notification: Your [[' + AFCH.consts.pagename + '|Articles for Creation submission]] has been ' + isDecline ? 'declined' : 'rejected'
+						summary: 'แจ้งเตือน: [[' + AFCH.consts.pagename + '|ฉบับร่าง AfC ที่คุณสร้างไว้]] ได้ถูก' + isDecline ? 'ตีกลับ' : 'ปัดตก' + 'แล้ว'
 					} );
 				} );
 			} );
@@ -2521,7 +2524,7 @@
 	}
 
 	function handleCleanup() {
-		prepareForProcessing( 'Cleaning' );
+		prepareForProcessing( 'เก็บกวาด' );
 
 		afchPage.getText( false ).done( function ( rawText ) {
 			var text = new AFCH.Text( rawText );
@@ -2652,7 +2655,7 @@
 
 		afchPage.edit( {
 			contents: text.get(),
-			summary: 'Postponing [[WP:ท10|ท10]] speedy deletion'
+			summary: 'เลื่อนกระบวนการลบตาม [[WP:ท10|ท10]]'
 		} );
 	}
 
