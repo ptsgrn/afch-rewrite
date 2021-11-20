@@ -52,7 +52,7 @@ else:
 # Shortname of the wiki target
 wiki = sys.argv[1]
 
-if wiki not in ('en', 'test'):
+if wiki not in ('th', 'test'):
 	print('Error: unrecognized wiki "{}". Must be "en" or "test".'.format(wiki))
 	sys.exit(1)
 
@@ -93,8 +93,8 @@ def stripFirstLine(text):
 	return '\n'.join(text.splitlines()[1:])
 
 if using_mwclient:
-	if wiki == 'en':
-		server_name = 'en.wikipedia.org'
+	if wiki == 'th':
+		server_name = 'th.wikipedia.org'
 	else:
 		server_name = 'test.wikipedia.org'
 	site = mwclient.Site(server_name)
@@ -134,7 +134,7 @@ except AttributeError:
 	sha1 = branch.commit.id
 
 # Prepend this to every page
-header = '/* Uploaded from https://github.com/WPAFC/afch-rewrite, commit: {} ({}) */\n'.format(sha1, branch)
+header = '/* Uploaded from https://github.com/ptsgrn/afch-rewrite, commit: {} ({}) */\n'.format(sha1, branch)
 
 isMainGadget = (wiki == 'en') and (root == 'MediaWiki:Gadget-afchelper')
 

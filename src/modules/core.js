@@ -63,7 +63,7 @@
 
 			// Must be defined above the larger $.extend block
 			// because AFCH.consts.summaryAd depends on it
-			AFCH.consts.version = '0.9.3-alpha';
+			AFCH.consts.version = '0.9.3-beta';
 
 			// Add more constants -- don't overwrite those already set, though
 			AFCH.consts = $.extend( AFCH.consts, {
