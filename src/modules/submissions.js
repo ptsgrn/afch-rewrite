@@ -305,10 +305,10 @@
 			output.push( tout );
 		} );
 
-		// Then comment templates
-		$.each( this.comments, function ( _, comment ) {
-			output.push( '\n{{AfC comment|1=' + comment.text + '}}' );
-		} );
+		// // Then comment templates
+		// $.each( this.comments, function ( _, comment ) {
+		// 	output.push( '\n{{AfC comment|1=' + comment.text + '}}' );
+		// } );
 
 		// If there were comments, add a horizontal rule beneath them
 		if ( this.comments.length ) {
@@ -630,10 +630,10 @@
 		// working on a patch for that, actually).
 		this.text = this.text.replace( new RegExp( '\\{\\{\\s*afc submission\\s*(?:\\||[^{{}}]*|{{.*?}})*?\\}\\}' +
 			// Also remove the AFCH-generated warning message, since if necessary the script will add it again
-			'( <!-- Do not remove this line! -->)?', 'gi' ), '' );
+			'( <!-- กรุณาอย่าลบบรรทัดนี้! -->)?', 'gi' ), '' );
 
 		// Nastiest hack of all time. As above, Parsoid would be great. Gotta wire it up asynchronously first, though.
-		this.text = this.text.replace( /\{\{\s*afc comment[\s\S]+?\(UTC\)\}\}/gi, '' );
+		this.text = this.text.replace( /\{\{\s*afc comment[\s\S]+?\(\+07\)\}\}/gi, '' );
 
 		// Remove horizontal rules that were added by AFCH after the comments
 		this.text = this.text.replace( /^----+$/gm, '' );
@@ -1235,7 +1235,7 @@
 				);
 
 			// Show a link to the next random submissions
-			new AFCH.status.Element( 'ดูฉบับร่างต่อโดยไปที่ $1, $2, or $3 &raquo;', {
+			new AFCH.status.Element( 'ดูฉบับร่างต่อโดยไปที่ $1, $2, หรือ $3 &raquo;', {
 				$1: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจ', 'สุ่มฉบับร่าง' ),
 				$2: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจเรียงตามอายุ/0 วันก่อน', 'ฉบับร่างอายุ 0 วัน' ),
 				$3: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจเรียงตามอายุ/เก่ามาก', 'ฉบับร่างที่เก่ามาก' )
@@ -1680,7 +1680,7 @@
 					$status.text( '' );
 					$submitButton
 						.removeClass( 'disabled' )
-						.text( 'ยอมรับและเผยแพร่' );
+						.text( 'ให้ผ่านและเผยแพร่' );
 
 					// If there is no value, die now, because otherwise mw.Title
 					// will throw an exception due to an invalid title
