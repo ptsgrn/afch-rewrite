@@ -697,7 +697,7 @@
 	};
 
 	// Add the launch link
-	$afchLaunchLink = $( mw.util.addPortletLink( AFCH.prefs.launchLinkPosition, '#', 'ทบทวน (AFCH beta)',
+	$afchLaunchLink = $( mw.util.addPortletLink( AFCH.prefs.launchLinkPosition, '#', 'ตรวจ (AFCH beta)',
 		'afch-launch', 'ทบทวนฉบับร่างโดยใช้ afch-rewrite', '1' ) );
 
 	if ( AFCH.prefs.autoOpen &&
@@ -938,7 +938,7 @@
 					refEndRe = /<\/\s*ref\s*\>/ig,
 					refEndMatches = text.match( refEndRe ) || [],
 
-					reflistRe = /({{(ref(erence)?(\s|-)?list|listaref|refs|footnote|reference|referencias)(?:{{[^{}]*}}|[^}{])*}})|(<\s*references\s*\/?>)/ig,
+					reflistRe = /({{(ref(erence)?(\s|-)?list|listaref|refs|footnote|reference|referencias|รายการอ้างอิง)(?:{{[^{}]*}}|[^}{])*}})|(<\s*references\s*\/?>)/ig,
 					hasReflist = reflistRe.test( text ),
 
 					// This isn't as good as a tokenizer, and believes that <ref> foo </b> is
@@ -948,7 +948,7 @@
 				// Uneven (/unclosed) <ref> and </ref> tags
 				if ( refBeginMatches.length !== refEndMatches.length ) {
 					addWarning( 'ฉบับร่างนี้มี <ref>' +
-						( refBeginMatches.length > refEndMatches.length ? 'ที่ไม่ได้ปิด' : 'ที่ไม่สมดุลunbalanced' ) );
+						( refBeginMatches.length > refEndMatches.length ? 'ที่ไม่ได้ปิด' : 'ที่ไม่สมดุล' ) );
 				}
 
 				// <ref>1<ref> instead of <ref>1</ref> detection
@@ -978,13 +978,13 @@
 				// <ref> after {{reflist}}
 				if ( hasReflist ) {
 					if ( refBeginRe.test( text.substring( reflistRe.lastIndex ) ) ) {
-						addWarning( 'Not all of the <ref> tags are before the references list. You may not see all references.' );
+						addWarning( 'มีการใช้แท็ก <ref> ที่ไม่ได้อยู่ก่อนรายการอ้างอิง คุณอาจไม่เห็นรายการอ้างอิงทั้งหมด' );
 					}
 				}
 
 				// <ref> without {{reflist}}
 				if ( refBeginMatches.length && !hasReflist ) {
-					addWarning( 'The submission contains <ref> tags, but has no references list! You may not see all references.' );
+					addWarning( 'ฉบับร่างมีการใช้แท็ก <ref> แต่ไม่มีการใช้รายการอ้างอิง คุณอาจไม่เห็นรายการอ้างอิงทั้งหมด' );
 				}
 
 				deferred.resolve();
@@ -998,7 +998,7 @@
 
 			// Don't show deletion notices for "sandbox" to avoid useless
 			// information when reviewing user sandboxes and the like
-			if ( afchSubmission.shortTitle.toLowerCase() === 'sandbox' ) {
+			if ( [ 'sandbox', 'ทดลองเขียน', 'กระบะทราย' ].afchSubmission.shortTitle.toLowerCase() === -1 ) {
 				deferred.resolve();
 				return deferred;
 			}
@@ -1019,8 +1019,8 @@
 					return;
 				}
 
-				addWarning( 'The page "' + afchSubmission.shortTitle + '" has been deleted ' + rawDeletions.length + ( rawDeletions.length === 10 ? '+' : '' ) +
-					' time' + ( rawDeletions.length > 1 ? 's' : '' ) + '.', 'View deletion log', function () {
+				addWarning( 'หน้า "' + afchSubmission.shortTitle + '" ได้ถูกลบ ' + ( rawDeletions.length === 10 ? 'มากกว่า' : '' ) + rawDeletions.length +
+					' ครั้ง' + ( rawDeletions.length > 1 ? 's' : '' ), 'ดูปูมการลบ', function () {
 					var $toggleLink = $( this ).addClass( 'deletion-log-toggle' ),
 						$warningDiv = $toggleLink.parent(),
 						deletions = [];
@@ -1030,7 +1030,7 @@
 							timestamp: deletion.timestamp,
 							relativeTimestamp: AFCH.relativeTimeSince( deletion.timestamp ),
 							deletor: deletion.user,
-							deletorLink: mw.util.getUrl( 'User:' + deletion.user ),
+							deletorLink: mw.util.getUrl( 'ผู้ใช้:' + deletion.user ),
 							reason: AFCH.convertWikilinksToHTML( deletion.comment )
 						} );
 					} );
@@ -1040,7 +1040,7 @@
 						.appendTo( $warningDiv );
 
 					// ...and now convert the link into a toggle which simply hides/shows the div
-					AFCH.makeToggle( '.deletion-log-toggle', '.deletion-log', 'View deletion log', 'Hide deletion log' );
+					AFCH.makeToggle( '.deletion-log-toggle', '.deletion-log', 'ดูปูมการลบ', 'ซ่อนปูมการลบ' );
 
 					return false;
 				} );
@@ -1059,15 +1059,15 @@
 				isOwnReview = afchSubmission.params.reviewer === AFCH.consts.user;
 
 				if ( isOwnReview ) {
-					reviewer = 'You';
+					reviewer = 'คุณ';
 				} else {
-					reviewer = afchSubmission.params.reviewer || 'Someone';
+					reviewer = afchSubmission.params.reviewer || 'ใครบางคน';
 				}
 
 				addWarning( reviewer + ( afchSubmission.params.reviewts ?
-					' began reviewing this submission ' + AFCH.relativeTimeSince( afchSubmission.params.reviewts ) :
-					' already began reviewing this submission' ) + '.',
-				isOwnReview ? 'Unmark as under review' : 'View page history',
+					'ได้เริ่มทำการตรวจฉบับร่างนี้แล้วเมื่อ ' + AFCH.relativeTimeSince( afchSubmission.params.reviewts ) :
+					'ได้ตรวจฉบับร่างนี้ไปแล้ว' ),
+				isOwnReview ? 'เลิกทำเครื่องหมายว่ากำลังตรวจ' : 'ดูประวัติหน้า',
 				isOwnReview ? function () {
 					handleMark( /* unmark */ true );
 				} : mw.util.getUrl( AFCH.consts.pagename, { action: 'history' } ) );
@@ -1084,12 +1084,11 @@
 					text = ( new AFCH.Text( rawText ) ).cleanUp( true ),
 					longCommentRegex = /(?:<![ \r\n\t]*--)([^\-]|[\r\n]|-[^\-]){30,}(?:--[ \r\n\t]*>)?/g,
 					longCommentMatches = text.match( longCommentRegex ) || [],
-					numberOfComments = longCommentMatches.length,
-					oneComment = numberOfComments === 1;
+					numberOfComments = longCommentMatches.length;
 
 				if ( numberOfComments ) {
-					addWarning( 'The page contains ' + ( oneComment ? 'an' : '' ) + ' HTML comment' + ( oneComment ? '' : 's' ) +
-						' longer than 30 characters.', 'View comment' + ( oneComment ? '' : 's' ), function () {
+					addWarning( 'หน้านี้มีคอมเมนต์ HTML ' +
+						' ที่ยาวกว่า 30 ตัวอักษร', 'ดูคอมเมนต์', function () {
 						var $toggleLink = $( this ).addClass( 'long-comment-toggle' ),
 							$warningDiv = $( this ).parent(),
 							$commentsWrapper = $( '<div>' )
@@ -1106,7 +1105,7 @@
 
 						// Now change the "View comment" link to behave as a normal toggle for .long-comments
 						AFCH.makeToggle( '.long-comment-toggle', '.long-comments',
-							'View comment' + ( oneComment ? '' : 's' ), 'Hide comment' + ( oneComment ? '' : 's' ) );
+							'ดูคอมเมนต์', 'ซ่อนคอมเมนต์' );
 
 						return false;
 					} );
@@ -1163,7 +1162,7 @@
 				'[[$1|$2]] ({{subst:CURRENTMONTHNAME}} {{subst:CURRENTDAY}}) ==\n{{subst:Afc reject|full=$1|reason=$3|details=$4|reason2=$5|details2=$6|comment=$7|sig=yes}}',
 
 			// $1 = article name
-			'comment-on-submission': '{{subst:AFC notification|comment|article=$1}}',
+			'comment-on-submission': '{{subst:afc notification|comment|article=$1}}',
 
 			// $1 = article name
 			'g13-submission': '{{subst:Db-afc-notice|$1}} ~~' + '~~',
@@ -1190,7 +1189,7 @@
 		// a new temporary "processing" stage instead
 		if ( !( $submitBtn.length || $content.length ) ) {
 			loadView( 'quick-action-processing', {
-				actionTitle: actionTitle || 'Processing',
+				actionTitle: actionTitle || 'กำลังดำเนินการ',
 				actionClass: actionClass || 'other-action'
 			} );
 
@@ -1225,14 +1224,14 @@
 	function setupAjaxStopHandler() {
 		$( document ).ajaxStop( function () {
 			$afch.find( '#afchSubmitForm' )
-				.text( 'Done' )
+				.text( 'สำเร็จ' )
 				.append(
 					' ',
 					$( '<a>' )
 						.attr( 'id', 'reloadLink' )
 						.addClass( 'text-smaller' )
 						.attr( 'href', mw.util.getUrl() )
-						.text( '(reloading...)' )
+						.text( '(รีโหลด...)' )
 				);
 
 			// Show a link to the next random submissions
@@ -1244,7 +1243,7 @@
 
 			// Also, automagically reload the page in place
 			$( '#mw-content-text' ).load( AFCH.consts.pagelink + ' #mw-content-text', function () {
-				$afch.find( '#reloadLink' ).text( '(รีโหลดแล้วโดยอัตโนมัติ)' );
+				$afch.find( '#reloadLink' ).text( '(รีโหลด)' );
 				// Fire the hook for new page content
 				mw.hook( 'wikipage.content' ).fire( $( '#mw-content-text' ) );
 			} );
@@ -1416,6 +1415,7 @@
 			for ( var tplIdx = 0; tplIdx < templateNames.length; tplIdx++ ) {
 				if ( wikiProjectMap.hasOwnProperty( templateNames[ tplIdx ] ) ) {
 					wikiProjectMap[ templateNames[ tplIdx ] ].alreadyOnPage = true;
+					// TODO: add thwiki equalment wikiProjrct here
 				} else if ( templateNames[ tplIdx ] === 'wikiproject biography' ) {
 					alreadyHasWPBio = true;
 				} else {
@@ -1494,7 +1494,7 @@
 					allow_single_deselect: true,
 					disable_search: true,
 					width: '140px',
-					placeholder_text_single: 'กดเพื่อเลือกClick to select'
+					placeholder_text_single: 'กดเพื่อเลือก'
 				} );
 
 				// If draft is assessed as stub, show stub sorting
@@ -1692,7 +1692,7 @@
 
 					AFCH.api.get( {
 						action: 'query',
-						titles: 'Talk:' + page.rawTitle
+						titles: 'พูดคุย:' + page.rawTitle
 					} ).done( function ( data ) {
 						if ( !data.query.pages.hasOwnProperty( '-1' ) ) {
 							$status.html( 'หน้าพูดคุย "' + linkToPage + '" มีอยู่แล้ว' );

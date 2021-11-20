@@ -38,8 +38,8 @@
 	$.getScript( AFCH.consts.baseurl + '/core.js' ).done( function () {
 		var loaded = AFCH.load( 'submissions' ); // perhaps eventually there will be more modules besides just 'submissions'
 		if ( !loaded ) {
-			mw.notify( 'AFCH could not be loaded: ' + ( AFCH.error || 'unknown error' ),
-				{ title: 'AFCH error' } );
+			mw.notify( 'ไม่สามารถโหลด AFCH ได้: ' + ( AFCH.error || 'ข้อผิดพลาดที่ไม่รู้จัก' ),
+				{ title: 'ข้อผิดพลาด AFCH' } );
 		}
 	} );
 }() );

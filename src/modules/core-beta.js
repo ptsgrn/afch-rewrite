@@ -159,7 +159,7 @@
 					// Finally, make and push the notification, then explode AFCH
 					mw.notify(
 						$( '<div>' )
-							.append( 'AFCH ไม่สามารถโหลดได เนื่องจาก "' + user + '" ไม่ได้อยู่ในรายการที่ ' )
+							.append( 'AFCH ไม่สามารถโหลดได้ เนื่องจาก "' + user + '" ไม่ได้อยู่ในรายการที่ ' )
 							.append( AFCH.makeLinkElementToPage( whitelist.rawTitle ) )
 							.append( ' โปรดส่งคำขอก่อนเพื่อใช้งาน ' )
 							.append( $howToDisable )
