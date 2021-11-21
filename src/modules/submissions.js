@@ -305,10 +305,10 @@
 			output.push( tout );
 		} );
 
-		// // Then comment templates
-		// $.each( this.comments, function ( _, comment ) {
-		// 	output.push( '\n{{AfC comment|1=' + comment.text + '}}' );
-		// } );
+		// Then comment templates
+		$.each( this.comments, function ( _, comment ) {
+		  output.push( '\n{{AfC comment|1=' + comment.text + '}}' );
+		} );
 
 		// If there were comments, add a horizontal rule beneath them
 		if ( this.comments.length ) {
