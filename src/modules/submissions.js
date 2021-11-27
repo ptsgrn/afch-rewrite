@@ -1328,6 +1328,7 @@
 	 */
 	function loadView( name, data, callback ) {
 		// Show the back button if we're not loading the main view
+		$afch.find( '.back-link' ).css( 'color', name === 'comment' ? 'black' : 'white' );
 		$afch.find( '.back-link' ).toggleClass( 'hidden', name === 'main' );
 		afchViewer.loadView( name, data );
 		if ( callback ) {
