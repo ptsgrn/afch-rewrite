@@ -70,6 +70,7 @@ https.createServer(options, function (req, res) {
 	content = content.replace(
 		"AFCH.consts.scriptpath = mw.config.get( 'wgServer' ) + mw.config.get( 'wgScript' );",
 		`AFCH.consts.scriptpath = 'https://localhost:${port}';`
-	);
+	)
+		.replace("AFCH beta", "AFCH DEV");
 	res.end(content);
 }).listen(port);
