@@ -1,70 +1,86 @@
+/* eslint-env node, es2021 */
+/* eslint-disable */
+
 // Serves the script from localhost for development purposes.
+// Note that we serve the un-built JS files from src/ instead of the built JS
+// files from build/. This avoids having to run the build process every time.
+// The build process does almost nothing for JS (as it just concatenates the
+// hogan file).
 
-const https = require('https');
+const child_process = require('child_process');
 const fs = require('fs');
+const http = require('http');
+const process = require('process');
 
-const argv = require('minimist')(process.argv);
+const HOGAN_FILE = 'node_modules/hogan.js/build/gh-pages/builds/2.0.0/hogan-2.0.0.js';
 
-// find the certs
-const DEFAULT_CERT_FILE = 'certificates/localhost.crt';
-if (!argv.cert && !fs.existsSync(DEFAULT_CERT_FILE)) {
-	console.error(`Error! Certificate file not found at ${DEFAULT_CERT_FILE}. You probably should run "npm run generate-certificates" (no quotes).`);
-	process.exit(0);
+if(!fs.existsSync(HOGAN_FILE)) {
+	console.log('No file found at ' + HOGAN_FILE + ' - downloading it with "npm install"...');
+	child_process.execSync('npm install', { stdio: 'inherit' });
 }
 
-const keyFile = argv.key || 'certificates/localhost.key';
-const certFile = argv.cert || 'certificates/localhost.crt';
-
-const options = {
-	key: fs.readFileSync(keyFile),
-	cert: fs.readFileSync(certFile)
-};
-
-// check that the main file exists
-if (!fs.existsSync("build/afch.js")) {
-	console.error("Error! Could not find the file build/afch.js. You probably should run \"grunt build\" (no quotes).");
-	process.exit(0);
+if(!fs.existsSync('build/afch.css')) {
+	console.log('No file found at build/afch.css; building it with "grunt build"...');
+	try {
+		child_process.execSync('grunt build', { stdio: 'inherit' });
+	} catch (e) {
+		console.error('The grunt build failed. Check the output, fix any errors, and try again.');
+		process.exit(1);
+	}
 }
 
-const port = process.env.PORT || argv.port || 4444;
-console.log(`Serving AFCH at https://localhost:${port} (Ctrl+C to stop). To install: go to https://test.wikipedia.org/w/index.php?title=Special:MyPage/common.js&action=edit (logging in if you get an error) and add this on a new line if it's not there yet:
+const port = process.env.PORT || 4444;
+console.log(`Serving AFCH on port ${port} (Ctrl+C to stop). Now browse to https://test.wikipedia.org/wiki/Main_Page?withJS=MediaWiki:Setup-afch-dev.js - make sure to log in if you aren't logged in. There should be a box with a link to your personal test draft.
 
-  mw.loader.load('https://localhost:${port}?ctype=text/javascript&title=afch-dev.js', 'text/javascript' );
+Let us know if you see any errors: https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Articles_for_creation/Helper_script/Contributing#Need_help?
 
-Reminder: you MUST run "grunt build" (no quotes) after you change the code to update the script.`);
+Reminder: each time you change the style (.less files), you must run "grunt build" (no quotes) again.`);
 
-https.createServer(options, function (req, res) {
+function readFile(path) {
+	return fs.readFileSync(path, { encoding: 'utf-8' });
+}
+
+http.createServer({}, async function (req, res) {
 	const reqUrl = new URL(req.url, `http://${req.headers.host}`);
 	if((!reqUrl.searchParams.has("ctype")) || (!reqUrl.searchParams.has("title"))) {
-		res.writeHead(400);
-		res.end("Parameters 'ctype' and/or 'title' not present. If you navigated to this page using your browser, the server is working correctly! Try visiting a draft page (see <a href='https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Articles_for_creation/Helper_script/Contributing/Developer_setup'>the instructions</a>).");
-		return;
+		reqUrl.searchParams.set('ctype', 'text/javascript');
+		reqUrl.searchParams.set('title', 'afch-dev.js');
 	}
 	res.writeHead(200, {
 		"Content-Type": reqUrl.searchParams.get("ctype"),
 		"Access-Control-Allow-Origin": "*",
 	});
 	var reqTitle = reqUrl.searchParams.get("title");
-	var filename = null;
 
 	// This is the reverse of what happens to filenames in scripts/upload.py
+	var content = '';
 	if(reqTitle.endsWith("core.js")) {
-		filename = "build/modules/core.js";
+		content += readFile(HOGAN_FILE) + ';';
+		content += readFile("src/modules/core.js");
+		// enable mockItUp by default for testing
+		content = content.replace(
+			'mockItUp: AFCH.consts.mockItUp || false,',
+			'mockItUp: AFCH.consts.mockItUp || true,'
+		);
 	} else if(reqTitle.endsWith("submissions.js")) {
 		if(reqTitle.endsWith("tpl-submissions.js")) {
-			filename = "build/templates/tpl-submissions.html";
+			content += readFile("src/templates/tpl-submissions.html");
 		} else {
-			filename = "build/modules/submissions.js";
+			content += readFile("src/modules/submissions.js");
 		}
 	} else if(reqTitle.endsWith("tpl-preferences.js")) {
-		filename = "build/templates/tpl-preferences.html";
+		content += readFile("src/templates/tpl-preferences.html");
 	} else if(reqTitle.endsWith(".css")) {
-		filename = "build/afch.css";
+		content += readFile("build/afch.css");
 	} else if(reqTitle.endsWith(".js")) {
 		// Assume all other JS files are the root. This probably isn't ideal.
-		filename = "build/afch.js";
+		content += readFile("src/afch.js");
+		content = content.replace(
+			"AFCH.consts.scriptpath = mw.config.get( 'wgServer' ) + mw.config.get( 'wgScript' );",
+			`AFCH.consts.scriptpath = 'http://localhost:${port}';`
+		);
 	} else {
-		console.error(`bad filename ${filename}`);
+		console.error(`bad filename: ${reqTitle}`);
 	}
 	var content = fs.readFileSync(filename, { encoding: "utf-8" });
 	content = content.replace(
