@@ -84,6 +84,11 @@
 			</select>
 		</div>
 
+		<div id="shortDescriptionWrapper">
+			<label for="shortDescription" class="afch-label">คำอธิบายย่อของบทความ</label>
+			<input type="text" id="shortDescription" class="afch-input afch-textfield" placeholder="British astronomer" value="{{shortDescription}}">
+		</div>
+
 		<div id="stubSorterWrapper" class="hidden">
 			<label class="afch-label" for="stub-sorter-select">เพิ่มแม่แบบโครง</label>
 			<div id="stubSorterContainer"></div>
@@ -290,6 +295,8 @@
 				placeholder="ใส่เหตุผลที่ปัดตกที่นี่ ใช้โค้ดวิกิได้"
 				cols="100" rows="5"></textarea>
 
+			<div id="declineInputPreview"></div>
+
 			<div id="csdWrapper" class="afch-option hidden">
 				<input type="checkbox" id="csdSubmission" class="afch-input"/>
 				<label for="csdSubmission" class="afch-label">แจ้งลบทันที</label>
@@ -300,6 +307,8 @@
 			<textarea id="rejectTextarea" class="afch-input afch-textfield afch-textarea hidden"
 				placeholder="ขยายความสาเหตุการปัดตกของคุณ ใช้โค้ดวิกิได้"
 				cols="100" rows="5"></textarea>
+
+			<div id="rejectInputPreview"></div>
 		</div>
 
 		<div id="notifyWrapper" class="hidden">
@@ -328,6 +337,8 @@
 		<textarea id="commentText" class="afch-input afch-textfield afch-textarea"
 			placeholder="ใส่ความเห็นของคุณเกี่ยวกับฉบับร่างที่นี่ ใช้โค้ดวิกิได้ ลายเซ็นของคุณจะถูกเพิ่มโดยอัตโนมัติ"
 			cols="100" rows="5"></textarea>
+
+		<div id="commentPreview"></div>
 
 	<div class="afch-option">
 		<input type="checkbox" id="notifyUser" class="afch-input" {{#notifyByDefault}}checked{{/notifyByDefault}} />
