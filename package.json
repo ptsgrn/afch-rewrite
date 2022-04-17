@@ -1,44 +1,44 @@
 {
-  "name": "afch-rewrite",
-  "version": "0.9.3-beta",
-  "description": "A tool for reviewing Articles for Creation submissions on the English Wikipedia.",
-  "homepage": "https://github.com/WPAFC/afch-rewrite",
-  "bugs": {
-    "url": "https://github.com/WPAFC/afch-rewrite/issues"
-  },
-  "license": "GPL-3.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/WPAFC/afch-rewrite/npm.git"
-  },
-  "scripts": {
-    "test": "grunt test",
-    "generate-certificates": "node scripts/generate-certificates.js",
-    "build": "grunt build",
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "hogan.js": "^3.0.2"
-  },
-  "devDependencies": {
-    "eslint": "^7.31.0",
-    "eslint-config-wikimedia": "^0.20.0",
-    "eslint-plugin-jsdoc": "^36.0.6",
-    "grunt": "^1.4.1",
-    "grunt-autoprefixer": "^3.0.4",
-    "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^4.0.0",
-    "grunt-contrib-less": "^3.0.0",
-    "grunt-eslint": "^23.0.0",
-    "grunt-exec": "^3.0.0",
-    "jest-cli": "^27.0.6",
-    "jquery": "^3.6.0",
-    "minimist": "^1.2.5"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "testMatch": [ "**/__tests__/**/test-*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)" ]
-  }
+	"name": "afch-rewrite",
+	"version": "0.9.3-beta",
+	"description": "A tool for reviewing Articles for Creation submissions on the English Wikipedia.",
+	"homepage": "https://github.com/WPAFC/afch-rewrite",
+	"bugs": {
+		"url": "https://github.com/WPAFC/afch-rewrite/issues"
+	},
+	"license": "GPL-3.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WPAFC/afch-rewrite/npm.git"
+	},
+	"scripts": {
+		"test": "grunt test",
+		"generate-certificates": "node scripts/generate-certificates.js",
+		"build": "grunt build",
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"hogan.js": "^3.0.2"
+	},
+	"devDependencies": {
+		"eslint": "^7.31.0",
+		"eslint-config-wikimedia": "^0.20.0",
+		"eslint-plugin-jsdoc": "^36.0.6",
+		"grunt": "^1.4.1",
+		"grunt-autoprefixer": "^3.0.4",
+		"grunt-contrib-clean": "^2.0.0",
+		"grunt-contrib-concat": "^1.0.1",
+		"grunt-contrib-copy": "^1.0.0",
+		"grunt-contrib-cssmin": "^4.0.0",
+		"grunt-contrib-less": "^3.0.0",
+		"grunt-eslint": "^23.0.0",
+		"grunt-exec": "^3.0.0",
+		"jest-cli": "^27.0.6",
+		"jquery": "^3.6.0",
+		"minimist": "^1.2.5"
+	},
+	"jest": {
+		"testEnvironment": "jsdom",
+		"testMatch": [ "**/__tests__/**/test-*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)" ]
+	}
 }
