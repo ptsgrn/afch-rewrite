@@ -1175,10 +1175,10 @@
 						var date = 'infinity';
 						if ( blockData.expiry !== 'infinity' ) {
 							var data = new Date( blockData.expiry );
-							var monthNames = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+							var monthNames = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 							date = data.getUTCDate() + ' ' + monthNames[ data.getUTCMonth() ] + ' ' + data.getUTCFullYear() + ' ' + data.getUTCHours() + ':' + data.getUTCMinutes() + ' UTC';
 						}
-						var warning = 'Submitter ' + creator + ' was blocked by ' + blockData.by + ' with an expiry time of ' + date + '. Reason: ' + blockData.reason;
+						var warning = 'ผู้ส่ง ' + creator + ' ได้ถูกบล็อกโดย ' + blockData.by + ' โดยมีเวลาหมดอายุถึง  ' + date + ' เนื่องจาก ' + blockData.reason;
 						addWarning( warning );
 					}
 				} );
@@ -1951,7 +1951,7 @@
 						},
 
 						dup: function ( pos ) {
-							updateTextfield( 'ชื่อของฉบับร่าวที่ซ้ำ (ไม่ต้องใส่เนมสเปซ)', 'Articles for creation/Fudge', candidateDupeName, pos );
+							updateTextfield('ชื่อของฉบับร่างที่ซ้ำ (ไม่ต้องใส่เนมสเปซ)', 'Articles for creation/Fudge', candidateDupeName, pos);
 						},
 
 						mergeto: function ( pos ) {
@@ -2220,7 +2220,7 @@
 				var $patrolLink,
 					newPage = new AFCH.Page( moveData.to ),
 					talkPage = newPage.getTalkPage(),
-					recentPage = new AFCH.Page( 'Wikipedia:Articles for creation/recent' );
+					recentPage = new AFCH.Page('วิกิพีเดีย:Articles for creation/ล่าสุด');
 
 				// ARTICLE
 				// -------
@@ -2239,6 +2239,7 @@
 
 					// {{subst:L}}, which generates DEFAULTSORT as well as
 					// adds the appropriate birth/death year categories
+					// thwiki already +543 for birth/death year
 					newText.append( '\n{{subst:Lifetime' +
 						'|1=' + data.birthYear +
 						'|2=' + ( data.deathYear || '' ) +
@@ -2248,6 +2249,7 @@
 				}
 
 				// Stub sorting
+				// thwiki: fine to leave it here, no need to comment out
 				newText = newText.get();
 				if ( typeof window.StubSorter_create_edit === 'function' ) {
 					newText = window.StubSorter_create_edit( newText, data[ 'stub-sorter-select' ] || [] ).text;
@@ -2255,7 +2257,7 @@
 
 				newPage.edit( {
 					contents: newText,
-					summary: 'เก็บกวาดฉบับร่าง [[Wikipedia:Articles for creation|AfC]] ที่ได้รับการยอมรับ'
+					summary: 'เก็บกวาดฉบับร่าง [[Wikipedia:Articles for creation|AfC]] ที่ได้รับการยอมรับแล้ว'
 				} );
 
 				// Patrol the new page if desired
@@ -2273,73 +2275,75 @@
 				// ---------
 
 				// not compatible with thwiki - yet
-				// talkPage.getText().done( function ( talkText ) {
-				// 	var talkTextPrefix = '';
+				talkPage.getText().done(function (talkText) {
+					var talkTextPrefix = '';
 
-				// 	// Add the AFC banner
-				// 	talkTextPrefix += '{{subst:WPAFC/article|class=' + data.newAssessment +
-				// 		( afchPage.additionalData.revId ? '|oldid=' + afchPage.additionalData.revId : '' ) + '}}';
+					// Add the AFC banner
+					talkTextPrefix += '{{subst:WPAFC/article|ระดับ=' + data.newAssessment +
+						(afchPage.additionalData.revId ? '|oldid=' + afchPage.additionalData.revId : '') + '}}';
 
-				// 	// Add biography banner if specified
-				// 	if ( data.isBiography ) {
-				// 		// Ensure we don't have duplicate biography tags
-				// 		AFCH.removeFromArray( data.newWikiProjects, 'WikiProject Biography' );
+					// Add biography banner if specified
+					// NOTE: thwiki did not have biography project yet
+					// if (data.isBiography) {
+					// 	// Ensure we don't have duplicate biography tags
+					// 	AFCH.removeFromArray(data.newWikiProjects, 'WikiProject Biography');
+					// 	talkTextPrefix += ('\n{{WikiProject Biography|living=' +
+					// 		(data.lifeStatus !== 'unknown' ? (data.lifeStatus === 'living' ? 'yes' : 'no') : '') +
+					// 		'|class=' + data.newAssessment + '|listas=' + data.subjectName + '}}');
+					// }
 
-				// 		talkTextPrefix += ( '\n{{WikiProject Biography|living=' +
-				// 			( data.lifeStatus !== 'unknown' ? ( data.lifeStatus === 'living' ? 'yes' : 'no' ) : '' ) +
-				// 			'|class=' + data.newAssessment + '|listas=' + data.subjectName + '}}' );
-				// 	}
+					// if (data.newAssessment === 'disambig' &&
+					// 	$.inArray('WikiProject Disambiguation', data.newWikiProjects) === -1) {
+					// 	data.newWikiProjects.push('WikiProject Disambiguation');
+					// }
 
-				// 	if ( data.newAssessment === 'disambig' &&
-				// 		$.inArray( 'WikiProject Disambiguation', data.newWikiProjects ) === -1 ) {
-				// 		data.newWikiProjects.push( 'WikiProject Disambiguation' );
-				// 	}
+					// Add and remove WikiProjects
+					var wikiProjectsToAdd = data.newWikiProjects.filter(function (newTemplateName) {
+						return !data.existingWikiProjects.some(function (existingTplObj) {
+							return existingTplObj.templateName === newTemplateName;
+						});
+					});
+					var wikiProjectsToRemove = data.existingWikiProjects.filter(function (existingTplObj) {
+						return !data.newWikiProjects.some(function (newTemplateName) {
+							return existingTplObj.templateName === newTemplateName;
+						});
+					}).map(function (templateObj) {
+						return templateObj.realTemplateName || templateObj.templateName;
+					});
 
-				// 	// Add and remove WikiProjects
-				// 	var wikiProjectsToAdd = data.newWikiProjects.filter( function ( newTemplateName ) {
-				// 		return !data.existingWikiProjects.some( function ( existingTplObj ) {
-				// 			return existingTplObj.templateName === newTemplateName;
-				// 		} );
-				// 	} );
-				// 	var wikiProjectsToRemove = data.existingWikiProjects.filter( function ( existingTplObj ) {
-				// 		return !data.newWikiProjects.some( function ( newTemplateName ) {
-				// 			return existingTplObj.templateName === newTemplateName;
-				// 		} );
-				// 	} ).map( function ( templateObj ) {
-				// 		return templateObj.realTemplateName || templateObj.templateName;
-				// 	} );
-				// 	if ( data.alreadyHasWPBio && !data.isBiography ) {
-				// 		wikiProjectsToRemove.push( data.existingWPBioTemplateName || 'wikiproject biography' );
-				// 	}
+					// NOTE: thwiki did not have biography project yet
+					// if (data.alreadyHasWPBio && !data.isBiography) {
+					// 	wikiProjectsToRemove.push(data.existingWPBioTemplateName || 'wikiproject biography');
+					// }
 
-				// 	$.each( wikiProjectsToAdd, function ( _index, templateName ) {
-				// 		talkTextPrefix += '\n{{' + templateName + '|class=' + data.newAssessment + '}}';
-				// 	} );
-				// 	$.each( wikiProjectsToRemove, function ( _index, templateName ) {
-				// 		// Regex from https://stackoverflow.com/a/5306111/1757964
-				// 		var sanitizedTemplateName = templateName.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&' );
-				// 		talkText = talkText.replace( new RegExp( '\\n?\\{\\{\\s*' + sanitizedTemplateName + '\\s*.+?\\}\\}', 'is' ), '' );
-				// 	} );
+					$.each(wikiProjectsToAdd, function (_index, templateName) {
+						talkTextPrefix += '\n{{' + templateName + '|ระดับ=' + data.newAssessment + '}}';
+					});
+					$.each(wikiProjectsToRemove, function (_index, templateName) {
+						// Regex from https://stackoverflow.com/a/5306111/1757964
+						var sanitizedTemplateName = templateName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+						talkText = talkText.replace(new RegExp('\\n?\\{\\{\\s*' + sanitizedTemplateName + '\\s*.+?\\}\\}', 'is'), '');
+					});
 
-				// 	// We prepend the text so that talk page content is not removed
-				// 	// (e.g. pages in `Draft:` namespace with discussion)
-				// 	talkText = talkTextPrefix + '\n\n' + talkText;
+					// We prepend the text so that talk page content is not removed
+					// (e.g. pages in `Draft:` namespace with discussion)
+					talkText = talkTextPrefix + '\n\n' + talkText;
 
-				// 	var summary = 'Placing [[Wikipedia:Articles for creation|Articles for creation]] banner';
-				// 	if ( wikiProjectsToAdd.length > 0 ) {
-				// 		summary += ', adding ' + wikiProjectsToAdd.length +
-				// 			' WikiProject banner' + ( ( wikiProjectsToAdd.length === 1 ) ? '' : 's' );
-				// 	}
-				// 	if ( wikiProjectsToRemove.length > 0 ) {
-				// 		summary += ', removing ' + wikiProjectsToRemove.length +
-				// 			' WikiProject banner' + ( ( wikiProjectsToRemove.length === 1 ) ? '' : 's' );
-				// 	}
+					var summary = 'ใส่ส่วนหัว [[Wikipedia:Articles for creation|Articles for creation]]';
+					if (wikiProjectsToAdd.length > 0) {
+						summary += ' +เพิ่มแม่แบบโครงการวิกิ ' + wikiProjectsToAdd.length +
+							' โครงการ';
+					}
+					if (wikiProjectsToRemove.length > 0) {
+						summary += ' +ลบแม่แบบโครงการวิกิ ' + wikiProjectsToRemove.length +
+							' โครงการ';
+					}
 
-				// 	talkPage.edit( {
-				// 		contents: talkText,
-				// 		summary: summary
-				// 	} );
-				// } );
+					talkPage.edit({
+						contents: talkText,
+						summary: summary
+					});
+				});
 
 				// NOTIFY SUBMITTER
 				// ----------------
@@ -2349,7 +2353,7 @@
 						AFCH.actions.notifyUser( submitter, {
 							message: AFCH.msg.get( 'accepted-submission',
 								{ $1: newPage, $2: data.newAssessment } ),
-							summary: 'แจ้งเตือน: ฉบับร่างของคุณได้ถูกสร้างเป็นบทความจริงแล้ว'
+							summary: 'ยินดีด้วย ฉบับร่างของคุณได้ถูกสร้างเป็นบทความจริงแล้ว'
 						} );
 					} );
 				}
@@ -2360,8 +2364,8 @@
 				$.when( recentPage.getText(), afchSubmission.getSubmitter() )
 					.then( function ( text, submitter ) {
 						var newRecentText = text,
-							matches = text.match( /{{afc contrib.*?}}\s*/gi ),
-							newTemplate = '{{afc contrib|' + data.newAssessment + '|' + newPage + '|' + submitter + '}}\n';
+							matches = text.match(/{{AfC contribution.*?}}\s*/gi),
+							newTemplate = '{{AfC contribution|' + data.newAssessment + '|' + newPage + '|' + submitter + '}}\n';
 
 						// Remove the older entries (at bottom of the page) if necessary
 						// to ensure we keep only 10 entries at any given point in time
@@ -2373,7 +2377,7 @@
 
 						recentPage.edit( {
 							contents: newRecentText,
-							summary: 'เพิ่มหน้า [[' + newPage + ']] ไปยังรายการบทความที่เพิ่งสร้าง'
+							summary: 'เพิ่มหน้า [[' + newPage + ']] ไปยังรายการบทความที่เพิ่งสร้างจาก AfC'
 						} );
 					} );
 			} );
@@ -2514,25 +2518,25 @@
 
 				// Check categories on the page to ensure that if the user has already been
 				// invited to the Teahouse, we don't invite them again.
-				// TODO thwiki did not have teahouse, this is not implemented yet
-				if ( data.inviteToTeahouse ) {
-					userTalk.getCategories( /* useApi */ true ).done( function ( categories ) {
-						var hasTeahouseCat = false,
-							teahouseCategories = [
-								'Category:Wikipedians who have received a Teahouse invitation',
-								'Category:Wikipedians who have received a Teahouse invitation through AfC'
-							];
+				// NOTE thwiki did not have teahouse, this is not implemented yet
+				// if ( data.inviteToTeahouse ) {
+				// 	userTalk.getCategories( /* useApi */ true ).done( function ( categories ) {
+				// 		var hasTeahouseCat = false,
+				// 			teahouseCategories = [
+				// 				'Category:Wikipedians who have received a Teahouse invitation',
+				// 				'Category:Wikipedians who have received a Teahouse invitation through AfC'
+				// 			];
 
-						$.each( categories, function ( _, cat ) {
-							if ( teahouseCategories.indexOf( cat ) !== -1 ) {
-								hasTeahouseCat = true;
-								return false;
-							}
-						} );
+				// 		$.each( categories, function ( _, cat ) {
+				// 			if ( teahouseCategories.indexOf( cat ) !== -1 ) {
+				// 				hasTeahouseCat = true;
+				// 				return false;
+				// 			}
+				// 		} );
 
-						shouldTeahouse.resolve( !hasTeahouseCat );
-					} );
-				}
+				// 		shouldTeahouse.resolve( !hasTeahouseCat );
+				// 	} );
+				// }
 
 				$.when( shouldTeahouse ).then( function ( teahouse ) {
 					var message;
@@ -2697,7 +2701,7 @@
 		var gotCreator = afchPage.getCreator();
 
 		// Update the display
-		prepareForProcessing( 'ส่งคำขอ', 'g13' );
+		prepareForProcessing('ส่งคำขอ', 'g10');
 
 		// Get the page text and the last modified date (cached!) and tag the page
 		$.when(
@@ -2707,7 +2711,7 @@
 			var text = new AFCH.Text( rawText );
 
 			// Add the deletion tag and clean up for good measure
-			text.prepend( '{{ลบ|g10|ts=' + AFCH.dateToMwTimestamp( lastModified ) + '}}\n' );
+			text.prepend('{{ลบ-ท10|ts=' + AFCH.dateToMwTimestamp(lastModified) + '}}\n');
 			text.cleanUp();
 
 			afchPage.edit( {

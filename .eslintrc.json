@@ -1,8 +1,8 @@
 {
 	"extends": "wikimedia",
 	"plugins": [
-        "jsdoc"
-    ],
+		"jsdoc"
+	],
 	"env": {
 		"browser": true,
 		"jquery": true
@@ -24,7 +24,7 @@
 		"jsdoc/require-param-type": 0,
 		"jsdoc/require-returns": 0,
 		"jsdoc/require-returns-check": 0,
-		"jsdoc/valid-types": 0, 
+		"jsdoc/valid-types": 0,
 		"max-len": 0,
 		"max-statements-per-line": 0,
 		"no-console": 0,
