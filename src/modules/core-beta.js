@@ -700,7 +700,7 @@
 				var status, request, deferred = $.Deferred();
 
 				if ( !hide ) {
-					status = new AFCH.status.Element('กำลังย้าย $1 ไปยัง $2...', {
+					status = new AFCH.status.Element( 'กำลังย้าย $1 ไปยัง $2...', {
 						$1: AFCH.makeLinkElementToPage( oldTitle ),
 						$2: AFCH.makeLinkElementToPage( newTitle )
 					} );
@@ -758,7 +758,7 @@
 
 				userTalkPage.exists().done( function ( exists ) {
 					userTalkPage.edit( {
-						contents: (exists ? '' : '{{subst:ยินดีต้อนรับ}}') + '\n\n' + options.message,
+						contents: ( exists ? '' : '{{subst:ยินดีต้อนรับ}}' ) + '\n\n' + options.message,
 						summary: options.summary || 'แจ้งผู้ใช้',
 						mode: 'appendtext',
 						statusText: 'กำลังเตือน',
@@ -851,7 +851,7 @@
 			 */
 			patrolRcid: function ( rcid, title ) {
 				var request, deferred = $.Deferred(),
-					status = new AFCH.status.Element('กำลังตรวจตรา $1...',
+					status = new AFCH.status.Element( 'กำลังตรวจตรา $1...',
 						{ $1: AFCH.makeLinkElementToPage( title ) || 'page with id #' + rcid } );
 
 				request = {
