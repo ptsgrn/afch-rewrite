@@ -732,7 +732,7 @@
 	};
 
 	// Add the launch link
-	$afchLaunchLink = $(mw.util.addPortletLink(AFCH.prefs.launchLinkPosition, 'javascript:void(0)', 'ตรวจ (AFCH beta)',
+	$afchLaunchLink = $(mw.util.addPortletLink(AFCH.prefs.launchLinkPosition, 'javascript' + ':' + 'void(0)', 'ตรวจ (AFCH beta)',
 		'afch-launch', 'ทบทวนฉบับร่างโดยใช้ afch-rewrite', '1' ) );
 
 	if ( AFCH.prefs.autoOpen &&
