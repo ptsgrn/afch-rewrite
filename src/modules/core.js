@@ -63,11 +63,11 @@
 
 			// Must be defined above the larger $.extend block
 			// because AFCH.consts.summaryAd depends on it
-			AFCH.consts.version = '0.9.3-beta';
+			AFCH.consts.version = '0.9.4';
 
 			// Add more constants -- don't overwrite those already set, though
 			AFCH.consts = $.extend( AFCH.consts, {
-				versionName: 'Imperial Kane',
+				versionName: 'Imperial Luna',
 
 				// If true, the script will NOT modify actual wiki content and
 				// will instead mock all such API requests (success assumed)
