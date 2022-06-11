@@ -93,7 +93,7 @@
 				whitelistRequired: true,
 
 				// Name of the whitelist page for reviewers
-				whitelistTitle: 'ผู้ใช้:Patsagorn Y./กระบะทราย/AFCH whitelist'
+				whitelistTitle: 'วิกิพีเดีย:โครงการวิกิว่าที่บทความ/ผู้มีส่วนร่วม'
 			}, AFCH.consts );
 
 			// Check whitelist if necessary, but don't delay loading of the
