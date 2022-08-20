@@ -14,12 +14,12 @@ const process = require('process');
 
 const HOGAN_FILE = 'node_modules/hogan.js/build/gh-pages/builds/2.0.0/hogan-2.0.0.js';
 
-if (!fs.existsSync(HOGAN_FILE)) {
+if(!fs.existsSync(HOGAN_FILE)) {
 	console.log('No file found at ' + HOGAN_FILE + ' - downloading it with "npm install"...');
 	child_process.execSync('npm install', { stdio: 'inherit' });
 }
 
-if (!fs.existsSync('build/afch.css')) {
+if(!fs.existsSync('build/afch.css')) {
 	console.log('No file found at build/afch.css; building it with "grunt build"...');
 	try {
 		child_process.execSync('grunt build', { stdio: 'inherit' });
@@ -42,7 +42,7 @@ function readFile(path) {
 
 http.createServer({}, async function (req, res) {
 	const reqUrl = new URL(req.url, `http://${req.headers.host}`);
-	if ((!reqUrl.searchParams.has("ctype")) || (!reqUrl.searchParams.has("title"))) {
+	if((!reqUrl.searchParams.has("ctype")) || (!reqUrl.searchParams.has("title"))) {
 		reqUrl.searchParams.set('ctype', 'text/javascript');
 		reqUrl.searchParams.set('title', 'afch-dev.js');
 	}
@@ -54,25 +54,25 @@ http.createServer({}, async function (req, res) {
 
 	// This is the reverse of what happens to filenames in scripts/upload.py
 	var content = '';
-	if (reqTitle.endsWith("core.js")) {
+	if(reqTitle.endsWith("core.js")) {
 		content += readFile(HOGAN_FILE) + ';';
-		content += readFile("src/modules/core-beta.js");
+		content += readFile("src/modules/core.js");
 		// enable mockItUp by default for testing
 		content = content.replace(
 			'mockItUp: AFCH.consts.mockItUp || false,',
 			'mockItUp: AFCH.consts.mockItUp || true,'
 		);
-	} else if (reqTitle.endsWith("submissions.js")) {
-		if (reqTitle.endsWith("tpl-submissions.js")) {
+	} else if(reqTitle.endsWith("submissions.js")) {
+		if(reqTitle.endsWith("tpl-submissions.js")) {
 			content += readFile("src/templates/tpl-submissions.html");
 		} else {
 			content += readFile("src/modules/submissions.js");
 		}
-	} else if (reqTitle.endsWith("tpl-preferences.js")) {
+	} else if(reqTitle.endsWith("tpl-preferences.js")) {
 		content += readFile("src/templates/tpl-preferences.html");
-	} else if (reqTitle.endsWith(".css")) {
+	} else if(reqTitle.endsWith(".css")) {
 		content += readFile("build/afch.css");
-	} else if (reqTitle.endsWith(".js")) {
+	} else if(reqTitle.endsWith(".js")) {
 		// Assume all other JS files are the root. This probably isn't ideal.
 		content += readFile("src/afch.js");
 		content = content.replace(
