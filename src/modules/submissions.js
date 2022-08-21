@@ -1,3 +1,4 @@
+/* eslint-disable no-tabs */
 //<nowiki>
 ( function ( AFCH, $, mw ) {
 	var $afchLaunchLink, $afch, $afchWrapper,
