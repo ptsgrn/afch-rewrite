@@ -732,8 +732,8 @@
 	};
 
 	// Add the launch link
-	$afchLaunchLink = $( mw.util.addPortletLink( AFCH.prefs.launchLinkPosition, 'javascript' + ':' + 'void(0)', 'ตรวจ (AFCH beta)',
-		'afch-launch', 'ทบทวนฉบับร่างโดยใช้ afch-rewrite', '1' ) );
+	$afchLaunchLink = $(mw.util.addPortletLink(AFCH.prefs.launchLinkPosition, 'javascript' + ':' + 'void(0)', 'ตรวจ (AFCH)',
+		'afch-launch', 'ทบทวนฉบับร่างโดยใช้ afch-rewrite สำหรับวิกิพีเดียภาษาไทย', '1'));
 
 	if ( AFCH.prefs.autoOpen &&
 		// Don't autoload in userspace -- too many false positives
@@ -1496,7 +1496,7 @@
 
 			// If any templates weren't in the WikiProject map, check if they were redirects
 			if ( otherTemplates.length > 0 ) {
-				var titles = otherTemplates.map( function ( n ) { return 'Template:' + n; } );
+				var titles = otherTemplates.map(function (n) { return 'แม่แบบ:' + n; });
 				titles = titles.slice( 0, 50 ); // prevent API error by capping max # of titles at 50
 				titles = titles.join( '|' );
 				return AFCH.api.post( {
