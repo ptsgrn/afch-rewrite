@@ -2489,7 +2489,7 @@
 				var $patrolLink,
 					newPage = new AFCH.Page( moveData.to ),
 					talkPage = newPage.getTalkPage(),
-					recentPage = new AFCH.Page( 'วิกิพีเดีย:Articles for creation/ล่าสุด' );
+					recentPage = new AFCH.Page( 'วิกิพีเดีย:ว่าที่บทความ/ล่าสุด' );
 
 				// ARTICLE
 				// -------
