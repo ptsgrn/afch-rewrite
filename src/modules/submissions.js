@@ -2598,7 +2598,7 @@
 					// (e.g. pages in `Draft:` namespace with discussion)
 					talkText = talkTextPrefix + '\n\n' + talkText;
 
-					var summary = 'ใส่ส่วนหัว [[Wikipedia:Articles for creation|Articles for creation]]';
+					var summary = 'ใส่ส่วนหัว [[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]]';
 					if ( wikiProjectsToAdd.length > 0 ) {
 						summary += ' +เพิ่มแม่แบบโครงการวิกิ ' + wikiProjectsToAdd.length +
 							' โครงการ';
