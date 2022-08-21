@@ -63,11 +63,11 @@
 
 			// Must be defined above the larger $.extend block
 			// because AFCH.consts.summaryAd depends on it
-			AFCH.consts.version = '0.9.4';
+			AFCH.consts.version = '0.9.3';
 
 			// Add more constants -- don't overwrite those already set, though
 			AFCH.consts = $.extend( AFCH.consts, {
-				versionName: 'Imperial Luna',
+				versionName: 'Imperial Ibix',
 
 				// If true, the script will NOT modify actual wiki content and
 				// will instead mock all such API requests (success assumed)
@@ -159,7 +159,7 @@
 					// Finally, make and push the notification, then explode AFCH
 					mw.notify(
 						$( '<div>' )
-							.append( 'AFCH ไม่สามารถโหลดได เนื่องจาก "' + user + '" ไม่ได้อยู่ในรายการที่ ' )
+							.append('AFCH ไม่สามารถโหลดได้ เนื่องจาก "' + user + '" ไม่ได้อยู่ในรายการที่ ')
 							.append( AFCH.makeLinkElementToPage( whitelist.rawTitle ) )
 							.append( ' โปรดส่งคำขอก่อนเพื่อใช้งาน ' )
 							.append( $howToDisable )
@@ -648,7 +648,7 @@
 				}
 
 				if ( AFCH.consts.mockItUp ) {
-					AFCH.log( 'Edit to "' + pagename + '"', request );
+					AFCH.log('แก้ไข "' + pagename + '"', request);
 					deferred.resolve();
 					return deferred;
 				}
@@ -711,7 +711,7 @@
 				var status, request, deferred = $.Deferred();
 
 				if ( !hide ) {
-					status = new AFCH.status.Element( 'Moving $1 to $2...', {
+					status = new AFCH.status.Element('กำลังย้าย $1 ไปยัง $2...', {
 						$1: AFCH.makeLinkElementToPage( oldTitle ),
 						$2: AFCH.makeLinkElementToPage( newTitle )
 					} );
@@ -769,7 +769,7 @@
 
 				userTalkPage.exists().done( function ( exists ) {
 					userTalkPage.edit( {
-						contents: ( exists ? '' : '{{อธิบายหน้าพูดคุย}}' ) + '\n\n' + options.message,
+						contents: (exists ? '' : '{{subst:ยินดีต้อนรับ}}') + '\n\n' + options.message,
 						summary: options.summary || 'แจ้งผู้ใช้',
 						mode: 'appendtext',
 						statusText: 'กำลังเตือน',
@@ -862,8 +862,8 @@
 			 */
 			patrolRcid: function ( rcid, title ) {
 				var request, deferred = $.Deferred(),
-					status = new AFCH.status.Element( 'Patrolling $1...',
-						{ $1: AFCH.makeLinkElementToPage( title ) || 'page with id #' + rcid } );
+					status = new AFCH.status.Element('กำลังตรวจตรา $1...',
+						{ $1: AFCH.makeLinkElementToPage(title) || 'หน้าที่มีรุ่น #' + rcid });
 
 				request = {
 					action: 'patrol',
