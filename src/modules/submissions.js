@@ -1496,8 +1496,10 @@
 
 			// If any templates weren't in the WikiProject map, check if they were redirects
 			if ( otherTemplates.length > 0 ) {
-				var titles = otherTemplates.map( function ( n ) { return 'แม่แบบ:' + n; } ).join( '|' );
-				return AFCH.api.get( {
+				var titles = otherTemplates.map( function ( n ) { return 'Template:' + n; } );
+				titles = titles.slice( 0, 50 ); // prevent API error by capping max # of titles at 50
+				titles = titles.join( '|' );
+				return AFCH.api.post( {
 					action: 'query',
 					titles: titles,
 					redirects: 'true'
