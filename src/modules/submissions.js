@@ -534,7 +534,9 @@
 				'Draft topics',
 				'AfC topic',
 				'Drafts moved from mainspace',
-				'Promising draft'
+				'Promising draft',
+				'บทความฉบับร่าง',
+				'ฉบับร่างบทความ'
 			];
 
 			templatesToRemove.forEach( function ( template ) {
@@ -553,7 +555,7 @@
 			] );
 		} else {
 			// If not yet accepted, comment out cats
-			text = text.replace( /\[\[Category:/gi, '[[:Category:' );
+			text = text.replace( /\[\[(Category|หมวดหมู่):/gi, '[[:หมวดหมู่:' );
 		}
 
 		// Remove empty section at the end (caused by "Resubmit" button on "declined" template)
