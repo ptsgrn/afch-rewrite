@@ -64,7 +64,7 @@ if root.endswith('.js'):
     sys.exit(1)
 
 # First, create a build
-command = 'grunt build'
+command = './node_modules/grunt/bin/grunt build'
 
 # Should we use --force on grunt build?
 if '--force' in sys.argv:
