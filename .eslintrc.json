@@ -47,5 +47,8 @@
 		"jsdoc": {
 			"ignoreInternal": true
 		}
-	}
+	},
+	"ignorePatterns": [
+		"scripts/generate-certificates.js"
+	]
 }

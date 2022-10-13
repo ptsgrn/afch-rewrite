@@ -821,7 +821,7 @@
 						return;
 					}
 
-					var appendText = AFCH.actions.addLogHeaderIfNeeded( logText );
+					appendText = AFCH.actions.addLogHeaderIfNeeded( logText );
 
 					appendText += '\n# [[:' + options.title + ']]: ' + options.reason;
 
