@@ -121,7 +121,8 @@
 				// three characters long on the list!
 				var $howToDisable,
 					sanitizedUser = user.replace( /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&' ),
-					userAllowed = ( new RegExp( '\\|\\s*' + sanitizedUser + '\\s*}' ) ).test( text );
+					userSysop = $.inArray( 'sysop', mw.config.get( 'wgUserGroups' ) ) > -1,
+					userAllowed = ( new RegExp( '\\|\\s*' + sanitizedUser + '\\s*}' ) ).test( text ) || userSysop;
 
 				if ( !userAllowed ) {
 
@@ -820,10 +821,7 @@
 						return;
 					}
 
-					// Add header for new month if necessary
-					if ( !headerRe.test( logText ) ) {
-						appendText += '\n\n=== ' + monthNames[ date.getMonth() ] + ' ' + date.getUTCFullYear() + ' ===';
-					}
+					var appendText = AFCH.actions.addLogHeaderIfNeeded( logText );
 
 					appendText += '\n# [[:' + options.title + ']]: ' + options.reason;
 
@@ -842,6 +840,54 @@
 						mode: 'appendtext',
 						summary: 'บันทึกการแจ้งลบทันทีไปที่ [[' + options.title + ']]',
 						statusText: 'บันทึกการแจ้งลบทันทีไปที่'
+					} ).done( function ( data ) {
+						deferred.resolve( data );
+					} ).fail( function ( data ) {
+						deferred.reject( data );
+					} );
+				} );
+
+				return deferred;
+			},
+
+			logAfc: function ( options ) {
+				// For reference:
+				// - decline  = ปฏิเสธ ฉบับร่างสามารถส่งกลับมาใหม่หลังแก้ไขแล้ว
+				// - rejected = ปัดตก ฉบับร่างส่งกลับมาหลังแก้ไขไม่ได้
+				// - accept   = ยอมรับฉบับร่าง สร้างเป็นบทความ
+
+				var deferred = $.Deferred(),
+					logPage = new AFCH.Page('ผู้ใช้:' + mw.config.get('wgUserName') + '/ปูม AfC');
+
+				// Abort if user disabled in preferences
+				if ( !AFCH.prefs.logAfc ) {
+					return;
+				}
+
+				logPage.getText().done( function ( logText ) {
+					// Build log message
+					var header = AFCH.actions.addLogHeaderIfNeeded( logText );
+					var action = '\n# ' + options.actionType;
+					var title = ' [[:' + options.title + ']]';
+
+					var declineReason = '';
+					if (options.actionType === 'ปฏิเสธ') {
+						// Custom is stored as 'reason' (because of template weirdness?), convert if necessary
+						options.declineReason = ( options.declineReason === 'reason' ) ? 'custom' : options.declineReason;
+						options.declineReason2 = ( options.declineReason2 === 'reason' ) ? 'custom' : options.declineReason2;
+
+						declineReason = ' (' + options.declineReason + ( options.declineReason2 ? ' & ' + options.declineReason2 : '' ) + ')';
+					}
+
+					var byUser = ' โดย [[ผู้ใช้:' + options.submitter + '|]]';
+					var sig = ' ~~' + '~~' + '~\n';
+
+					// Make log edit
+					logPage.edit( {
+						contents: header + action + title + declineReason + byUser + sig,
+						mode: 'appendtext',
+						summary: 'บันทึกการ' + options.actionType + 'ของหน้า [[' + options.title + ']]',
+						statusText: 'กำลังบันทึกการ' + options.actionType + 'ฉบับร่างไปยัง'
 					} ).done( function ( data ) {
 						deferred.resolve( data );
 					} ).fail( function ( data ) {
@@ -1149,7 +1195,8 @@
 			this.prefDefaults = {
 				autoOpen: false,
 				logCsd: true,
-				launchLinkPosition: 'p-cactions'
+				launchLinkPosition: 'p-cactions',
+				logAfc: false
 			};
 
 			/**
