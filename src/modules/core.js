@@ -857,7 +857,7 @@
 				// - accept   = ยอมรับฉบับร่าง สร้างเป็นบทความ
 
 				var deferred = $.Deferred(),
-					logPage = new AFCH.Page('ผู้ใช้:' + mw.config.get('wgUserName') + '/ปูม AfC');
+					logPage = new AFCH.Page( 'ผู้ใช้:' + mw.config.get( 'wgUserName' ) + '/ปูม AfC' );
 
 				// Abort if user disabled in preferences
 				if ( !AFCH.prefs.logAfc ) {
@@ -871,7 +871,7 @@
 					var title = ' [[:' + options.title + ']]';
 
 					var declineReason = '';
-					if (options.actionType === 'ปฏิเสธ') {
+					if ( options.actionType === 'ปฏิเสธ' ) {
 						// Custom is stored as 'reason' (because of template weirdness?), convert if necessary
 						options.declineReason = ( options.declineReason === 'reason' ) ? 'custom' : options.declineReason;
 						options.declineReason2 = ( options.declineReason2 === 'reason' ) ? 'custom' : options.declineReason2;
