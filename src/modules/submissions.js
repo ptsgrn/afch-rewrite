@@ -528,7 +528,7 @@
 			text = text.replace( /\{\{AfC postpone G13(?:\|\d*)?\}\}\n*/gi, '' );
 
 			// Remove draft topics template
-			text = text.replace( /\{\{draft topics\|(.*?)\}\}\n?/ig, '' );
+			text = text.replace( /\{\{(draft topics|บทความฉบับร่าง|ฉบับร่างบทความ)\|(.*?)\}\}\n?/ig, '' );
 
 			// Remove AfC topic template
 			text = text.replace( /\{\{AfC topic\|(.*?)\}\}\n?/ig, '' );
