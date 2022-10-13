@@ -1,7 +1,7 @@
-afch-rewrite [![Build Status](https://github.com/WPAFC/afch-rewrite/actions/workflows/unit_tests.yml/badge.svg)] [![Release](https://img.shields.io/github/release/wpafc/afch-rewrite.svg)](https://github.com/WPAFC/afch-rewrite/releases)
+afch-rewrite [![Unit Tests](https://github.com/ptsgrn/afch-rewrite/actions/workflows/unit_tests.yml/badge.svg?branch=master)](https://github.com/ptsgrn/afch-rewrite/actions/workflows/unit_tests.yml) ![Release](https://img.shields.io/github/v/release/ptsgrn/afch-rewrite)
 ============
 
-**v0.9.3-beta Imperial Kane**
+**v0.9.3 Imperial Kane**
 
 A tool for reviewing Articles for Creation submissions on the English Wikipedia, rewritten using clear, object-oriented JavaScript with a focus on killing bloat while adding value.
 
@@ -31,6 +31,7 @@ New versions of the script can be released through `scripts/release.py`, which a
 
 ### Version history
 
+* 0.9.3 Imperial Kane (13 Octuber 2022)
 * 0.9.3-beta Imperial Kane (21 November 2021)
 * 0.9.3-alpha Imperial Kane (13 November 2021)
 * 0.9.1 Imperial Ibex (05 December 2018)
