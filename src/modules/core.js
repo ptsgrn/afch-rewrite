@@ -66,35 +66,43 @@
 			AFCH.consts.version = '0.9.3';
 
 			// Add more constants -- don't overwrite those already set, though
-			AFCH.consts = $.extend( AFCH.consts, {
-				versionName: 'Imperial Ibix',
+			AFCH.consts = $.extend(
+				AFCH.consts,
+				{
+					versionName: 'Imperial Ibix',
 
-				// If true, the script will NOT modify actual wiki content and
-				// will instead mock all such API requests (success assumed)
-				mockItUp: AFCH.consts.mockItUp || false,
+					// If true, the script will NOT modify actual wiki content and
+					// will instead mock all such API requests (success assumed)
+					mockItUp: AFCH.consts.mockItUp || false,
 
-				// Full page name, "Wikipedia talk:Articles for creation/sandbox"
-				pagename: mw.config.get( 'wgPageName' ).replace( /_/g, ' ' ),
+					// Full page name, "Wikipedia talk:Articles for creation/sandbox"
+					pagename: mw.config.get( 'wgPageName' ).replace( /_/g, ' ' ),
 
-				// Link to the current page, "/wiki/Wikipedia talk:Articles for creation/sandbox"
-				pagelink: mw.util.getUrl(),
+					// Link to the current page, "/wiki/Wikipedia talk:Articles for creation/sandbox"
+					pagelink: mw.util.getUrl(),
 
-				// Used when status is disabled
-				nullstatus: { update: function () { return; } },
+					// Used when status is disabled
+					nullstatus: {
+						update: function () {
+							return;
+						}
+					},
 
-				// Current user
-				user: mw.user.getName(),
+					// Current user
+					user: mw.user.getName(),
 
-				// Edit summary ad
-				summaryAd: ' ([[WP:AFCH|AFCH]] ' + AFCH.consts.version + ')',
+					// Edit summary ad
+					summaryAd: ' ([[WP:AFCH|AFCH]] ' + AFCH.consts.version + ')',
 
-				// Require users to be on whitelist to use the script
-				// Testwiki users don't need to be on it
-				whitelistRequired: true,
+					// Require users to be on whitelist to use the script
+					// Testwiki users don't need to be on it
+					whitelistRequired: mw.config.get( 'wgDBname' ) !== 'testwiki',
 
-				// Name of the whitelist page for reviewers
-				whitelistTitle: 'วิกิพีเดีย:โครงการวิกิว่าที่บทความ/รายการผู้ตรวจทาน'
-			}, AFCH.consts );
+					// Name of the whitelist page for reviewers
+					whitelistTitle: 'วิกิพีเดีย:โครงการวิกิว่าที่บทความ/รายการผู้ตรวจทาน'
+				},
+				AFCH.consts
+			);
 
 			// Check whitelist if necessary, but don't delay loading of the
 			// script for users who ARE allowed; rather, just destroy the
@@ -1655,17 +1663,20 @@
 		 */
 		parseForTimestamp: function ( string, mwstyle ) {
 			var exp, match, date;
-			// 22:22, 13 ตุลาคม 2563 (+07)
-			exp = new RegExp( '(\\d{1,2}):(\\d{2}), (\\d{1,2}) ' +
-				'(มกราคม|กุมภาพันธ์|มีนาคม|เมษายน|พฤษภาคม|มิถุนายน|กรกฎาคม|สิงหาคม|กันยายน|ตุลาคม|พฤศจิกายน|ธันวาคม) ' +
-				'(\\d{4}) \\(+07\\)', 'g' );
+			// 00:01, 26 มิถุนายน 2565 (+07)
+			exp = new RegExp(
+				'(\\d{1,2}):(\\d{2}), (\\d{1,2}) ' +
+          '(มกราคม|กุมภาพันธ์|มีนาคม|เมษายน|พฤษภาคม|มิถุนายน|กรกฎาคม|สิงหาคม|กันยายน|ตุลาคม|พฤศจิกายน|ธันวาคม) ' +
+          '(\\d{4}) \\(\\+07\\)',
+				'g'
+			);
 
 			match = exp.exec( string );
 
 			if ( !match ) {
 				return false;
 			}
-			// if thai year, convert to b.e.
+			// if thai year, convert to CE
 			if ( match[ 5 ] > 2483 ) {
 				match[ 5 ] -= 543;
 			}

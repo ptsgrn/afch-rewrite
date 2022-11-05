@@ -314,7 +314,6 @@
 		if ( this.comments.length ) {
 			output.push( '\n----' );
 		}
-
 		return output.join( '\n' );
 	};
 
@@ -546,8 +545,16 @@
 				'(After listing your sources please cite them using inline citations and place them after the information they cite.|Inline citations added to your article will automatically display here.) ' +
 				'(Please see|See) ((https?://)?en.wikipedia.org/wiki/(Wikipedia|WP):REFB|\\[\\[Wikipedia:REFB\\]\\]) for instructions on how to add citations.'
 			] );
+
+			// thank to iScript cleanup module
+			text = convertExternalLinksToWikilinks( text );
+			text = toomuchVowels( text );
+			text = reFormat( text );
+			text = policyFix( text );
+			text = fixSpelling( text );
 		} else {
 			// If not yet accepted, comment out cats
+
 			text = text.replace( /\[\[(Category|หมวดหมู่):/gi, '[[:หมวดหมู่:' );
 		}
 
@@ -866,12 +873,6 @@
 
 			return text;
 		}
-
-		text = convertExternalLinksToWikilinks( text );
-		text = toomuchVowels( text );
-		text = reFormat( text );
-		text = policyFix( text );
-		text = fixSpelling( text );
 
 		this.text = text;
 		this.removeExcessNewlines();
@@ -2709,7 +2710,7 @@
 		}
 
 		if ( declineReason2 ) {
-			editSummary += ' and ';
+			editSummary += ' และ ';
 			if ( declineReason2 === 'reason' ) {
 				editSummary += data.declineTextarea.substring( 0, lengthLimit );
 				if ( data.declineTextarea.length > lengthLimit ) {
