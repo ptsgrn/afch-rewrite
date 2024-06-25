@@ -69,30 +69,30 @@
 				// will instead mock all such API requests (success assumed)
 				mockItUp: AFCH.consts.mockItUp || false,
 
-					// Full page name, "Wikipedia talk:Articles for creation/sandbox"
-					pagename: mw.config.get( 'wgPageName' ).replace( /_/g, ' ' ),
+				// Full page name, "Wikipedia talk:Articles for creation/sandbox"
+				pagename: mw.config.get( 'wgPageName' ).replace( /_/g, ' ' ),
 
-					// Link to the current page, "/wiki/Wikipedia talk:Articles for creation/sandbox"
-					pagelink: mw.util.getUrl(),
+				// Link to the current page, "/wiki/Wikipedia talk:Articles for creation/sandbox"
+				pagelink: mw.util.getUrl(),
 
 				// Used when status is disabled
 				nullstatus: { update: function () {
 					return;
 				} },
 
-					// Current user
-					user: mw.user.getName(),
+				// Current user
+				user: mw.user.getName(),
 
 				// Edit summary ad
 				summaryAd: ' ([[WP:AFCH|AFCH]])',
 
-					// Require users to be on whitelist to use the script
-					// Testwiki users don't need to be on it
-					whitelistRequired: mw.config.get( 'wgDBname' ) !== 'testwiki',
+				// Require users to be on whitelist to use the script
+				// Testwiki users don't need to be on it
+				whitelistRequired: mw.config.get( 'wgDBname' ) !== 'testwiki',
 
-					// Name of the whitelist page for reviewers
-					whitelistTitle: 'วิกิพีเดีย:โครงการวิกิว่าที่บทความ/รายการผู้ตรวจทาน'
-				},	AFCH.consts );
+				// Name of the whitelist page for reviewers
+				whitelistTitle: 'วิกิพีเดีย:โครงการวิกิว่าที่บทความ/รายการผู้ตรวจทาน'
+			}, AFCH.consts );
 
 			if ( window.afchSuppressDevEdits === false ) {
 				AFCH.consts.mockItUp = false;
@@ -614,7 +614,7 @@
 					status = AFCH.consts.nullstatus;
 				}
 
-				if (!options.subscribe) {
+				if ( !options.subscribe ) {
 					request = {
 						action: 'edit',
 						title: pagename,
@@ -907,14 +907,14 @@
 			 * @param {string} logText Text of user's AfC log
 			 * @return {string} headerText
 			 */
-			addLogHeaderIfNeeded: function (logText) {
+			addLogHeaderIfNeeded: function ( logText ) {
 				var date = new Date(),
 					monthNames = [ 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม' ],
-					headerRe = new RegExp( '^==+\\s*' + monthNames[ date.getMonth() ] + '\\s+' + (date.getFullYear() + 543) + '\\s*==+', 'm' ),
+					headerRe = new RegExp( '^==+\\s*' + monthNames[ date.getMonth() ] + '\\s+' + ( date.getFullYear() + 543 ) + '\\s*==+', 'm' ),
 					headerText = '';
 
 				if ( !headerRe.test( logText ) ) {
-					headerText += '\n\n=== ' + monthNames[ date.getMonth() ] + ' ' + (date.getFullYear() + 543) + ' ===';
+					headerText += '\n\n=== ' + monthNames[ date.getMonth() ] + ' ' + ( date.getFullYear() + 543 ) + ' ===';
 				}
 
 				return headerText;

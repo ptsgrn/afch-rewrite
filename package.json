@@ -1,8 +1,8 @@
 {
-  "name": "afch-helper",
-  "version": "0.9.3",
-  "description": "A localized version tool for reviewing Articles for Creation submissions on the Thai Wikipedia.",
-  "homepage": "https://github.com/ptsgrn/afch-rewrite",
+	"name": "afch-helper",
+	"version": "0.9.3",
+	"description": "A localized version tool for reviewing Articles for Creation submissions on the Thai Wikipedia.",
+	"homepage": "https://github.com/ptsgrn/afch-rewrite",
 	"bugs": {
 		"url": "https://github.com/ptsgrn/afch-rewrite/issues"
 	},
@@ -11,15 +11,15 @@
 		"type": "git",
 		"url": "https://github.com/ptsgrn/afch-rewrite.git"
 	},
-  "scripts": {
+	"scripts": {
 		"test": "grunt test",
 		"lint": "grunt lint"
-  },
-  "dependencies": {
-    "hogan.js": "^3.0.2"
-  },
-  "devDependencies": {
-    "eslint": "^8.57.0",
+	},
+	"dependencies": {
+		"hogan.js": "^3.0.2"
+	},
+	"devDependencies": {
+		"eslint": "^8.57.0",
 		"eslint-config-wikimedia": "^0.27.0",
 		"grunt": "^1.4.1",
 		"grunt-autoprefixer": "^3.0.4",
@@ -32,12 +32,12 @@
 		"grunt-exec": "^3.0.0",
 		"jest-cli": "^27.0.6",
 		"jquery": "^3.6.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
+	},
+	"jest": {
+		"testEnvironment": "jsdom",
 		"testMatch": [
 			"**/tests/**/test-*.[jt]s?(x)",
 			"**/?(*.)+(spec|test).[jt]s?(x)"
 		]
-  }
+	}
 }

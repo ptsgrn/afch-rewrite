@@ -638,13 +638,13 @@
 		 *
 		 * @author iScript authors
 		 * @param {string} text text to fix
-		 * @returns fixed text
+		 * @return fixed text
 		 */
 		function fixSpelling( text ) {
-			//Spellings
+			// Spellings
 			if ( text.indexOf( 'nofixbot' ) !== -1 ) { // do not run if nofixbot
 				text = text
-					.replace( /ไบท์(?!\]\])/g, 'ไบต์' ) //Ordering is intended
+					.replace( /ไบท์(?!\]\])/g, 'ไบต์' ) // Ordering is intended
 					.replace( /เยอรมันนี/g, 'เยอรมนี' )
 					.replace( /\sกฏ/g, ' กฎ' )
 					.replace( /\sเกมส์/g, ' เกม' )
@@ -689,7 +689,7 @@
 					.replace( /นิวยอร์ค/g, 'นิวยอร์ก' )
 					.replace( /โน๊ต/g, 'โน้ต' )
 					.replace( /บรรได/g, 'บันได' )
-					.replace( /บรรเทิง(?!จิตร)/g, 'บันเทิง' ) //See: ประสิทธิ์ ศิริบรรเทิง and กรรณิการ์ บรรเทิงจิตร
+					.replace( /บรรเทิง(?!จิตร)/g, 'บันเทิง' ) // See: ประสิทธิ์ ศิริบรรเทิง and กรรณิการ์ บรรเทิงจิตร
 					.replace( /บราวเซอร์|เบราเซอร์/g, 'เบราว์เซอร์' )
 					.replace( /บล็อค|บล๊อค|บล๊อก/g, 'บล็อก' )
 					.replace( /เบรค/g, 'เบรก' )
@@ -708,7 +708,7 @@
 					.replace( /มิวสิค(?!\u0E31)/g, 'มิวสิก' )
 					.replace( /ไมโครซอฟต์/g, 'ไมโครซอฟท์' )
 					.replace( /รถยนตร์/g, 'รถยนต์' )
-					.replace( /ร็อค(?!แม)/g, 'ร็อก' ) //ignore ร็อคแมน
+					.replace( /ร็อค(?!แม)/g, 'ร็อก' ) // ignore ร็อคแมน
 					.replace( /ฤา/g, 'ฤๅ' )
 					.replace( /ล็อค/g, 'ล็อก' )
 					.replace( /ลอส แองเจลิส|ลอส แองเจลลิส|ลอส แองเจลีส|ลอสแองเจลิส|ลอสแองเจลีส|ลอสแองเจลลิส|ลอสแองเจอลิส|ลอสแองเจอลีส|ลอสแอนเจลลิส/g, 'ลอสแอนเจลิส' )
@@ -743,15 +743,15 @@
 					.replace( /เอาท์พุต|เอาท์พุท/g, 'เอาต์พุต' )
 					.replace( /แอปพลิเคชั่น|แอพพลิเคชั่น|แอพพลิเคชัน|แอพพลิคเคชัน/g, 'แอปพลิเคชัน' )
 
-					//Exceptions cases handling
+					// Exceptions cases handling
 					.replace( /คริสต์มาส วิไลโรจน์/g, 'คริสมาส วิไลโรจน์' )
 					.replace( /สมาคมเนชั่นแนล จีโอกราฟิก/g, 'สมาคมเนชั่นแนล จีโอกราฟฟิก' )
 					.replace( /(อีเอ็มไอ|เบเกอรี่)มิวสิก/g, '$1มิวสิค' )
 					.replace( /สตรีลิงก์/g, 'สตรีลิงค์' )
 					.replace( /นกหัสดีลิงก์/g, 'นกหัสดีลิงค์' )
 					.replace( /โปรเจกต์วัน/g, 'โปรเจควัน' )
-					.replace( /ร โปรเจกต์/g, 'ร โปรเจ็คต์' ) //ดิ โอฬาร โปรเจ็คต์
-					.replace( /สารอัปเดต/g, 'สารอัพเดท' ); //นิตรสารอัพเดท
+					.replace( /ร โปรเจกต์/g, 'ร โปรเจ็คต์' ) // ดิ โอฬาร โปรเจ็คต์
+					.replace( /สารอัปเดต/g, 'สารอัพเดท' ); // นิตรสารอัพเดท
 
 				// .replace(/เอ็กซเรย์/g, "เอกซเรย์")
 			}
@@ -764,7 +764,7 @@
 		 *
 		 * @author iScript authors
 		 * @param {string} text text to fix
-		 * @returns fixed text
+		 * @return fixed text
 		 */
 		function policyFix( text ) {
 			text = text
@@ -789,21 +789,21 @@
 		 *
 		 * @author iScript authors
 		 * @param {string} text text to fix
-		 * @returns fixed text
+		 * @return fixed text
 		 */
 		function toomuchVowels( text ) {
-			//Fix double Thai vowels
-			//# สระหน้า           เ|แ|โ|ใ|ไ
-			//# สระหลัง           ะ|า|ๅ
-			//# อำ คือ             ำ
-			//# สระบน             ั|ิ|ี|ึ|ื|ํ
-			//# สระล่าง            ุ|ู|ฺ
-			//# ไม้ไต่คู้             ็
-			//# วรรณยุกต์          ่|้|๊|๋
-			//# ทัณฑฆาต          ์
-			//# ไปยาลน้อย        ฯ
-			//# ไม้ยมก           ๆ
-			//text = text.replace(/(แ|โ|ใ|ไ|ะ|า|ๅ|ำ|ั|ิ|ี|ึ|ื|ํ|ุ|ู|ฺ|็|่|้|๊|๋|์){2,}/g, "$1") //remove dup
+			// Fix double Thai vowels
+			// # สระหน้า           เ|แ|โ|ใ|ไ
+			// # สระหลัง           ะ|า|ๅ
+			// # อำ คือ             ำ
+			// # สระบน             ั|ิ|ี|ึ|ื|ํ
+			// # สระล่าง            ุ|ู|ฺ
+			// # ไม้ไต่คู้             ็
+			// # วรรณยุกต์          ่|้|๊|๋
+			// # ทัณฑฆาต          ์
+			// # ไปยาลน้อย        ฯ
+			// # ไม้ยมก           ๆ
+			// text = text.replace(/(แ|โ|ใ|ไ|ะ|า|ๅ|ำ|ั|ิ|ี|ึ|ื|ํ|ุ|ู|ฺ|็|่|้|๊|๋|์){2,}/g, "$1") //remove dup
 
 			text = text
 				.replace( /ํา/g, 'ำ' ) // Nikhahit (nikkhahit) + Sara Aa -> Saram Am
@@ -831,7 +831,7 @@
 		 *
 		 * @author iScript authors
 		 * @param {string} text text to fix
-		 * @returns fixed text
+		 * @return fixed text
 		 */
 		function reFormat( text ) {
 			/* reformat - header */
@@ -841,7 +841,7 @@
 				.replace( /^(={1,5}) *(.*?) ?(={1,5}) *$/gm, '$1 $2 $3' ); // ==หัวข้อ== -> == หัวข้อ ==
 
 			/* reformat - parentheses */
-			//Add exception for RTL languages. Example:ps:ماينامار(برما)
+			// Add exception for RTL languages. Example:ps:ماينامار(برما)
 			var rtlLangPrefix = [ 'ar', 'arc', 'ckb', 'dv', 'fa', 'ha', 'he', 'khw', 'ks', 'ps', 'sd', 'ur', 'yi' ]; // https://meta.wikimedia.org/wiki/Template:List_of_language_names_ordered_by_code
 			var matches = text.match( new RegExp( '\\[\\[(?:' + rtlLangPrefix.join( '|' ) + ')\\:.*?\\]\\]', 'ig' ) );
 			text = text
@@ -876,19 +876,19 @@
 			text = text.replace( /-{0,2} ?\[\[ผู้ใช้:.*/g, '' );
 
 			// Fix Template Parameters Layout: Move | from back to front (using Top to Bottom approach)
-			text = text.replace( / *\|(?!-) *\r?\n *([^=\*<|{}]*?) ?=(?!=) *([^\|={}]*?)/gm, '\n| $1 = $2' ); //รวมแก้สองอย่างโดยการตรวจย้ายบนไปล่างแทน
+			text = text.replace( / *\|(?!-) *\r?\n *([^=\*<|{}]*?) ?=(?!=) *([^\|={}]*?)/gm, '\n| $1 = $2' ); // รวมแก้สองอย่างโดยการตรวจย้ายบนไปล่างแทน
 			// text = text.replace(/({{.*)(?!})\| *\r/g,"$1");                                   //แก้ {{... | -> {{...
 			// text = text.replace(/(\n) *([^|{}]*?) ?= *([^|{}]*?)\| *\r/g,"$1| $2 = $3");      //แก้ ... | -> | ...
 
 			// TODO: Need comments for code below for maintenance reasons: Hard to debug
-			text = text.replace( /\n *\|(?!-) *([^={}\*].*?) ?= *([^<={}]*?) \| ?( *}} *\r?\n| *\r?\n *}} *\r?\n)/g, '\n| $1 = $2\n}}\n' ); //รุ่นใหม่ แค่จับขึ้นบรรทัดใหม่
+			text = text.replace( /\n *\|(?!-) *([^={}\*].*?) ?= *([^<={}]*?) \| ?( *}} *\r?\n| *\r?\n *}} *\r?\n)/g, '\n| $1 = $2\n}}\n' ); // รุ่นใหม่ แค่จับขึ้นบรรทัดใหม่
 			// text = text.replace(/(\n) *([^\|{}].*?) ?= *([^|{}]*?)(}}\r\n|\r\n *}})/g,"$1| $2 = $3\n}}");//แก้ ... -> | ...
 
 			// Fix Template Parameters Layout: Add extra space in betweens
 			text = text.replace( /\r?\n *\|(?!-) *([^=\|\?'"{}]*?) ?= *([^=]*?) */g, '\n| $1 = $2' );
 
 			// Fix Template: Remove extra | if exist at the end
-			text = text.replace( /\n *\|(?!-) *([^=\|'"{}]*?)=([^=\|]*?) ?\r?\n?\| ?\r?\n?\}\}(?!\})/g, '\n| $1 = $2\n}}' ); //| abc = 123 | }} -> | abc = 123 }}
+			text = text.replace( /\n *\|(?!-) *([^=\|'"{}]*?)=([^=\|]*?) ?\r?\n?\| ?\r?\n?\}\}(?!\})/g, '\n| $1 = $2\n}}' ); // | abc = 123 | }} -> | abc = 123 }}
 
 			return text;
 		}
@@ -1432,13 +1432,13 @@
 		}
 
 		function checkForBlocks() {
-			const dateFormatter = new Intl.DateTimeFormat('th-TH', {
+			var dateFormatter = new Intl.DateTimeFormat( 'th-TH', {
 				year: 'numeric',
 				month: 'long',
 				day: 'numeric',
 				hour: 'numeric',
 				minute: 'numeric'
-			});
+			} );
 			return afchSubmission.getSubmitter().then( function ( creator ) {
 				return checkIfUserIsBlocked( creator ).then( function ( blockData ) {
 					if ( blockData !== null ) {
@@ -1447,7 +1447,7 @@
 							var data = new Date( blockData.expiry );
 							date = dateFormatter.format( data );
 						}
-						var warning = creator + 'ซึ่งเป็นผู้ส่งฉบับร่างถูกบล็อกโดย ' + blockData.by + (date === "infinity" ? " โดยไม่มีกำหนดปลดบล็อก" : ' จนถึง ' + date) + ' เนื่องจาก: ' + blockData.reason;
+						var warning = creator + 'ซึ่งเป็นผู้ส่งฉบับร่างถูกบล็อกโดย ' + blockData.by + ( date === 'infinity' ? ' โดยไม่มีกำหนดปลดบล็อก' : ' จนถึง ' + date ) + ' เนื่องจาก: ' + blockData.reason;
 						addWarning( warning );
 					}
 				} );
@@ -2658,7 +2658,7 @@
 					talkText = results.talkText;
 
 					var summary = 'ใส่ส่วนหัว [[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]]';
-					if (results.countOfWikiProjectsAdded > 0) {
+					if ( results.countOfWikiProjectsAdded > 0 ) {
 						summary += ' +เพิ่มแม่แบบโครงการวิกิ ' + results.countOfWikiProjectsAdded +
 							' โครงการ';
 					}
