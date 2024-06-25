@@ -1,8 +1,8 @@
 {
-	"name": "afch-rewrite",
-	"version": "0.9.3",
-	"description": "A localized version tool for reviewing Articles for Creation submissions on the Thai Wikipedia.",
-	"homepage": "https://github.com/ptsgrn/afch-rewrite",
+  "name": "afch-helper",
+  "version": "0.9.3",
+  "description": "A localized version tool for reviewing Articles for Creation submissions on the Thai Wikipedia.",
+  "homepage": "https://github.com/ptsgrn/afch-rewrite",
 	"bugs": {
 		"url": "https://github.com/ptsgrn/afch-rewrite/issues"
 	},
@@ -11,19 +11,16 @@
 		"type": "git",
 		"url": "https://github.com/ptsgrn/afch-rewrite.git"
 	},
-	"scripts": {
+  "scripts": {
 		"test": "grunt test",
-		"generate-certificates": "node scripts/generate-certificates.js",
-		"build": "grunt build",
-		"start": "node server.js"
-	},
-	"dependencies": {
-		"hogan.js": "^3.0.2"
-	},
-	"devDependencies": {
-		"eslint": "^7.31.0",
-		"eslint-config-wikimedia": "^0.20.0",
-		"eslint-plugin-jsdoc": "^36.0.6",
+		"lint": "grunt lint"
+  },
+  "dependencies": {
+    "hogan.js": "^3.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+		"eslint-config-wikimedia": "^0.27.0",
 		"grunt": "^1.4.1",
 		"grunt-autoprefixer": "^3.0.4",
 		"grunt-contrib-clean": "^2.0.0",
@@ -31,14 +28,16 @@
 		"grunt-contrib-copy": "^1.0.0",
 		"grunt-contrib-cssmin": "^4.0.0",
 		"grunt-contrib-less": "^3.0.0",
-		"grunt-eslint": "^23.0.0",
+		"grunt-eslint": "^24.3.0",
 		"grunt-exec": "^3.0.0",
 		"jest-cli": "^27.0.6",
-		"jquery": "^3.6.0",
-		"minimist": "^1.2.5"
-	},
-	"jest": {
-		"testEnvironment": "jsdom",
-		"testMatch": [ "**/__tests__/**/test-*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)" ]
-	}
+		"jquery": "^3.6.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+		"testMatch": [
+			"**/tests/**/test-*.[jt]s?(x)",
+			"**/?(*.)+(spec|test).[jt]s?(x)"
+		]
+  }
 }

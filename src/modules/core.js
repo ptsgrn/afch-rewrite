@@ -1,11 +1,11 @@
-//<nowiki>
+// <nowiki>
 ( function ( AFCH, $, mw ) {
 	$.extend( AFCH, {
 
 		/**
 		 * Log anything to the console
 		 *
-		 * @param {anything} thing(s)
+		 * @param {any} thing(s)
 		 */
 		log: function () {
 			var args = Array.prototype.slice.call( arguments );
@@ -17,7 +17,9 @@
 		},
 
 		/**
-		 * @internal Functions called when AFCH.destroy() is run
+		 * Functions called when AFCH.destroy() is run
+		 *
+		 * @internal
 		 * @type {Array}
 		 */
 		_destroyFunctions: [],
@@ -46,7 +48,7 @@
 		/**
 		 * Prepares the AFCH gadget by setting constants and checking environment
 		 *
-		 * @return {bool} Whether or not all setup functions executed successfully
+		 * @return {boolean} Whether or not all setup functions executed successfully
 		 */
 		setup: function () {
 			// Check requirements
@@ -61,19 +63,11 @@
 			AFCH.preferences = new AFCH.Preferences();
 			AFCH.prefs = AFCH.preferences.prefStore;
 
-			// Must be defined above the larger $.extend block
-			// because AFCH.consts.summaryAd depends on it
-			AFCH.consts.version = '0.9.3';
-
 			// Add more constants -- don't overwrite those already set, though
-			AFCH.consts = $.extend(
-				AFCH.consts,
-				{
-					versionName: 'Imperial Ibix',
-
-					// If true, the script will NOT modify actual wiki content and
-					// will instead mock all such API requests (success assumed)
-					mockItUp: AFCH.consts.mockItUp || false,
+			AFCH.consts = $.extend( AFCH.consts, {
+				// If true, the script will NOT modify actual wiki content and
+				// will instead mock all such API requests (success assumed)
+				mockItUp: AFCH.consts.mockItUp || false,
 
 					// Full page name, "Wikipedia talk:Articles for creation/sandbox"
 					pagename: mw.config.get( 'wgPageName' ).replace( /_/g, ' ' ),
@@ -81,18 +75,16 @@
 					// Link to the current page, "/wiki/Wikipedia talk:Articles for creation/sandbox"
 					pagelink: mw.util.getUrl(),
 
-					// Used when status is disabled
-					nullstatus: {
-						update: function () {
-							return;
-						}
-					},
+				// Used when status is disabled
+				nullstatus: { update: function () {
+					return;
+				} },
 
 					// Current user
 					user: mw.user.getName(),
 
-					// Edit summary ad
-					summaryAd: ' ([[WP:AFCH|AFCH]] ' + AFCH.consts.version + ')',
+				// Edit summary ad
+				summaryAd: ' ([[WP:AFCH|AFCH]])',
 
 					// Require users to be on whitelist to use the script
 					// Testwiki users don't need to be on it
@@ -100,9 +92,11 @@
 
 					// Name of the whitelist page for reviewers
 					whitelistTitle: 'วิกิพีเดีย:โครงการวิกิว่าที่บทความ/รายการผู้ตรวจทาน'
-				},
-				AFCH.consts
-			);
+				},	AFCH.consts );
+
+			if ( window.afchSuppressDevEdits === false ) {
+				AFCH.consts.mockItUp = false;
+			}
 
 			// Check whitelist if necessary, but don't delay loading of the
 			// script for users who ARE allowed; rather, just destroy the
@@ -128,9 +122,11 @@
 				// the script, so long as there was a user whose name was
 				// three characters long on the list!
 				var $howToDisable,
-					sanitizedUser = user.replace( /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&' ),
+					sanitizedUser = user.replace( /[-[\]/{}()*+?.\\^$|]/g, '\\$&' ),
 					userSysop = $.inArray( 'sysop', mw.config.get( 'wgUserGroups' ) ) > -1,
-					userAllowed = ( new RegExp( '\\|\\s*' + sanitizedUser + '\\s*}' ) ).test( text ) || userSysop;
+					userNPP = $.inArray( 'patroller', mw.config.get( 'wgUserGroups' ) ) > -1,
+					userOnWhitelist = ( new RegExp( '\\|\\s*' + sanitizedUser + '\\s*}' ) ).test( text ),
+					userAllowed = userOnWhitelist || userSysop || userNPP;
 
 				if ( !userAllowed ) {
 
@@ -148,8 +144,8 @@
 									( new mw.Api() ).postWithEditToken( {
 										action: 'options',
 										change: 'gadget-afchelper=0'
-									} ).done( function ( data ) {
-										mw.notify( 'AFCH ถูกปิดเรียบร้อย หากต้องการเปิดอีกครั้งกรุณาไปที่การตั้งเก็ดเจต' );
+									} ).done( function () {
+										mw.notify( 'AFCH ถูกปิดเรียบร้อย หากต้องการเปิดอีกครั้งกรุณาไปที่การตั้งค่าเก็ดเจต' );
 									} );
 								} )
 							);
@@ -188,8 +184,8 @@
 		/**
 		 * Loads the subscript and dependencies
 		 *
-		 * @param {string} type Which type of script to load:
-		 *                      'redirects' or 'ffu' or 'submissions'
+		 * @param {string} type Which type of script to load: 'redirects' or 'ffu' or 'submissions'
+		 * @return {boolean}
 		 */
 		load: function ( type ) {
 			if ( !AFCH.setup() ) {
@@ -221,33 +217,9 @@
 		},
 
 		/**
-		 * Appends a feedback link to the given element
-		 *
-		 * @param {string|jQuery} $element The jQuery element or selector to which the link should be appended
-		 * @param {string} type (optional) The part of AFCH that feedback is being given for, e.g. "files for upload"
-		 * @param {string} linkText (optional) Text to display in the link; by default "Give feedback!"
-		 */
-		initFeedback: function ( $element, type, linkText ) {
-			var feedback = new mw.Feedback( {
-				title: new mw.Title( 'Wikipedia talk:WikiProject Articles for creation/Helper script' ),
-				bugsLink: 'https://en.wikipedia.org/w/index.php?title=Wikipedia_talk:WikiProject_Articles_for_creation/Helper_script&action=edit&section=new',
-				bugsListLink: 'https://en.wikipedia.org/w/index.php?title=Wikipedia_talk:WikiProject_Articles_for_creation/Helper_script'
-			} );
-			$( '<span>' )
-				.text( linkText || 'ให้ข้อเสนอแนะ' )
-				.addClass( 'feedback-link link' )
-				.click( function () {
-					feedback.launch( {
-						subject: '[' + AFCH.consts.version + '] ' + ( type ? 'ข้อเสนอแนะเกี่ยวกับ ' + type : 'ข้อเสนอแนะ AFCH' )
-					} );
-				} )
-				.appendTo( $element );
-		},
-
-		/**
 		 * Represents a page, mainly a wrapper for various actions
 		 *
-		 * @param name
+		 * @param {string} name
 		 */
 		Page: function ( name ) {
 			var pg = this;
@@ -277,7 +249,7 @@
 			 * Makes an API request to get a variety of details about the current
 			 * revision of the page, which it then sets.
 			 *
-			 * @param {bool} usecache if true, will resolve immediately if function has
+			 * @param {boolean} usecache if true, will resolve immediately if function has
 			 *                        run successfully before
 			 * @return {jQuery.Deferred} resolves when data set successfully
 			 */
@@ -312,7 +284,7 @@
 			/**
 			 * Gets the page text
 			 *
-			 * @param {bool} usecache use cache if possible
+			 * @param {boolean} usecache use cache if possible
 			 * @return {string}
 			 */
 			this.getText = function ( usecache ) {
@@ -357,7 +329,8 @@
 						 * with recursion and all that mess, /g is our friend...which is pefectly
 						 * satisfactory for our purposes.
 						 *
-						 * @param $v
+						 * @param {jQuery} $v
+						 * @return {string}
 						 */
 						function parseValue( $v ) {
 							var text = AFCH.jQueryToHtml( $v );
@@ -397,9 +370,9 @@
 			/**
 			 * Gets the categories from the page
 			 *
-			 * @param {bool} useApi If true, use the api to get categories, instead of parsing the page. This is
+			 * @param {boolean} useApi If true, use the api to get categories, instead of parsing the page. This is
 			 *                      necessary if you need info about transcluded categories.
-			 * @param {bool} includeCategoryLinks If true, will also include links to categories (e.g. [[:Category:Foo]]).
+			 * @param {boolean} includeCategoryLinks If true, will also include links to categories (e.g. [[:Category:Foo]]).
 			 *                                    Note that if useApi is true, includeCategoryLinks must be false.
 			 * @return {Array}
 			 */
@@ -425,7 +398,7 @@
 
 					while ( match ) {
 						// Name of each category, with first letter capitalized
-						categories.push( match[ 1 ].charAt( 0 ).toUpperCase() + match[ 1 ].substring( 1 ) );
+						categories.push( match[ 1 ].charAt( 0 ).toUpperCase() + match[ 1 ].slice( 1 ) );
 						match = catRegex.exec( text );
 					}
 
@@ -522,10 +495,9 @@
 			/**
 			 * Gets the associated talk page
 			 *
-			 * @param textOnly
 			 * @return {AFCH.Page}
 			 */
-			this.getTalkPage = function ( textOnly ) {
+			this.getTalkPage = function () {
 				var title, ns = this.title.getNamespaceId();
 
 				// Odd-numbered namespaces are already talk namespaces
@@ -537,7 +509,6 @@
 
 				return new AFCH.Page( title.getPrefixedText() );
 			};
-
 		},
 
 		/**
@@ -609,16 +580,19 @@
 
 			/**
 			 * Modifies a page's content
-			 * TODO the property name "contents" is quite silly, because people used to the MediaWiki API are gonna write "text"
 			 *
+			 * @todo the property name "contents" is quite silly, because people used to the MediaWiki API are gonna write "text"
 			 * @param {string} pagename The page to be modified, namespace included
-			 * @param {Object} options Object with properties:
+			 * @param {Object} options Object with properties ('contents' is required, others are optional):
 			 *                          contents: {string} the text to add to/replace the page,
 			 *                          summary: {string} edit summary, will have the edit summary ad at the end,
-			 *                          createonly: {bool} set to true to only edit the page if it doesn't exist,
+			 *                          createonly: {boolean} set to true to only edit the page if it doesn't exist,
 			 *                          mode: {string} 'appendtext' or 'prependtext'; default: (replace everything)
-			 *                          hide: {bool} Set to true to supress logging in statusWindow
+			 *                          hide: {boolean} Set to true to supress logging in statusWindow
 			 *                          statusText: {string} message to show in status; default: "Editing"
+			 *                          followRedirects: {boolean} true to follow redirects, false to ignore redirects
+			 *                          watchlist: {string} 'nochange', 'preferences', 'unwatch', or 'watch'
+			 *                          subscribe: {boolean} when appending a talk page section, whether or not to subscribe to it
 			 * @return {jQuery.Deferred} Resolves if saved with all data
 			 */
 			editPage: function ( pagename, options ) {
@@ -628,6 +602,11 @@
 					options = {};
 				}
 
+				// Default to false
+				if ( !options.followRedirects ) {
+					options.followRedirects = false;
+				}
+
 				if ( !options.hide ) {
 					status = new AFCH.status.Element( ( options.statusText || 'กำลังแก้ไข' ) + ' $1...',
 						{ $1: AFCH.makeLinkElementToPage( pagename ) } );
@@ -635,12 +614,26 @@
 					status = AFCH.consts.nullstatus;
 				}
 
-				request = {
-					action: 'edit',
-					text: options.contents,
-					title: pagename,
-					summary: options.summary + AFCH.consts.summaryAd
-				};
+				if (!options.subscribe) {
+					request = {
+						action: 'edit',
+						title: pagename,
+						text: options.contents,
+						summary: options.summary + AFCH.consts.summaryAd,
+						redirect: options.followRedirects
+					};
+				} else {
+					// Because it is easier to do subscriptions with it, use the discussiontoolsedit API instead of the edit API
+					request = {
+						action: 'discussiontoolsedit',
+						paction: 'addtopic',
+						page: pagename,
+						sectiontitle: '',
+						wikitext: options.contents.trim(),
+						summary: options.summary + AFCH.consts.summaryAd,
+						autosubscribe: 'yes'
+					};
+				}
 
 				if ( pagename.indexOf( 'ฉบับร่าง:' ) === 0 ) {
 					request.nocreate = 'true';
@@ -650,9 +643,15 @@
 					request.minor = 'true';
 				}
 
+				if ( [ 'nochange', 'preferences', 'unwatch', 'watch' ].includes( options.watchlist ) ) {
+					request.watchlist = options.watchlist;
+				} else if ( AFCH.prefs.noWatch ) {
+					request.watchlist = 'nochange';
+				}
+
 				// Depending on mode, set appendtext=text or prependtext=text,
 				// which overrides the default text option
-				if ( options.mode ) {
+				if ( !options.subscribe && options.mode ) {
 					request[ options.mode ] = options.contents;
 				}
 
@@ -665,18 +664,21 @@
 				AFCH.api.postWithEditToken( request )
 					.done( function ( data ) {
 						var $diffLink;
+						var api = options.subscribe ? 'discussiontoolsedit' : 'edit';
+						// The success string is capitalized by one API and not the other
+						var success = options.subscribe ? 'success' : 'Success';
 
-						if ( data && data.edit && data.edit.result && data.edit.result === 'Success' ) {
+						if ( data && data[ api ] && data[ api ].result && data[ api ].result === success ) {
 							deferred.resolve( data );
 
-							if ( data.edit.hasOwnProperty( 'nochange' ) ) {
+							if ( data[ api ].hasOwnProperty( 'nochange' ) ) {
 								status.update( 'ไม่มีการเปลี่ยนแปลงใน $1' );
 								return;
 							}
 
 							// Create a link to the diff of the edit
 							$diffLink = AFCH.makeLinkElementToPage(
-								'Special:Diff/' + data.edit.oldrevid + '/' + data.edit.newrevid, '(แตกต่าง)'
+								'Special:Diff/' + data[ api ].newrevid, '(แตกต่าง)'
 							).addClass( 'text-smaller' );
 
 							status.update( 'บันทึก $1 แล้ว' + AFCH.jQueryToHtml( $diffLink ) );
@@ -695,25 +697,13 @@
 			},
 
 			/**
-			 * Deletes a page
-			 *
-			 * @param  {string} pagename Page to delete
-			 * @param  {string} reason   Reason for deletion; shown in deletion log
-			 * @return {jQuery.Deferred} Resolves with success/failure
-			 */
-			deletePage: function ( pagename, reason ) {
-				// FIXME: implement
-				return false;
-			},
-
-			/**
 			 * Moves a page
 			 *
 			 * @param {string} oldTitle Page to move
 			 * @param {string} newTitle Move target
 			 * @param {string} reason Reason for moving; shown in move log
 			 * @param {Object} additionalParameters https://www.mediawiki.org/wiki/API:Move#Parameters
-			 * @param {bool} hide Don't show the move in the status display
+			 * @param {boolean} hide Don't show the move in the status display
 			 * @return {jQuery.Deferred} Resolves with success/failure
 			 */
 			movePage: function ( oldTitle, newTitle, reason, additionalParameters, hide ) {
@@ -734,6 +724,10 @@
 					to: newTitle,
 					reason: reason + AFCH.consts.summaryAd
 				}, additionalParameters );
+
+				if ( AFCH.prefs.noWatch ) {
+					request.watchlist = 'nochange';
+				}
 
 				if ( AFCH.consts.mockItUp ) {
 					AFCH.log( request );
@@ -764,12 +758,11 @@
 			 * Notifies a user. Follows redirects and appends a message
 			 * to the bottom of the user's talk page.
 			 *
-			 * @param  {string} user
-			 * @param  {Object} data object with properties
+			 * @param {string} user
+			 * @param {Object} options object with properties
 			 *                   - message: {string}
-			 *                   - summary: {string}
+			 *                   - summary: {string} edit summary
 			 *                   - hide: {bool}, default false
-			 * @param options
 			 * @return {jQuery.Deferred} Resolves with success/failure
 			 */
 			notifyUser: function ( user, options ) {
@@ -781,8 +774,10 @@
 						contents: ( exists ? '' : '{{subst:ยินดีต้อนรับ}}' ) + '\n\n' + options.message,
 						summary: options.summary || 'แจ้งผู้ใช้',
 						mode: 'appendtext',
-						statusText: 'กำลังเตือน',
-						hide: options.hide
+						statusText: 'กำลังแจ้ง',
+						hide: options.hide,
+						followRedirects: true,
+						subscribe: AFCH.prefs.autoSubscribe
 					} )
 						.done( function () {
 							deferred.resolve();
@@ -802,8 +797,7 @@
 			 *                  - title {string}
 			 *                  - reason {string}
 			 *                  - usersNotified {array} optional
-			 * @return {jQuery.Deferred} resolves false if the page did not exist, otherwise
-			 *                      resolves/rejects with data from the edit
+			 * @return {jQuery.Deferred|void} resolves false if the page did not exist, otherwise resolves/rejects with data from the edit
 			 */
 			logCSD: function ( options ) {
 				var deferred = $.Deferred(),
@@ -841,7 +835,7 @@
 						} );
 					}
 
-					appendText += ' ~~' + '~~' + '~\n';
+					appendText += ' ~~~~~\n';
 
 					logPage.edit( {
 						contents: appendText,
@@ -888,7 +882,7 @@
 					}
 
 					var byUser = ' โดย [[ผู้ใช้:' + options.submitter + '|]]';
-					var sig = ' ~~' + '~~' + '~\n';
+					var sig = ' ~~~~~\n';
 
 					// Make log edit
 					logPage.edit( {
@@ -904,6 +898,26 @@
 				} );
 
 				return deferred;
+			},
+
+			/**
+			 * Takes text of the log page; returns a string with the header for the current month
+			 * if that header doesn't already exist
+			 *
+			 * @param {string} logText Text of user's AfC log
+			 * @return {string} headerText
+			 */
+			addLogHeaderIfNeeded: function (logText) {
+				var date = new Date(),
+					monthNames = [ 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม' ],
+					headerRe = new RegExp( '^==+\\s*' + monthNames[ date.getMonth() ] + '\\s+' + (date.getFullYear() + 543) + '\\s*==+', 'm' ),
+					headerText = '';
+
+				if ( !headerRe.test( logText ) ) {
+					headerText += '\n\n=== ' + monthNames[ date.getMonth() ] + ' ' + (date.getFullYear() + 543) + ' ===';
+				}
+
+				return headerText;
 			},
 
 			/**
@@ -960,7 +974,7 @@
 			/**
 			 * Creates the status container
 			 *
-			 * @param  {selector} location String/jQuery selector for where the
+			 * @param {string|jQuery} location String/jQuery selector for where the
 			 *                             status container should be prepended
 			 */
 			init: function ( location ) {
@@ -973,7 +987,7 @@
 			/**
 			 * Represents an element in the status container
 			 *
-			 * @param  {string} initialText Initial text of the element
+			 * @param {string} initialText Initial text of the element
 			 * @param {Object} substitutions key-value pairs of strings that should be replaced by something
 			 *                               else. For example, { '$2': mw.user.getUser() }. If not redefined, $1
 			 *                               will be equal to the current page name.
@@ -982,7 +996,7 @@
 				/**
 				 * Replace the status element with new html content
 				 *
-				 * @param  {jQuery|string} html Content of the element
+				 * @param {jQuery|string} html Content of the element
 				 *                              Can use $1 to represent the page name
 				 */
 				this.update = function ( html ) {
@@ -1062,7 +1076,7 @@
 					$.each( substitutions, function ( original, replacement ) {
 						text = text.replace(
 							// Escape the original substitution key, then make it a global regex
-							new RegExp( original.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' ), 'g' ),
+							new RegExp( original.replace( /[-/\\^$*+?.()|[\]{}]/g, '\\$&' ), 'g' ),
 							replacement
 						);
 					} );
@@ -1204,7 +1218,9 @@
 				autoOpen: false,
 				logCsd: true,
 				launchLinkPosition: 'p-cactions',
-				logAfc: false
+				logAfc: false,
+				noWatch: false,
+				autoSubscribe: false
 			};
 
 			/**
@@ -1282,8 +1298,6 @@
 				// of the preferences as variables, as well as an additional few used in other locations.
 				this.$dialog.empty().append(
 					this.views.renderView( 'preferences', $.extend( {}, this.prefStore, {
-						version: AFCH.consts.version,
-						versionName: AFCH.consts.versionName,
 						userAgent: window.navigator.userAgent
 					} ) )
 				);
@@ -1406,7 +1420,7 @@
 		/**
 		 * Removes a key from a given object and returns the value of the key
 		 *
-		 * @param object
+		 * @param {Object} object
 		 * @param {string} key
 		 * @return {Mixed}
 		 */
@@ -1456,11 +1470,6 @@
 				} else {
 					value = $element.val();
 
-					// Ignore placeholder text
-					if ( value === $element.attr( 'placeholder' ) ) {
-						value = '';
-					}
-
 					// For <select multiple> with nothing selected, jQuery returns null...
 					// convert that to an empty array so that $.each() won't explode later
 					if ( value === null ) {
@@ -1492,16 +1501,23 @@
 		 * @param {string} pagename - The title of the page.
 		 * @param {string} displayTitle - What gets shown by the link.
 		 * @param {boolean} [newTab=true] - Whether to open page in a new tab.
+		 * @param {boolean} dontFollowRedirects - whether to add &redirect=no to URLs, to prevent auto redirecting when clicked
 		 * @return {jQuery} <a> element
 		 */
-		makeLinkElementToPage: function ( pagename, displayTitle, newTab ) {
+		makeLinkElementToPage: function ( pagename, displayTitle, newTab, dontFollowRedirects ) {
 			var actualTitle = pagename.replace( /_/g, ' ' );
 
 			// newTab is an optional parameter.
 			newTab = ( typeof newTab === 'undefined' ) ? true : newTab;
 
+			var options = {};
+			if ( dontFollowRedirects ) {
+				options = { redirect: 'no' };
+			}
+			var url = mw.util.getUrl( actualTitle, options );
+
 			return $( '<a>' )
-				.attr( 'href', mw.util.getUrl( actualTitle ) )
+				.attr( 'href', url )
 				.attr( 'id', 'afch-cat-link-' + pagename.toLowerCase().replace( / /g, '-' ).replace( /\//g, '-' ) )
 				.attr( 'title', actualTitle )
 				.text( displayTitle || actualTitle )
@@ -1517,7 +1533,6 @@
 		 */
 		makeLinkElementToCategory: function ( pagename, displayTitle ) {
 			var linkElement = AFCH.makeLinkElementToPage( 'Special:RandomInCategory/' + pagename, displayTitle, false ),
-				linkText = displayTitle || pagename.replace( /_/g, ' ' ),
 				request = {
 					action: 'query',
 					titles: 'หมวดหมู่:' + pagename,
@@ -1570,6 +1585,140 @@
 			}
 
 			return newCode;
+		},
+
+		/**
+		 * Remove empty section at the end of the draft. Empty sections at the end of drafts
+		 * frequently happen because of how the "Resubmit" button on the "declined" template
+		 * works. The empty section may have categories after it - keep them there.
+		 *
+		 * @param {string} wikicode
+		 * @return {string} wikicode
+		 */
+		removeEmptySectionAtEnd: function ( wikicode ) {
+			// Hard to write a regex that doesn't catastrophic backtrack while still saving multiple categories and multiple blank lines. So we'll do this the old-fashioned way...
+
+			// Divide wikitext into lines
+			var lines = wikicode.split( '\n' );
+
+			// Buffers
+			var linesToKeep = [];
+			var i;
+
+			// Crawl the list of lines backward (bottom up)
+			var count = lines.length;
+			for ( i = count - 1; i >= 0; i-- ) {
+				var line = lines[ i ];
+				var isWhitespace = line.match( /^\s*$/ );
+				var isCategory = line.match( /^\s*\[\[:?Category:/i );
+				var isHeading = line.match( /^==[^=]+==$/i );
+
+				if ( isWhitespace || isCategory ) {
+					linesToKeep.push( line );
+					continue;
+				} else if ( isHeading ) {
+					break;
+				}
+
+				// If it's something besides the three things above, such as text, then there's no blank headings to delete. Return unaltered wikitext. We're done.
+				return wikicode;
+			}
+
+			// Delete the lines we checked from the array of lines. We'll be replacing these with new lines in a moment.
+			lines = lines.slice( 0, i );
+
+			// Add the categories and blank lines back
+			// Need to iterate backward, same as the loop above
+			count = linesToKeep.length;
+			for ( var j = count - 1; j >= 0; j-- ) {
+				var lineToKeep = linesToKeep[ j ];
+				lines.push( lineToKeep );
+			}
+
+			wikicode = lines.join( '\n' );
+
+			// The old algorithm had some quirks related to adding and removing \n. Mimic the old algorithm for now, so that unit tests pass and users don't have to get used to new behavior.
+			if ( wikicode.match( /\n\n$/ ) ) {
+				wikicode = wikicode.slice( 0, -1 );
+			}
+			wikicode = wikicode.replace( /\n(\n\n\[\[:?Category:)/i, '$1' );
+
+			return wikicode;
+		},
+
+		/**
+		 * @param {string} talkText Wikitext of the draft talk page
+		 * @param {string} newAssessment Value of "Article assessment" dropdown list, or "" if blank
+		 * @param {number} revId Revision ID of the draft that is being accepted
+		 * @param {boolean} isBiography Value of the "Is the article a biography?" check box
+		 * @param {Array} newWikiProjects Value of the "Add WikiPrjects" part of the form. The <input> is a chips interface called jquery.chosen. Note that if there are existing WikiProject banners on the page, the form will auto-add those to the "Add WikiProjects" part of the form when it first loads.
+		 * @param {string} lifeStatus Value of "Is the subject alive?" dropdown list ("unknown", "living", "dead")
+		 * @param {string} subjectName Value of the "Subject name (last, first)" text input, or "" if blank
+		 * @param {Array<Object>} existingWikiProjects An array of associative arrays. The associative arrays contain the keys {string} displayName (example: Somalia), {string} templateName (example: WikiProject Somalia), and {boolean} alreadyOnPage
+		 * @param {boolean} alreadyHasWPBio
+		 * @param {null} existingWPBioTemplateName
+		 * @return {Object} { {string} talkText, {number} countOfWikiProjectsAdded, {number} countOfWikiProjectsRemoved }
+		 */
+		addTalkPageBanners: function ( talkText, newAssessment, revId, isBiography, newWikiProjects, lifeStatus, subjectName, existingWikiProjects, alreadyHasWPBio, existingWPBioTemplateName ) {
+			var talkTextPrefix = '';
+
+			// Add the AFC banner
+			talkTextPrefix += '{{subst:WPAFC/article|class=' + newAssessment +
+				( revId ? '|oldid=' + revId : '' ) + '}}';
+
+			// Add biography banner if specified
+			if ( isBiography ) {
+				// Ensure we don't have duplicate biography tags
+				AFCH.removeFromArray( newWikiProjects, 'WikiProject Biography' );
+
+				talkTextPrefix += ( '\n{{WikiProject Biography|living=' +
+					( lifeStatus !== 'unknown' ? ( lifeStatus === 'living' ? 'yes' : 'no' ) : '' ) +
+					'|class=' + newAssessment + '|listas=' + subjectName + '}}' );
+			}
+
+			// Add disambiguation banner if needed
+			if ( newAssessment === 'disambig' &&
+				$.inArray( 'WikiProject Disambiguation', newWikiProjects ) === -1 ) {
+				newWikiProjects.push( 'WikiProject Disambiguation' );
+			}
+
+			// Add and remove WikiProjects
+			/** @member {Array} */
+			var wikiProjectsToAdd = newWikiProjects.filter( function ( newTemplateName ) {
+				return !existingWikiProjects.some( function ( existingTplObj ) {
+					return existingTplObj.templateName === newTemplateName;
+				} );
+			} );
+			/** @member {Array} */
+			var wikiProjectsToRemove = existingWikiProjects.filter( function ( existingTplObj ) {
+				return !newWikiProjects.some( function ( newTemplateName ) {
+					return existingTplObj.templateName === newTemplateName;
+				} );
+			} ).map( function ( templateObj ) {
+				return templateObj.realTemplateName || templateObj.templateName;
+			} );
+			if ( alreadyHasWPBio && !isBiography ) {
+				wikiProjectsToRemove.push( existingWPBioTemplateName || 'wikiproject biography' );
+			}
+
+			$.each( wikiProjectsToAdd, function ( _index, templateName ) {
+				talkTextPrefix += '\n{{' + templateName + '|class=' + newAssessment + '}}';
+			} );
+			$.each( wikiProjectsToRemove, function ( _index, templateName ) {
+				// Regex from https://stackoverflow.com/a/5306111/1757964
+				var sanitizedTemplateName = templateName.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&' );
+				talkText = talkText.replace( new RegExp( '\\n?\\{\\{\\s*' + sanitizedTemplateName + '\\s*.+?\\}\\}', 'is' ), '' );
+			} );
+
+			// We prepend the text so that talk page content is not removed
+			// (e.g. pages in `Draft:` namespace with discussion)
+			talkText = talkTextPrefix + '\n\n' + talkText;
+
+			return {
+				talkText: talkText,
+				countOfWikiProjectsAdded: wikiProjectsToAdd.length,
+				countOfWikiProjectsRemoved: wikiProjectsToRemove.length
+			};
 		},
 
 		/**
@@ -1658,8 +1807,8 @@
 		 * If there is no match, return false
 		 *
 		 * @param {string} string string to parse
-		 * @param mwstyle
-		 * @return {Date|integer}
+		 * @param {boolean} mwstyle convert to a mediawiki-style timestamp?
+		 * @return {Date|number}
 		 */
 		parseForTimestamp: function ( string, mwstyle ) {
 			var exp, match, date;
@@ -1699,7 +1848,7 @@
 		 * Parses a MediaWiki internal YYYYMMDDHHMMSS timestamp
 		 *
 		 * @param {string} string
-		 * @return {Date|bool} if unable to parse, returns false
+		 * @return {Date|boolean} if unable to parse, returns false
 		 */
 		mwTimestampToDate: function ( string ) {
 			var date, dateMatches = /(\d{4})(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)/.exec( string );
@@ -1774,4 +1923,4 @@
 	} );
 
 }( AFCH, jQuery, mediaWiki ) );
-//</nowiki>
+// </nowiki>

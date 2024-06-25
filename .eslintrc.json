@@ -1,54 +1,31 @@
 {
 	"extends": "wikimedia",
-	"plugins": [
-		"jsdoc"
-	],
 	"env": {
 		"browser": true,
 		"jquery": true
 	},
 	"globals": {
-		"AFCH": true,
-		"Hogan": false,
-		"importScript": false,
-		"mediaWiki": true,
-		"mw": true,
-		"OO": false
+		"AFCH": "writable",
+		"Hogan": "readonly",
+		"importScript": "readonly",
+		"mediaWiki": "writable",
+		"mw": "writable",
+		"OO": "readonly"
 	},
 	"rules": {
-		"camelcase": 0,
-		"eqeqeq": 0,
-		"jsdoc/check-param-names": 0,
-		"jsdoc/check-tag-names": 0,
-		"jsdoc/no-undefined-types": 0,
-		"jsdoc/require-param-type": 0,
-		"jsdoc/require-returns": 0,
-		"jsdoc/require-returns-check": 0,
-		"jsdoc/valid-types": 0,
-		"max-len": 0,
-		"max-statements-per-line": 0,
-		"no-console": 0,
-		"no-global-assign": 0,
-		"no-implicit-globals": 0,
-		"no-new": 0,
-		"no-prototype-builtins": 0,
-		"no-shadow": 0,
-		"no-undef": 0,
-		"no-underscore-dangle": 0,
-		"no-unused-vars": 0,
-		"no-use-before-define": 0,
-		"no-useless-concat": 0,
-		"no-useless-escape": 0,
-		"one-var": 0,
-		"spaced-comment": 0,
-		"vars-on-top": 0
-	},
-	"settings": {
-		"jsdoc": {
-			"ignoreInternal": true
-		}
-	},
-	"ignorePatterns": [
-		"scripts/generate-certificates.js"
-	]
+		"camelcase": "off",
+		"eqeqeq": "warn",
+		"max-len": "off",
+		"no-console": "off",
+		"no-global-assign": "warn",
+		"no-implicit-globals": "warn",
+		"no-new": "warn",
+		"no-prototype-builtins": "off",
+		"no-shadow": "off",
+		"no-undef": "warn",
+		"no-underscore-dangle": "off",
+		"security/detect-non-literal-regexp": "off",
+		"security/detect-unsafe-regex": "off",
+		"unicorn/prefer-string-slice": "off"
+	}
 }

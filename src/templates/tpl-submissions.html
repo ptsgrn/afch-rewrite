@@ -1,9 +1,9 @@
-//<nowiki>
+// <nowiki>
 
 <!-- main -->
 <div class="review-panel initial">
 	<div class="initial-header">
-		<span>AFCH v<span title="{{versionName}}">{{version}}</span>&nbsp;
+		<span>AFCH&nbsp;
 		(<!-- Disabled due to issue #71 <span class="feedback-wrapper"></span> | --><span class="preferences-wrapper"></span>)</span>
 		กำลังตรวจหน้า "{{title}}"
 	</div>
@@ -119,6 +119,11 @@
 			<input type="checkbox" id="isBiography" class="afch-input"/>
 		</div>
 
+		<div id="copyCommentsWrapper">
+			<label for="copyComments" class="afch-label">Copy comments to talk page</label>
+			<input type="checkbox" id="copyComments" class="afch-input"/>
+		</div>
+
 		<div id="bioOptionsWrapper" class="hidden">
 
 			<div id="subjectNameWrapper">
@@ -188,6 +193,8 @@
 			<input type="checkbox" id="notifyUser" class="afch-input" checked/>
 		</div>
 
+		<div id="afchEditConflict"></div>
+
 		<div id="afchSubmitForm" data-running="กำลังรับฉบับร่างไว้..." class="gradient-button accept">ให้ผ่าน &amp; เผยแพร่</div>
 
 	</div>
@@ -217,6 +224,8 @@
 					<option value="athlete">athlete - ฉบับร่างเกี่ยวกับนักกีฬาที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
 					<option value="music">music - ฉบับร่างเกี่ยวกับดนตรีที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
 					<option value="film">film - ฉบับร่างเกี่ยวกับภาพยนตร์ที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
+					<option value="book">book - ฉบับร่างเกี่ยวกับหนังสือที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
+					<option value="event">event - ฉบับร่างเกี่ยวกับเหตุการณ์ที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
 					<option value="corp">corp - ฉบับร่างเกี่ยวกับบริษัทและองค์กรที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
 					<option value="bio">bio - ฉบับร่างเกี่ยวกับบุคคลที่ยังไม่เข้าเงื่อนไขความโดดเด่น</option>
 					<option value="nn">nn - ฉบับร่างเกี่ยวกับหัวข้อที่ยังไม่เข้าเงื่อนไขความโดดเด่น (จะอธิบายเพิ่มเติมภายหลัง)</option>
@@ -324,6 +333,8 @@
 			</div> -->
 		</div>
 
+		<div id="afchEditConflict"></div>
+
 		<div id="afchSubmitForm" data-running="กำลังตีกลับฉบับร่าง..." class="gradient-button button-centered decline hidden">ตีกลับฉบับร่าง</div>
 
 	</div>
@@ -341,10 +352,12 @@
 
 		<div id="commentPreview"></div>
 
-	<div class="afch-option">
-		<input type="checkbox" id="notifyUser" class="afch-input" {{#notifyByDefault}}checked{{/notifyByDefault}} />
-		<label for="notifyUser" class="afch-label">แจ้งผู้ส่ง</label>
-	</div>
+		<div class="afch-option">
+			<input type="checkbox" id="notifyUser" class="afch-input" {{#notifyByDefault}}checked{{/notifyByDefault}} />
+			<label for="notifyUser" class="afch-label">แจ้งผู้ส่ง</label>
+		</div>
+
+		<div id="afchEditConflict"></div>
 
 		<div id="afchSubmitForm" data-running="กำลังแจ้งผู้ส่ง..." class="gradient-button button-centered comment">โพสต์ความเห็น</div>
 
@@ -371,6 +384,8 @@
 			<div id="submitterNameStatus" class="error"></div>
 		</div>
 
+		<div id="afchEditConflict"></div>
+
 		<div id="afchSubmitForm" data-running="กำลังส่งตรวจ..." class="gradient-button button-centered submit">บันทึก</div>
 
 	</div>
@@ -385,12 +400,13 @@
 			placeholder="ใส่เหตุผลว่าเพราะเหตุใดจึงต้องการยืดเวลาการลบ ซึ่งจะเพิ่มในแม่แบบด้วย"
 			cols="100" rows="5"></textarea>
 
+		<div id="afchEditConflict"></div>
+
 		<div id="afchSubmitForm" data-running="ยืดระยะเวลาการลบ..." class="gradient-button button-centered postpone-g10">
 			ยืดระยะเวลาการลบ
 		</div>
-
 	</div>
 </div>
 <!-- /postpone-g10 -->
 
-//</nowiki>
+// </nowiki>

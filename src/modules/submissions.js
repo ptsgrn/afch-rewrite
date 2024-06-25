@@ -1,5 +1,4 @@
-/* eslint-disable no-tabs */
-//<nowiki>
+// <nowiki>
 ( function ( AFCH, $, mw ) {
 	var $afchLaunchLink, $afch, $afchWrapper,
 		afchPage, afchSubmission, afchViews, afchViewer;
@@ -356,9 +355,8 @@
 	 * Sets the submission status
 	 *
 	 * @param {string} newStatus status to set, 'd'|'t'|'r'|''
-	 * @param {params} optional; params to add to the template whose status was set
-	 * @param newParams
-	 * @return {bool} success
+	 * @param {Object} newParams optional; params to add to the template whose status was set
+	 * @return {boolean} success
 	 */
 	AFCH.Submission.prototype.setStatus = function ( newStatus, newParams ) {
 		var relevantTemplate = this.templates[ 0 ];
@@ -422,7 +420,7 @@
 	 * Add a new comment to the beginning of this.comments
 	 *
 	 * @param {string} text comment text
-	 * @return {bool} success
+	 * @return {boolean} success
 	 */
 	AFCH.Submission.prototype.addNewComment = function ( text ) {
 		var commentText = $.trim( text );
@@ -453,8 +451,28 @@
 		var deferred = $.Deferred(),
 			user = this.params.u;
 
+		// Recursively detect if the user has been renamed by checking the rename log
 		if ( user ) {
-			deferred.resolve( user );
+			AFCH.api.get( {
+				action: 'query',
+				list: 'logevents',
+				formatversion: 2,
+				letype: 'renameuser',
+				lelimit: 1,
+				letitle: 'User:' + user
+			} ).then( function ( resp ) {
+				var logevents = resp.query.logevents;
+
+				if ( logevents.length ) {
+					var newName = logevents[ 0 ].params.newuser;
+					this.params.u = newName;
+					this.getSubmitter().then( function ( user ) {
+						deferred.resolve( user );
+					} );
+				} else {
+					deferred.resolve( user );
+				}
+			}.bind( this ) );
 		} else {
 			this.page.getCreator().done( function ( user ) {
 				deferred.resolve( user );
@@ -467,7 +485,7 @@
 	/**
 	 * Represents text of an AfC submission
 	 *
-	 * @param {[type]} text [description]
+	 * @param {string} text
 	 */
 	AFCH.Text = function ( text ) {
 		this.text = text;
@@ -504,7 +522,7 @@
 				'Once you have saved this page you will find a new yellow \'Review waiting\' box at the bottom of your submission page. ' +
 				'If you have submitted your page previously,(?: either)? the old pink \'Submission declined\' template or the old grey ' +
 				'\'Draft\' template will still appear at the top of your submission page, but you should ignore (them|it). Again, please ' +
-				'don\'t change anything in this text box. Just press the \"Save page\" button below.'
+				'don\'t change anything in this text box. Just press the "Save page" button below.'
 			];
 
 		if ( isAccept ) {
@@ -515,7 +533,7 @@
 			// Not removed if the |text= parameter is present, which could contain
 			// arbitrary wikitext and therefore makes the end of the template harder
 			// to detect
-			text = text.replace( /\{\{Draft(?!\|\s*text\s*=)(?: article(?!\|\s*text\s*=)(?:\|(?:subject=)?[^\|]+)?|\|(?:subject=)?[^\|]+)?\}\}/gi, '' );
+			text = text.replace( /\{\{Draft(?!\|\s*text\s*=)(?: article(?!\|\s*text\s*=)(?:\|(?:subject=)?[^|]+)?|\|(?:subject=)?[^|]+)?\}\}/gi, '' );
 			text = text.replace( /\{\{ฉบับร่าง(?!\|\s*text\s*=)(?:บทความ(?!\|\s*text\s*=)(?:\|(?:subject=)?[^\|]+)?|\|(?:subject=)?[^\|]+)?\}\}/gi, '' );
 			text = text.replace( /\{\{บทความ(?:ฉบับร่าง(?!\|\s*text\s*=)(?:\|(?:subject=)?[^\|]+)?|\|(?:subject=)?[^\|]+)?\}\}/gi, '' );
 
@@ -560,6 +578,7 @@
 
 		// Remove empty section at the end (caused by "Resubmit" button on "declined" template)
 		// Section may have categories after it - keep them there
+		text = AFCH.removeEmptySectionAtEnd( text );
 		text = text.replace( /\n+==.+?==((?:\[\[:?(Category|หมวดหมู่):.+?\]\]|\s+)*)$/, '$1' );
 
 		// Assemble a master regexp and remove all now-unneeded comments (commentsToRemove)
@@ -577,21 +596,21 @@
 		text = text.replace( /<!--\s*((\[\[:{0,1}((Category|หมวดหมู่):.*?)\]\]\s*)+)-->/gi, '$1' );
 
 		// Remove spaces/commas between <ref> tags
-		text = text.replace( /\s*(<\/\s*ref\s*\>)\s*[,]*\s*(<\s*ref\s*(name\s*=|group\s*=)*\s*[^\/]*>)[ \t]*$/gim, '$1$2' );
+		text = text.replace( /\s*(<\/\s*ref\s*>)\s*[,]*\s*(<\s*ref\s*(name\s*=|group\s*=)*\s*[^/]*>)[ \t]*$/gim, '$1$2' );
 
 		// Remove whitespace before <ref> tags
-		text = text.replace( /[ \t]*(<\s*ref\s*(name\s*=|group\s*=)*\s*.*[^\/]+>)[ \t]*$/gim, '$1' );
+		text = text.replace( /[ \t]*(<\s*ref\s*(name\s*=|group\s*=)*\s*.*[^/]+>)[ \t]*$/gim, '$1' );
 
 		// Move punctuation before <ref> tags
-		text = text.replace( /\s*((<\s*ref\s*(name\s*=|group\s*=)*\s*.*[\/]{1}>)|(<\s*ref\s*(name\s*=|group\s*=)*\s*[^\/]*>(?:<[^<\>]*\>|[^><])*<\/\s*ref\s*\>))[ \t]*([.!?,;:])+$/gim, '$6$1' );
+		text = text.replace( /\s*((<\s*ref\s*(name\s*=|group\s*=)*\s*.*[/]{1}>)|(<\s*ref\s*(name\s*=|group\s*=)*\s*[^/]*>(?:<[^<>]*>|[^><])*<\/\s*ref\s*>))[ \t]*([.!?,;:])+$/gim, '$6$1' );
 
 		// Replace {{http://example.com/foo}} with "* http://example.com/foo" (common newbie error)
-		text = text.replace( /\n\{\{(http[s]?|ftp[s]?|irc|gopher|telnet)\:\/\/(.*?)\}\}/gi, '\n* $1://$3' );
+		text = text.replace( /\n\{\{(http[s]?|ftp[s]?|irc|gopher|telnet):\/\/(.*?)\}\}/gi, '\n* $1://$3' );
 
 		// Convert http://-style links to other wikipages to wikicode syntax
 		// FIXME: Break this out into its own core function? Will it be used elsewhere?
 		function convertExternalLinksToWikilinks( text ) {
-			var linkRegex = /\[{1,2}(?:https?:)?\/\/(?:en.wikipedia.org\/wiki|enwp.org)\/([^\s\|\]\[]+)(?:\s|\|)?((?:\[\[[^\[\]]*\]\]|[^\]\[])*)\]{1,2}/ig,
+			var linkRegex = /\[{1,2}(?:https?:)?\/\/(?:en.wikipedia.org\/wiki|enwp.org)\/([^\s|\][]+)(?:\s|\|)?((?:\[\[[^[\]]*\]\]|[^\][])*)\]{1,2}/ig,
 				linkMatch = linkRegex.exec( text ),
 				title, displayTitle, newLink;
 
@@ -887,6 +906,10 @@
 		this.text = this.text.replace( /^\s*/, '' );
 	};
 
+	AFCH.Text.prototype.getAfcComments = function () {
+		return this.text.match( /\{\{\s*afc comment[\s\S]+?\(UTC\)\}\}/gi );
+	};
+
 	AFCH.Text.prototype.removeAfcTemplates = function () {
 		// FIXME: Awful regex to remove the old submission templates
 		// This is bad. It works for most cases but has a hellish time
@@ -914,8 +937,8 @@
 	 * Removes old submission templates/comments and then adds new ones
 	 * specified by `new`
 	 *
-	 * @param {string} new
-	 * @param newCode
+	 * @param {string} newCode
+	 * @return {string}
 	 */
 	AFCH.Text.prototype.updateAfcTemplates = function ( newCode ) {
 		this.removeAfcTemplates();
@@ -1046,7 +1069,7 @@
 					.append(
 						$( '<div>' )
 							.addClass( 'initial-header' )
-							.text( 'กำลังโหลด AFCH v' + AFCH.consts.version + '...' )
+							.text( 'กำลังโหลด AFCH ...' )
 					)
 			);
 
@@ -1091,16 +1114,13 @@
 				decline: submission.isCurrentlySubmitted,
 				comment: true, // Comments are always okay!
 				submit: !submission.isCurrentlySubmitted,
-				alreadyUnderReview: submission.isUnderReview,
-				version: AFCH.consts.version,
-				versionName: AFCH.consts.versionName
+				alreadyUnderReview: submission.isUnderReview
 			} );
 
 			// Set up the extra options slide-out panel, which appears
 			// when the user click on the chevron
 			$afch.find( '#afchExtra .open' ).click( function () {
-				var $extra = $afch.find( '#afchExtra' ),
-					$toggle = $( this );
+				var $extra = $afch.find( '#afchExtra' );
 
 				if ( extrasRevealed ) {
 					$extra.find( 'a' ).hide();
@@ -1115,18 +1135,28 @@
 				}
 			} );
 
-			// Add feedback and preferences links
-			// FIXME: Feedback temporarily disabled due to https://github.com/WPAFC/afch-rewrite/issues/71
-			// AFCH.initFeedback( $afch.find( 'span.feedback-wrapper' ), '[your topic here]', 'give feedback' );
+			// Add preferences link
 			AFCH.preferences.initLink( $afch.find( 'span.preferences-wrapper' ), 'การตั้งค่า' );
 
 			// Set up click handlers
-			$afch.find( '#afchAccept' ).click( function () { spinnerAndRun( showAcceptOptions ); } );
-			$afch.find( '#afchDecline' ).click( function () { spinnerAndRun( showDeclineOptions ); } );
-			$afch.find( '#afchComment' ).click( function () { spinnerAndRun( showCommentOptions ); } );
-			$afch.find( '#afchSubmit' ).click( function () { spinnerAndRun( showSubmitOptions ); } );
-			$afch.find( '#afchClean' ).click( function () { handleCleanup(); } );
-			$afch.find( '#afchMark' ).click( function () { handleMark( /* unmark */ submission.isUnderReview ); } );
+			$afch.find( '#afchAccept' ).click( function () {
+				spinnerAndRun( showAcceptOptions );
+			} );
+			$afch.find( '#afchDecline' ).click( function () {
+				spinnerAndRun( showDeclineOptions );
+			} );
+			$afch.find( '#afchComment' ).click( function () {
+				spinnerAndRun( showCommentOptions );
+			} );
+			$afch.find( '#afchSubmit' ).click( function () {
+				spinnerAndRun( showSubmitOptions );
+			} );
+			$afch.find( '#afchClean' ).click( function () {
+				handleCleanup();
+			} );
+			$afch.find( '#afchMark' ).click( function () {
+				handleMark( /* unmark */ submission.isUnderReview );
+			} );
 
 			// Load warnings about the page, then slide them in
 			getSubmissionWarnings().done( function ( warnings ) {
@@ -1144,8 +1174,12 @@
 			// but don't hold up the rest of the loading to do so
 			submission.isG13Eligible().done( function ( eligible ) {
 				$afch.find( '.g13-related' ).toggleClass( 'hidden', !eligible );
-				$afch.find( '#afchG13' ).click( function () { handleG13(); } );
-				$afch.find( '#afchPostponeG13' ).click( function () { spinnerAndRun( showPostponeG13Options ); } );
+				$afch.find( '#afchG13' ).click( function () {
+					handleG13();
+				} );
+				$afch.find( '#afchPostponeG13' ).click( function () {
+					spinnerAndRun( showPostponeG13Options );
+				} );
 			} );
 		} );
 	}
@@ -1163,8 +1197,8 @@
 		 * Adds a warning
 		 *
 		 * @param {string} message
-		 * @param {string|bool} actionMessage set to false to hide action link
-		 * @param {Function | string} onAction function to call of success, or URL to browse to
+		 * @param {string|boolean} actionMessage set to false to hide action link
+		 * @param {Function|string} onAction function to call on success, or URL to browse to
 		 */
 		function addWarning( message, actionMessage, onAction ) {
 			var $action,
@@ -1175,7 +1209,7 @@
 			if ( actionMessage !== false ) {
 				$action = $( '<a>' )
 					.addClass( 'link' )
-					.text( actionMessage || 'แก้ไขหน้า' )
+					.text( '(' + ( actionMessage || 'แก้ไขหน้า' ) + ')' )
 					.appendTo( $warning );
 
 				if ( typeof onAction === 'function' ) {
@@ -1201,7 +1235,7 @@
 						return ref.indexOf( '/>', ref.length - 2 ) === -1;
 					} ),
 
-					refEndRe = /<\/\s*ref\s*\>/ig,
+					refEndRe = /<\/\s*ref\s*>/ig,
 					refEndMatches = text.match( refEndRe ) || [],
 
 					reflistRe = /({{(ref(erence)?(\s|-)?list|listaref|refs|footnote|reference|referencias|รายการอ้างอิง)(?:{{[^{}]*}}|[^}{])*}})|(<\s*references\s*\/?>)/ig,
@@ -1209,7 +1243,7 @@
 
 					// This isn't as good as a tokenizer, and believes that <ref> foo </b> is
 					// completely correct... but it's a good intermediate level solution.
-					malformedRefs = text.match( /<\s*ref\s*[^\/]*>?<\s*[^\/]*\s*ref\s*>/ig ) || [];
+					malformedRefs = text.match( /<\s*ref\s*[^/]*>?<\s*[^/]*\s*ref\s*>/ig ) || [];
 
 				// Uneven (/unclosed) <ref> and </ref> tags
 				if ( refBeginMatches.length !== refEndMatches.length ) {
@@ -1220,9 +1254,8 @@
 				// <ref>1<ref> instead of <ref>1</ref> detection
 				if ( malformedRefs.length ) {
 					addWarning( 'ฉบับร่างมีการใช้ <ref> ที่ไม่ถูกต้อง', 'ดูรายละเอียด', function () {
-						var $toggleLink = $( this ).addClass( 'malformed-refs-toggle' ),
-							$warningDiv = $( this ).parent();
-						$malformedRefWrapper = $( '<div>' )
+						var $warningDiv = $( this ).parent();
+						var $malformedRefWrapper = $( '<div>' )
 							.addClass( 'malformed-refs' )
 							.appendTo( $warningDiv );
 
@@ -1348,15 +1381,14 @@
 					// Simulate cleanUp first so that we don't warn about HTML
 					// comments that the script will remove anyway in the future
 					text = ( new AFCH.Text( rawText ) ).cleanUp( true ),
-					longCommentRegex = /(?:<![ \r\n\t]*--)([^\-]|[\r\n]|-[^\-]){30,}(?:--[ \r\n\t]*>)?/g,
+					longCommentRegex = /(?:<![ \r\n\t]*--)([^-]|[\r\n]|-[^-]){30,}(?:--[ \r\n\t]*>)?/g,
 					longCommentMatches = text.match( longCommentRegex ) || [],
 					numberOfComments = longCommentMatches.length;
 
 				if ( numberOfComments ) {
 					addWarning( 'หน้านี้มีคอมเมนต์ HTML ' +
 						' ที่ยาวกว่า 30 ตัวอักษร', 'ดูคอมเมนต์', function () {
-						var $toggleLink = $( this ).addClass( 'long-comment-toggle' ),
-							$warningDiv = $( this ).parent(),
+						var $warningDiv = $( this ).parent(),
 							$commentsWrapper = $( '<div>' )
 								.addClass( 'long-comments' )
 								.appendTo( $warningDiv );
@@ -1383,6 +1415,45 @@
 			return deferred;
 		}
 
+		function checkForCopyvio() {
+			return AFCH.api.get( {
+				action: 'pagetriagelist',
+				page_id: mw.config.get( 'wgArticleId' )
+			} ).then( function ( json ) {
+				var triageInfo = json.pagetriagelist.pages[ 0 ];
+				if ( triageInfo && Number( triageInfo.copyvio ) === mw.config.get( 'wgCurRevisionId' ) ) {
+					addWarning(
+						'This submission may contain copyright violations',
+						'CopyPatrol',
+						'https://copypatrol.wmcloud.org/en?filter=all&searchCriteria=page_exact&searchText=' + encodeURIComponent( afchPage.rawTitle ) + '&drafts=1&revision=' + mw.config.get( 'wgCurRevisionId' ), '_blank'
+					);
+				}
+			} );
+		}
+
+		function checkForBlocks() {
+			const dateFormatter = new Intl.DateTimeFormat('th-TH', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+				hour: 'numeric',
+				minute: 'numeric'
+			});
+			return afchSubmission.getSubmitter().then( function ( creator ) {
+				return checkIfUserIsBlocked( creator ).then( function ( blockData ) {
+					if ( blockData !== null ) {
+						var date = 'infinity';
+						if ( blockData.expiry !== 'infinity' ) {
+							var data = new Date( blockData.expiry );
+							date = dateFormatter.format( data );
+						}
+						var warning = creator + 'ซึ่งเป็นผู้ส่งฉบับร่างถูกบล็อกโดย ' + blockData.by + (date === "infinity" ? " โดยไม่มีกำหนดปลดบล็อก" : ' จนถึง ' + date) + ' เนื่องจาก: ' + blockData.reason;
+						addWarning( warning );
+					}
+				} );
+			} );
+		}
+
 		$.when(
 			checkReferences(),
 			checkDeletionLog(),
@@ -1404,7 +1475,7 @@
 			// $1 = article name
 			// $2 = article class or '' if not available
 			'accepted-submission': headerBegin +
-				'หน้า [[$1]] ได้รับการยอมรับแล้ว ==\n{{subst:Afc talk|$1|class=$2|sig=~~' + '~~}}',
+				'หน้า [[$1]] ได้รับการยอมรับแล้ว ==\n{{subst:Afc talk|$1|class=$2|sig=~~~~}}',
 
 			// $1 = full submission title
 			// $2 = short title
@@ -1431,9 +1502,9 @@
 			'comment-on-submission': '{{subst:afc notification|comment|article=$1}}',
 
 			// $1 = article name
-			'g13-submission': '{{subst:Db-afc-notice|$1}} ~~' + '~~',
+			'g13-submission': '{{subst:Db-afc-notice|$1}} ~~~~',
 
-			'teahouse-invite': '{{subst:Wikipedia:Teahouse/AFC invitation|sign=~~' + '~~}}'
+			'teahouse-invite': '{{subst:Wikipedia:Teahouse/AFC invitation|sign=~~~~}}'
 		} );
 	}
 
@@ -1478,7 +1549,6 @@
 
 		// Handler will run after the main AJAX requests complete
 		setupAjaxStopHandler();
-
 	}
 
 	/**
@@ -1501,10 +1571,12 @@
 				);
 
 			// Show a link to the next random submissions
-			new AFCH.status.Element( 'Continue to next $1, $2, or $3 &raquo;', {
-				$1: AFCH.makeLinkElementToCategory( 'Pending AfC submissions', 'random submission' ),
-				$2: AFCH.makeLinkElementToCategory( 'AfC pending submissions by age/0 days ago', 'zero-day-old submission' ),
-				$3: AFCH.makeLinkElementToCategory( 'AfC pending submissions by age/Very old', 'very old submission' )
+			// We need "new" here because Element uses "this." and needs the right context.
+			// eslint-disable-next-line no-new
+			new AFCH.status.Element( 'ทำต่อหรือไม่ $1, $2, or $3 &raquo;', {
+				$1: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจ', 'สุ่มฉบับร่าง' ),
+				$2: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจเรียงตามอายุ/0 วันก่อน', 'ใหม่ล่าสุด' ),
+				$3: AFCH.makeLinkElementToCategory( 'ฉบับร่างรอตรวจเรียงตามอายุ/เก่ามาก', 'เก่าสุด (>6 เดือน)' )
 			} );
 
 			// Also, automagically reload the page in place
@@ -1545,10 +1617,18 @@
 				// Also provide extra data
 				$.extend( data, extraData );
 
-				prepareForProcessing();
+				checkForEditConflict().then( function ( editConflict ) {
+					if ( editConflict ) {
+						showEditConflictMessage();
+						return;
+					}
 
-				// Now finally call the applicable handler
-				fn( data );
+					// Hide the HTML form. Show #afchStatus messages
+					prepareForProcessing();
+
+					// Now finally call the applicable handler
+					fn( data );
+				} );
 			} );
 		} );
 	}
@@ -1558,7 +1638,6 @@
 	 * calls the passed function
 	 *
 	 * @param {Function} fn function to call when spinner has been displayed
-	 * @return {[type]} [description]
 	 */
 	function spinnerAndRun( fn ) {
 		var $spinner, $container = $afch.find( '#afchContent' );
@@ -1609,17 +1688,19 @@
 		/**
 		 * If possible, use the session storage to get the WikiProject list.
 		 * If it hasn't been cached already, load it manually and then cache
+		 *
+		 * @return {jQuery.Deferred}
 		 */
 		function loadWikiProjectList() {
 			var deferred = $.Deferred(),
-				wikiProjects = [],
-				// This is so a new version of AFCH will invalidate the WikiProject cache
-				lsKey = 'afch-' + AFCH.consts.version + '-wikiprojects-2';
+				// Left over from when a new version of AFCH would invalidate the WikiProject cache. The lsKey doesn't change nowadays though.
+				lsKey = 'mw-afch-wikiprojects-2',
+				wikiProjects = mw.storage.getObject( lsKey );
 
-			if ( window.localStorage && window.localStorage[ lsKey ] ) {
-				wikiProjects = JSON.parse( window.localStorage[ lsKey ] );
+			if ( wikiProjects ) {
 				deferred.resolve( wikiProjects );
 			} else {
+				wikiProjects = [];
 				$.ajax( {
 					url: mw.config.get( 'wgServer' ) + '/w/index.php?title=%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%B4%E0%B8%9E%E0%B8%B5%E0%B9%80%E0%B8%94%E0%B8%B5%E0%B8%A2:' +
 						'%E0%B9%82%E0%B8%84%E0%B8%A3%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%B4/%E0%B9%81%E0%B8%A1%E0%B9%88%E0%B9%81%E0%B8' +
@@ -1634,12 +1715,8 @@
 					} );
 
 					// If possible, cache the WikiProject data!
-					if ( window.localStorage ) {
-						try {
-							window.localStorage[ lsKey ] = JSON.stringify( wikiProjects );
-						} catch ( e ) {
-							AFCH.log( 'ไม่สามารถแคชรายชื่อโครงการวิกิได้: ' + e.message );
-						}
+					if ( !mw.storage.setObject( lsKey, wikiProjects, ( 7 * 24 * 60 * 60 ) ) ) {
+						AFCH.log( 'ไม่สามารถแคชรายชื่อโครงการวิกิได้.' );
 					}
 
 					deferred.resolve( wikiProjects );
@@ -1692,7 +1769,9 @@
 
 			// If any templates weren't in the WikiProject map, check if they were redirects
 			if ( otherTemplates.length > 0 ) {
-				var titles = otherTemplates.map( function ( n ) { return 'Template:' + n; } ).join( '|' );
+				var titles = otherTemplates.map( function ( n ) {
+					return 'แม่แบบ:' + n;
+				} ).join( '|' );
 				return AFCH.api.get( {
 					action: 'query',
 					titles: titles,
@@ -1702,8 +1781,8 @@
 					if ( data.query && data.query.redirects && data.query.redirects.length > 0 ) {
 						var redirs = data.query.redirects;
 						for ( var redirIdx = 0; redirIdx < redirs.length; redirIdx++ ) {
-							var redir = redirs[ redirIdx ].to.substring( 'แม่แบบ:'.length ).toLowerCase();
-							var originalName = redirs[ redirIdx ].from.substring( 'แม่แบบ:'.length );
+							var redir = redirs[ redirIdx ].to.slice( 'แม่แบบ:'.length ).toLowerCase();
+							var originalName = redirs[ redirIdx ].from.slice( 'แม่แบบ:'.length );
 							if ( wikiProjectMap.hasOwnProperty( redir ) ) {
 								wikiProjectMap[ redir ].alreadyOnPage = true;
 								wikiProjectMap[ redir ].realTemplateName = originalName;
@@ -1746,7 +1825,9 @@
 			if ( !hasWikiProjects ) {
 				mw.notify( 'ไม่สามารถโหลดรายการโครงการวิกิได้' );
 			}
-			var wikiProjectObjs = Object.keys( wikiProjectMap ).map( function ( key ) { return wikiProjectMap[ key ]; } );
+			var wikiProjectObjs = Object.keys( wikiProjectMap ).map( function ( key ) {
+				return wikiProjectMap[ key ];
+			} );
 
 			loadView( 'accept', {
 				newTitle: afchSubmission.shortTitle,
@@ -1809,7 +1890,7 @@
 				// Extend the chosen menu for new WikiProjects. We hackily show a
 				// "Click to manually add {{PROJECT}}" link -- sadly, jquery.chosen
 				// doesn't support this natively.
-				$afch.find( '#newWikiProjects_chzn input' ).keyup( function ( e ) {
+				$afch.find( '#newWikiProjects_chzn input' ).keyup( function () {
 					var $chzn = $afch.find( '#newWikiProjects_chzn' ),
 						$input = $( this ),
 						newProject = $input.val(),
@@ -1908,9 +1989,11 @@
 				function prefillBiographyDetails() {
 					var titleParts;
 
-					// Prefill `LastName, FirstName` for Biography if the page title is two words and
+					// Prefill `LastName, FirstName` for Biography if the page title is two words
+					// after removing any trailing parentheticals (likely disambiguation), and
 					// therefore probably safe to asssume in a `FirstName LastName` format.
-					titleParts = afchSubmission.shortTitle.split( ' ' );
+					var title = afchSubmission.shortTitle.replace( / \([\s\S]*?\)$/g, '' );
+					titleParts = title.split( ' ' );
 					if ( titleParts.length === 2 ) {
 						$afch.find( '#subjectName' ).val( titleParts[ 1 ] + ', ' + titleParts[ 0 ] );
 					}
@@ -1947,6 +2030,7 @@
 					$status.text( '' );
 					$submitButton
 						.removeClass( 'disabled' )
+						.css( 'pointer-events', 'auto' )
 						.text( 'ให้ผ่านและเผยแพร่' );
 
 					// If there is no value, die now, because otherwise mw.Title
@@ -1979,22 +2063,31 @@
 							inprop: 'protection',
 							titles: page.rawTitle
 						} )
-					).then( function ( rawBlacklistResult, rawData ) {
+					).then( function ( rawBlacklist, rawInfo ) {
 						var errorHtml, buttonText;
 
 						// Get just the result, not the Promise object
-						var blacklistResult = rawBlacklistResult[ 0 ],
-							data = rawData[ 0 ];
+						var blacklistResult = rawBlacklist[ 0 ],
+							infoResult = rawInfo[ 0 ];
 
-						// If the page already exists, display an error
-						if ( !data.query.pages.hasOwnProperty( '-1' ) ) {
+						var pageAlreadyExists = !infoResult.query.pages.hasOwnProperty( '-1' );
+
+						var pages = infoResult && infoResult.query && infoResult.query.pages && infoResult.query.pages;
+						var firstPageInObject = Object.values( pages )[ 0 ];
+						var pageIsRedirect = firstPageInObject && ( 'redirect' in firstPageInObject );
+
+						if ( pageAlreadyExists && pageIsRedirect ) {
+							var linkToRedirect = AFCH.jQueryToHtml( AFCH.makeLinkElementToPage( page.rawTitle, null, null, true ) );
+							errorHtml = '<br />ว้า ดูเหมือนว่าหน้า "' + linkToRedirect + '" จะมีอยู่แล้วแต่เป็นหน้าเปลี่ยนทาง <span id="afch-redirect-notification">คุณต้องการแจ้งลบก่อนแล้วยอมรับฉบับร่างนี้ภายหลังหรือไม่ <a id="afch-redirect-tag-speedy">ได้เลย</a> / <a id="afch-redirect-abort">ยังก่อน</a></span>';
+							buttonText = 'มีบทความชื่อนี้อยู่แล้ว';
+						} else if ( pageAlreadyExists ) {
 							errorHtml = 'ว้า ดูเหมือนว่าบทความ "' + linkToPage + '" จะมีอยู่แล้ว';
 							buttonText = 'ชื่อบทความที่เสนอมามีอยู่แล้ว';
 						} else {
 							// If the page doesn't exist but IS create-protected and the
 							// current reviewer is not an admin, also display an error
 							// FIXME: offer one-click request unprotection?
-							$.each( data.query.pages[ '-1' ].protection, function ( _, entry ) {
+							$.each( infoResult.query.pages[ '-1' ].protection, function ( _, entry ) {
 								if ( entry.type === 'create' && entry.level === 'sysop' &&
 									$.inArray( 'sysop', mw.config.get( 'wgUserGroups' ) ) === -1 ) {
 									errorHtml = 'แย่แล้ว บทความ "' + linkToPage + '" ถูกล็อกสร้าง คุณจำเป็นต้องส่งคำขอยกเลิกการป้องกันสร้างหน้า';
@@ -2021,9 +2114,20 @@
 						// Show the error message
 						$status.html( errorHtml );
 
+						// Add listener for the "Do you want to tag it for speedy deletion so you can accept this draft later?" "yes" link.
+						$( '#afch-redirect-tag-speedy' ).on( 'click', function () {
+							handleAcceptOverRedirect( page.rawTitle );
+						} );
+
+						// Add listener for the "Do you want to tag it for speedy deletion so you can accept this draft later?" "no" link.
+						$( '#afch-redirect-abort' ).on( 'click', function () {
+							$( '#afch-redirect-notification' ).hide();
+						} );
+
 						// Disable the submit button and show an error in its place
 						$submitButton
 							.addClass( 'disabled' )
+							.css( 'pointer-events', 'none' )
 							.text( buttonText );
 					} );
 				} );
@@ -2039,7 +2143,6 @@
 				existingWPBioTemplateName: existingWPBioTemplateName,
 				existingShortDescription: shortDescription
 			} );
-
 		} );
 	}
 
@@ -2072,7 +2175,9 @@
 			declineCounts = AFCH.userData.get( 'decline-counts', false );
 
 			if ( declineCounts ) {
-				declineList = $.map( declineCounts, function ( _, key ) { return key; } );
+				var declineList = $.map( declineCounts, function ( _, key ) {
+					return key;
+				} );
 
 				// Sort list in descending order (most-used at beginning)
 				declineList.sort( function ( a, b ) {
@@ -2118,7 +2223,7 @@
 					candidateDupeName = ( afchSubmission.shortTitle !== 'sandbox' ) ? afchSubmission.shortTitle : '',
 					prevDeclineComment = $afch.find( '#declineTextarea' ).val(),
 					declineHandlers = {
-						cv: function ( pos ) {
+						cv: function () {
 							$afch.find( '#cvUrlWrapper' ).removeClass( 'hidden' );
 							$afch.add( '#csdWrapper' ).removeClass( 'hidden' );
 
@@ -2130,11 +2235,13 @@
 									$( this ).removeClass( 'bad-input' );
 									submitButton
 										.removeClass( 'disabled' )
+										.css( 'pointer-events', 'auto' )
 										.text( 'ตีกลับฉบับร่าง' );
 								} else {
 									$( this ).addClass( 'bad-input' );
 									submitButton
 										.addClass( 'disabled' )
+										.css( 'pointer-events', 'none' )
 										.text( 'กรุณาใส่หนึ่งถึงสามลิงก์' );
 								}
 							} );
@@ -2242,7 +2349,7 @@
 							type: 'block'
 						} ).css( 'padding', '20px' ) );
 					var reasonDeferreds = reason.map( AFCH.getReason );
-					$.when.apply( $, reasonDeferreds ).then( function ( a, b ) {
+					$.when.apply( $, reasonDeferreds ).then( function () {
 						$( '#previewContainer' )
 							.html( Array.prototype.slice.call( arguments )
 								.join( '<hr />' ) );
@@ -2269,8 +2376,8 @@
 
 	function addSignature( text ) {
 		text = text.trim();
-		if ( text.indexOf( '~~' + '~~' ) === -1 ) {
-			text += ' ~~' + '~~';
+		if ( text.indexOf( '~~~~' ) === -1 ) {
+			text += ' ~~~~';
 		}
 		return text;
 	}
@@ -2315,9 +2422,22 @@
 
 	function showCommentOptions() {
 		loadView( 'comment', {} );
+
+		var $submitButton = $( '#afchSubmitForm' );
+		$submitButton.hide();
+
 		$( '#commentText' ).on( 'keyup', mw.util.debounce( 500, function () {
 			previewComment( $( '#commentText' ), $( '#commentPreview' ) );
+
+			// Hide the submit button if there is no comment typed in
+			var comment = $( '#commentText' ).val();
+			if ( comment.length > 0 ) {
+				$submitButton.show();
+			} else {
+				$submitButton.hide();
+			}
 		} ) );
+
 		addFormSubmitHandler( handleComment );
 	}
 
@@ -2344,6 +2464,7 @@
 				$afch.find( '#submitterNameStatus' ).text( '' );
 				$afch.find( '#afchSubmitForm' )
 					.removeClass( 'disabled' )
+					.css( 'pointer-events', 'auto' )
 					.text( 'ส่งตรวจ' );
 			}
 
@@ -2381,6 +2502,7 @@
 						status.text( 'ลบ "ผู้ใช้:" ออกจากข้อความเริ่มต้น' );
 						submitButton
 							.addClass( 'disabled' )
+							.css( 'pointer-events', 'none' )
 							.text( 'ชื่อผู้ใช้ไม่ถูกต้อง' );
 						return;
 					}
@@ -2396,6 +2518,7 @@
 							status.text( 'ไม่พบผู้ใช้ชื่อ "' + submitter + '"' );
 							submitButton
 								.addClass( 'disabled' )
+								.css( 'pointer-events', 'none' )
 								.text( 'ไม่พบผู้ใช้' );
 						}
 					} );
@@ -2411,8 +2534,37 @@
 		addFormSubmitHandler( handlePostponeG13 );
 	}
 
-	// These functions actually perform a given action using data passed
-	// in the `data` parameter.
+	// These functions perform a given action using data passed in the `data` parameter.
+
+	function handleAcceptOverRedirect( destinationPageTitle ) {
+		// get rid of the accept form. replace it with the status div.
+		prepareForProcessing();
+
+		// Add {{Db-afc-move}} speedy deletion tag to redirect, and add to watchlist
+		( new AFCH.Page( destinationPageTitle ) ).edit( {
+			contents: '{{Db-afc-move|' + afchPage.rawTitle + '}}\n\n',
+			mode: 'prependtext',
+			summary: 'Requesting speedy deletion ([[Wikipedia:CSD#G6|CSD G6]]).',
+			statusText: 'Tagging',
+			watchlist: 'watch'
+		} );
+
+		// Mark the draft as under review.
+		afchPage.getText( false ).then( function ( rawText ) {
+			var text = new AFCH.Text( rawText );
+			afchSubmission.setStatus( 'r', {
+				reviewer: AFCH.consts.user,
+				reviewts: '{{subst:REVISIONTIMESTAMP}}'
+			} );
+			text.updateAfcTemplates( afchSubmission.makeWikicode() );
+			text.cleanUp();
+			afchPage.edit( {
+				contents: text.get(),
+				summary: 'Marking submission as under review',
+				statusText: 'Marking as under review'
+			} );
+		} );
+	}
 
 	function handleAccept( data ) {
 		var newText = data.afchText;
@@ -2429,6 +2581,12 @@
 				// ARTICLE
 				// -------
 
+				// get comments left by reviewers to put on talk page
+				var comments = [];
+				if ( data.copyComments ) {
+					comments = newText.getAfcComments();
+				}
+
 				newText.removeAfcTemplates();
 
 				newText.updateCategories( data.newCategories );
@@ -2440,13 +2598,18 @@
 
 				// Add biography details
 				if ( data.isBiography ) {
-
+					var deathYear = 'LIVING';
+					if ( data.lifeStatus === 'dead' ) {
+						deathYear = data.deathYear || 'MISSING';
+					} else if ( data.lifeStatus === 'unknown' ) {
+						deathYear = 'UNKNOWN';
+					}
 					// {{subst:L}}, which generates DEFAULTSORT as well as
 					// adds the appropriate birth/death year categories
 					// thwiki already +543 for birth/death year
 					newText.append( '\n{{subst:Lifetime' +
 						'|1=' + data.birthYear +
-						'|2=' + ( data.deathYear || '' ) +
+						'|2=' + deathYear +
 						'|3=' + data.subjectName + '}}'
 					);
 
@@ -2480,67 +2643,32 @@
 
 				// not compatible with thwiki - yet
 				talkPage.getText().done( function ( talkText ) {
-					var talkTextPrefix = '';
-
-					// Add the AFC banner
-					talkTextPrefix += '{{subst:WPAFC/article|ระดับ=' + data.newAssessment +
-						( afchPage.additionalData.revId ? '|oldid=' + afchPage.additionalData.revId : '' ) + '}}';
-
-					// Add biography banner if specified
-					// NOTE: thwiki did not have biography project yet
-					// if (data.isBiography) {
-					// 	// Ensure we don't have duplicate biography tags
-					// 	AFCH.removeFromArray(data.newWikiProjects, 'WikiProject Biography');
-					// 	talkTextPrefix += ('\n{{WikiProject Biography|living=' +
-					// 		(data.lifeStatus !== 'unknown' ? (data.lifeStatus === 'living' ? 'yes' : 'no') : '') +
-					// 		'|class=' + data.newAssessment + '|listas=' + data.subjectName + '}}');
-					// }
-
-					// if (data.newAssessment === 'disambig' &&
-					// 	$.inArray('WikiProject Disambiguation', data.newWikiProjects) === -1) {
-					// 	data.newWikiProjects.push('WikiProject Disambiguation');
-					// }
-
-					// Add and remove WikiProjects
-					var wikiProjectsToAdd = data.newWikiProjects.filter( function ( newTemplateName ) {
-						return !data.existingWikiProjects.some( function ( existingTplObj ) {
-							return existingTplObj.templateName === newTemplateName;
-						} );
-					} );
-					var wikiProjectsToRemove = data.existingWikiProjects.filter( function ( existingTplObj ) {
-						return !data.newWikiProjects.some( function ( newTemplateName ) {
-							return existingTplObj.templateName === newTemplateName;
-						} );
-					} ).map( function ( templateObj ) {
-						return templateObj.realTemplateName || templateObj.templateName;
-					} );
-
-					// NOTE: thwiki did not have biography project yet
-					// if (data.alreadyHasWPBio && !data.isBiography) {
-					// 	wikiProjectsToRemove.push(data.existingWPBioTemplateName || 'wikiproject biography');
-					// }
-
-					$.each( wikiProjectsToAdd, function ( _index, templateName ) {
-						talkTextPrefix += '\n{{' + templateName + '|ระดับ=' + data.newAssessment + '}}';
-					} );
-					$.each( wikiProjectsToRemove, function ( _index, templateName ) {
-						// Regex from https://stackoverflow.com/a/5306111/1757964
-						var sanitizedTemplateName = templateName.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&' );
-						talkText = talkText.replace( new RegExp( '\\n?\\{\\{\\s*' + sanitizedTemplateName + '\\s*.+?\\}\\}', 'is' ), '' );
-					} );
-
-					// We prepend the text so that talk page content is not removed
-					// (e.g. pages in `Draft:` namespace with discussion)
-					talkText = talkTextPrefix + '\n\n' + talkText;
+					var results = AFCH.addTalkPageBanners(
+						talkText,
+						data.newAssessment,
+						afchPage.additionalData.revId,
+						data.isBiography,
+						data.newWikiProjects,
+						data.lifeStatus,
+						data.subjectName,
+						data.existingWikiProjects,
+						data.alreadyHasWPBio,
+						data.existingWPBioTemplateName
+					);
+					talkText = results.talkText;
 
 					var summary = 'ใส่ส่วนหัว [[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]]';
-					if ( wikiProjectsToAdd.length > 0 ) {
-						summary += ' +เพิ่มแม่แบบโครงการวิกิ ' + wikiProjectsToAdd.length +
+					if (results.countOfWikiProjectsAdded > 0) {
+						summary += ' +เพิ่มแม่แบบโครงการวิกิ ' + results.countOfWikiProjectsAdded +
 							' โครงการ';
 					}
-					if ( wikiProjectsToRemove.length > 0 ) {
-						summary += ' +ลบแม่แบบโครงการวิกิ ' + wikiProjectsToRemove.length +
+					if ( results.countOfWikiProjectsRemoved > 0 ) {
+						summary += ' +ลบแม่แบบโครงการวิกิ ' + results.countOfWikiProjectsRemoved +
 							' โครงการ';
+					}
+
+					if ( comments && comments.length > 0 ) {
+						talkText = talkText.trim() + '\n\n== ความเห็นจากผู้ตรวจผ่าน AfC ==\n' + comments.join( '\n\n' );
 					}
 
 					talkPage.edit( {
@@ -2581,7 +2709,8 @@
 
 						recentPage.edit( {
 							contents: newRecentText,
-							summary: 'Adding [[' + newPage + ']] to list of recent AfC creations'
+							summary: 'Adding [[' + newPage + ']] to list of recent AfC creations',
+							watchlist: 'nochange'
 						} );
 					} );
 
@@ -2813,6 +2942,54 @@
 		} );
 	}
 
+	function checkForEditConflict() {
+		// Get timestamp of the revision currently loaded in the browser
+		return AFCH.api.get( {
+			action: 'query',
+			format: 'json',
+			prop: 'revisions',
+			revids: mw.config.get( 'wgCurRevisionId' ),
+			formatversion: 2
+		} ).then( function ( data ) {
+			// convert timestamp format from 2024-05-03T09:40:20Z to 1714729221
+			var currentRevisionTimestampTZ = data.query.pages[ 0 ].revisions[ 0 ].timestamp;
+			var currentRevisionSeconds = ( new Date( currentRevisionTimestampTZ ).getTime() ) / 1000;
+
+			// add one second. we don't want the current revision to be in our list of revisions
+			currentRevisionSeconds++;
+
+			// Then get all revisions since that timestamp
+			return AFCH.api.get( {
+				action: 'query',
+				format: 'json',
+				prop: 'revisions',
+				titles: [ mw.config.get( 'wgPageName' ) ],
+				formatversion: 2,
+				rvstart: currentRevisionSeconds,
+				rvdir: 'newer'
+			} ).then( function ( data ) {
+				var revisionsSinceTimestamp = data.query.pages[ 0 ].revisions;
+				if ( revisionsSinceTimestamp && revisionsSinceTimestamp.length > 0 ) {
+					return true;
+				}
+				return false;
+			} );
+		} );
+	}
+
+	function showEditConflictMessage() {
+		$( '#afchSubmitForm' ).hide();
+
+		// Putting this here instead of in tpl-submissions.html to reduce code duplication
+		var editConflictHtml = 'Edit conflict! Your changes were not saved. Please check the <a id="afchHistoryLink" href="">page history</a>. To avoid overwriting the other person\'s edits, please refresh this page and start again.';
+		$( '#afchEditConflict' ).html( editConflictHtml );
+
+		var historyLink = new mw.Uri( mw.util.getUrl( mw.config.get( 'wgPageName' ), { action: 'history' } ) );
+		$( '#afchHistoryLink' ).prop( 'href', historyLink );
+
+		$( '#afchEditConflict' ).show();
+	}
+
 	function handleComment( data ) {
 		var text = data.afchText;
 
@@ -2976,7 +3153,7 @@
 			text = data.afchText,
 			rawText = text.get(),
 			postponeRegex = /\{\{AfC postpone G13\s*(?:\|\s*(\d*)\s*)?\}\}/ig;
-		match = postponeRegex.exec( rawText );
+		var match = postponeRegex.exec( rawText );
 
 		// First add the postpone template
 		if ( match ) {
@@ -3007,4 +3184,4 @@
 	}
 
 }( AFCH, jQuery, mediaWiki ) );
-//</nowiki>
+// </nowiki>

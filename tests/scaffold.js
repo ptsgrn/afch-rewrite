@@ -4,6 +4,8 @@
  * the actual tests themselves.
  */
 
+/* eslint-env jest, node */
+
 jest.autoMockOff();
 
 fs = require( 'fs' );
@@ -21,10 +23,16 @@ mw.user = {
 };
 
 mw.loader = {
-	using: function () { return { then: function ( callback ) { callback(); } }; }
+	using: function () {
+		return {
+			then: function ( callback ) {
+				callback();
+			}
+		};
+	}
 };
 
-var basePageHtml = fs.readFileSync( './__tests__/test-frame.html' ).toString();
+var basePageHtml = fs.readFileSync( './tests/test-frame.html' ).toString();
 
 requireScript = function ( name ) {
 	return require( './../src/' + name );
