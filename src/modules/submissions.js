@@ -2591,7 +2591,8 @@
 
 				newText.updateCategories( data.newCategories );
 
-				newText.updateShortDescription( data.existingShortDescription, data.shortDescription );
+				// THWIKI - none for now
+				// newText.updateShortDescription( data.existingShortDescription, data.shortDescription );
 
 				// Clean the page
 				newText.cleanUp( /* isAccept */ true );
