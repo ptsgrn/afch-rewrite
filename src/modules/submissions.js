@@ -2656,7 +2656,7 @@
 						data.subjectName
 					);
 
-					var summary = 'ใส่ส่วนหัว[[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]] และส่วนหัวอื่น ๆ';
+					var summary = 'ใส่ส่วนหัวโครงการวิกิ';
 
 					if ( comments && comments.length > 0 ) {
 						talkText = talkText.trim() + '\n\n== ความเห็นจากผู้ตรวจผ่าน AfC ==\n' + comments.join( '\n\n' );
