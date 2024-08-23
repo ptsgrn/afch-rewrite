@@ -2646,29 +2646,17 @@
 
 				// not compatible with thwiki - yet
 				talkPage.getText().done( function ( talkText ) {
-					var results = AFCH.addTalkPageBanners(
+					talkText = AFCH.addTalkPageBanners(
 						talkText,
 						data.newAssessment,
 						afchPage.additionalData.revId,
 						data.isBiography,
 						data.newWikiProjects,
 						data.lifeStatus,
-						data.subjectName,
-						data.existingWikiProjects,
-						data.alreadyHasWPBio,
-						data.existingWPBioTemplateName
+						data.subjectName
 					);
-					talkText = results.talkText;
 
-					var summary = 'ใส่ส่วนหัว [[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]]';
-					if ( results.countOfWikiProjectsAdded > 0 ) {
-						summary += ' +เพิ่มแม่แบบโครงการวิกิ ' + results.countOfWikiProjectsAdded +
-							' โครงการ';
-					}
-					if ( results.countOfWikiProjectsRemoved > 0 ) {
-						summary += ' +ลบแม่แบบโครงการวิกิ ' + results.countOfWikiProjectsRemoved +
-							' โครงการ';
-					}
+					var summary = 'ใส่ส่วนหัว[[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]] และส่วนหัวอื่น ๆ';
 
 					if ( comments && comments.length > 0 ) {
 						talkText = talkText.trim() + '\n\n== ความเห็นจากผู้ตรวจผ่าน AfC ==\n' + comments.join( '\n\n' );
