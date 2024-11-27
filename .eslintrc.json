@@ -26,6 +26,23 @@
 		"no-underscore-dangle": "off",
 		"security/detect-non-literal-regexp": "off",
 		"security/detect-unsafe-regex": "off",
-		"unicorn/prefer-string-slice": "off"
+		"unicorn/prefer-string-slice": "off",
+
+		"eqeqeq": "warn",
+		"es-x/no-array-prototype-includes": "warn",
+		"es-x/no-object-values": "warn",
+		"es-x/no-regexp-s-flag": "warn",
+		"no-global-assign": "warn",
+		"no-implicit-globals": "warn",
+		"no-jquery/no-animate": "warn",
+		"no-jquery/no-each-util": "warn",
+		"no-jquery/no-grep": "warn",
+		"no-jquery/no-in-array": "warn",
+		"no-jquery/no-map-util": "warn",
+		"no-jquery/no-sizzle": "warn",
+		"no-jquery/no-slide": "warn",
+		"no-jquery/no-trim": "warn",
+		"no-undef": "warn",
+		"prefer-const": "warn"
 	}
 }

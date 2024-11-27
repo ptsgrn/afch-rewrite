@@ -969,7 +969,7 @@
 			/**
 			 * Represents the status container, created ub init()
 			 */
-			container: false,
+			$container: false,
 
 			/**
 			 * Creates the status container
@@ -978,7 +978,7 @@
 			 *                             status container should be prepended
 			 */
 			init: function ( location ) {
-				AFCH.status.container = $( '<div>' )
+				AFCH.status.$container = $( '<div>' )
 					.attr( 'id', 'afchStatus' )
 					.addClass( 'afchStatus' )
 					.prependTo( location || '#mw-content-text' );
@@ -1015,7 +1015,7 @@
 						html = html.replace( key, value );
 					} );
 					// Then update the element
-					this.element.html( html );
+					this.$element.html( html );
 				};
 
 				/**
@@ -1026,7 +1026,7 @@
 				};
 
 				// Sanity check, there better be a status container
-				if ( !AFCH.status.container ) {
+				if ( !AFCH.status.$container ) {
 					AFCH.status.init();
 				}
 
@@ -1038,8 +1038,8 @@
 
 				this.substitutions = substitutions;
 
-				this.element = $( '<li>' )
-					.appendTo( AFCH.status.container );
+				this.$element = $( '<li>' )
+					.appendTo( AFCH.status.$container );
 
 				this.update( initialText );
 			}
@@ -1400,20 +1400,20 @@
 			this.views = views;
 			this.$element = $element;
 
-			this.previousState = false;
+			this.$previousState = false;
 
 			this.loadView = function ( view, data ) {
 				var code = this.views.renderView( view, data );
 
 				// Update the view cache
-				this.previousState = this.$element.clone( true );
+				this.$previousState = this.$element.clone( true );
 
 				this.$element.html( code );
 			};
 
 			this.loadPrevious = function () {
-				this.$element.replaceWith( this.previousState );
-				this.$element = this.previousState;
+				this.$element.replaceWith( this.$previousState );
+				this.$element = this.$previousState;
 			};
 		},
 
@@ -1538,13 +1538,13 @@
 					titles: 'หมวดหมู่:' + pagename,
 					prop: 'categoryinfo'
 				},
-				linkSpan = $( '<span>' ).append( linkElement ),
+				$linkSpan = $( '<span>' ).append( linkElement ),
 				countSpanId = 'afch-cat-count-' + pagename
 					.toLowerCase()
 					.replace( / /g, '-' )
 					.replace( /\//g, '-' );
 
-			linkSpan.append( $( '<span>' ).attr( 'id', countSpanId ) );
+			$linkSpan.append( $( '<span>' ).attr( 'id', countSpanId ) );
 
 			AFCH.api.get( request )
 				.done( function ( data ) {
@@ -1558,7 +1558,7 @@
 					}
 				} );
 
-			return linkSpan;
+			return $linkSpan;
 		},
 
 		/**
