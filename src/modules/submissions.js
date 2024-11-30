@@ -2541,10 +2541,11 @@
 		prepareForProcessing();
 
 		// Add {{Db-afc-move}} speedy deletion tag to redirect, and add to watchlist
+		// THWIKI - we use the all purpose [[แม่แบบ:ลบ]] template
 		( new AFCH.Page( destinationPageTitle ) ).edit( {
-			contents: '{{Db-afc-move|' + afchPage.rawTitle + '}}\n\n',
+			contents: '{{ลบ|[[WP:ท4|ท4: การลบทางเทคนิค]]: เตรียมหน้าปลายทางการย้ายสำหรับ [[' + afchPage.rawTitle + ']] ผู้ดูแลระบบสามารถลบหน้านี้ได้โดยไม่ต้องตรวจฉบับร่างซ้ำ}}\n\n',
 			mode: 'prependtext',
-			summary: 'Requesting speedy deletion ([[Wikipedia:CSD#G6|CSD G6]]).',
+			summary: 'แจ้งลบทันทีสำหรับเตรียมย้ายหน้าฉบับร่างที่ยอมรับแล้ว ([[WP:ท4|ท4]])',
 			statusText: 'Tagging',
 			watchlist: 'watch'
 		} );
