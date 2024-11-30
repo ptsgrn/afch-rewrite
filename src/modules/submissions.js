@@ -2561,8 +2561,8 @@
 			text.cleanUp();
 			afchPage.edit( {
 				contents: text.get(),
-				summary: 'Marking submission as under review',
-				statusText: 'Marking as under review'
+				summary: 'ทำเครื่องหมายหน้าว่ากำลังตรวจ',
+				statusText: 'กำลังทำเครื่องหมายหน้าว่ากำลังตรวจ'
 			} );
 		} );
 	}
@@ -3042,7 +3042,7 @@
 
 			afchPage.edit( {
 				contents: text.get(),
-				summary: 'ส่ง'
+				summary: 'ส่งฉบับร่าง'
 			} );
 
 		} );
@@ -3117,7 +3117,7 @@
 
 			afchPage.edit( {
 				contents: text.get(),
-				summary: 'ทำเครื่องหมายฉบับร่าง[[WP:AFC|AfC]] ' +
+				summary: 'ทำเครื่องหมายฉบับร่าง[[WP:AFC|AfC]] +' +
 					'สำหรับการลบทันทีในเงื่อนไข [[WP:ท10|ท10]]'
 			} );
 
@@ -3181,7 +3181,7 @@
 
 		afchPage.edit( {
 			contents: text.get(),
-			summary: 'เลื่อนกระบวนการลบตาม [[WP:ท10|ท10]]'
+			summary: 'เลื่อนกระบวนการลบ [[WP:ท10|ท10]]'
 		} );
 	}
 
