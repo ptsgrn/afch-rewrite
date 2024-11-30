@@ -1470,7 +1470,7 @@
 	 * Stores useful strings to AFCH.msg
 	 */
 	function setMessages() {
-		var headerBegin = '== การส่งฉบับร่างของคุณกับ [[Wikipedia:Articles for creation|AfC]]: ';
+		var headerBegin = '== การส่งฉบับร่างของคุณกับ[[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]]: ';
 		AFCH.msg.set( {
 			// $1 = article name
 			// $2 = article class or '' if not available
@@ -2570,7 +2570,7 @@
 		var newText = data.afchText;
 
 		AFCH.actions.movePage( afchPage.rawTitle, data.newTitle,
-			'กำลังเผยแพร่ฉบับร่าง [[Wikipedia:Articles for creation|AfC]] ที่ได้รับการยอมรับแล้ว',
+			'เผยแพร่ฉบับร่าง[[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]]ที่ได้รับการยอมรับแล้ว',
 			{ movetalk: true } ) // Also move associated talk page if exists (e.g. `Draft_talk:`)
 			.done( function ( moveData ) {
 				var $patrolLink,
@@ -2625,7 +2625,7 @@
 
 				newPage.edit( {
 					contents: newText,
-					summary: 'เก็บกวาดฉบับร่าง [[Wikipedia:Articles for creation|AfC]] ที่ได้รับการยอมรับแล้ว'
+					summary: 'เก็บกวาดฉบับร่าง[[วิกิพีเดีย:ว่าที่บทความ|ว่าที่บทความ]]ที่ได้รับการยอมรับแล้ว'
 				} );
 
 				// Patrol the new page if desired
