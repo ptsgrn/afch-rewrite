@@ -527,7 +527,7 @@
 
 		if ( isAccept ) {
 			// Remove {{Draft categories}}
-			text = text.replace( /\{\{(Draft categories|หมวดหมู่ฉบับร่าง)\s*\|((?:\s*\[\[:?(หมวดหมู่|Category):[ \S]+?\]\]\s*)*)\s*\}\}/gi, '$1' );
+			text = text.replace( /\{\{(?:Draft categories|หมวดหมู่ฉบับร่าง)\s*\|((?:\s*\[\[:?(หมวดหมู่|Category):[ \S]+?\]\]\s*)*)\s*\}\}/gi, '$1' );
 
 			// Remove {{Draft article}} (and {{Draft}}).
 			// Not removed if the |text= parameter is present, which could contain
@@ -1297,7 +1297,8 @@
 
 			// Don't show deletion notices for "sandbox" to avoid useless
 			// information when reviewing user sandboxes and the like
-			if ( [ 'sandbox', 'ทดลองเขียน', 'กระบะทราย' ].afchSubmission.shortTitle.toLowerCase() === -1 ) {
+			// if ( [ 'sandbox', 'ทดลองเขียน', 'กระบะทราย' ].shortTitle.toLowerCase() === -1 ) {
+			if (['sandbox', 'ทดลองเขียน', 'กระบะทราย'].indexOf(afchSubmission.shortTitle.toLowerCase()) !== -1) {
 				deferred.resolve();
 				return deferred;
 			}
@@ -2711,7 +2712,7 @@
 
 						recentPage.edit( {
 							contents: newRecentText,
-							summary: 'Adding [[' + newPage + ']] to list of recent AfC creations',
+							summary: 'เพิ่มหน้า [[' + newPage + ']] ในรายการการสร้างล่าสุด',
 							watchlist: 'nochange'
 						} );
 					} );
