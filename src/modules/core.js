@@ -1677,7 +1677,7 @@
 
 			// add AFC banner to array
 			banners.push(
-				'{{subst:WPAFC/article' +
+				'{{subst:WPAFC/article|class=' + newAssessment +
 				( revId ? '|oldid=' + revId : '' ) +
 				'}}'
 			);
@@ -1711,9 +1711,9 @@
 			banners = AFCH.removeDuplicateBanners( banners );
 
 			// delete |class= from banners in array
-			banners = banners.map( function ( value ) {
-				return value.replace( /\s*\|\s*class\s*=\s*[^|}]*([\n|}])/, '$1' );
-			} );
+			// banners = banners.map( function ( value ) {
+			// 	return value.replace( /\s*\|\s*class\s*=\s*[^|}]*([\n|}])/, '$1' );
+			// } );
 
 			// Convert array back to wikitext and append to top of talk page.
 			// Always add a shell even if it's just wrapping one banner, for code simplification reasons.
