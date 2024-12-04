@@ -196,7 +196,7 @@
 
 			if ( AFCH.consts.beta ) {
 				// Load minified css
-				mw.loader.load( AFCH.consts.scriptpath + '?action=raw&ctype=text/css&title=MediaWiki:Gadget-afch.css', 'text/css' );
+				mw.loader.load(AFCH.consts.scriptpath + '?action=raw&ctype=text/css&title=User:Patsagorn_Y./afch.css', 'text/css' );
 				promise = mw.loader.using( [
 					'jquery.chosen',
 					'jquery.spinner',
