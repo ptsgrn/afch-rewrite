@@ -2697,7 +2697,8 @@
 				// ----------
 
 				$.when( recentPage.getText(), afchSubmission.getSubmitter() )
-					.then( function ( text, submitter ) {
+					.then(function (text, submitter) {
+						console.log('recentPage', text);
 						var newRecentText = text,
 							matches = text.match( /{{AfC contribution.*?}}\s*/gi ),
 							newTemplate = '{{AfC contribution|' + data.newAssessment + '|' + newPage + '|' + submitter + '}}\n';

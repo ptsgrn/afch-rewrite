@@ -802,7 +802,7 @@
 			logCSD: function ( options ) {
 				var deferred = $.Deferred(),
 					logPage = new AFCH.Page( 'ผู้ใช้:' + mw.config.get( 'wgUserName' ) + '/' +
-						( window.Twinkle && window.Twinkle.getPref( 'speedyLogPageName' ) || 'ปูม CSD' ) );
+						( window.Twinkle && window.Twinkle.getPref( 'speedyLogPageName' ) || 'บันทึก CSD' ) );
 
 				// Abort if user disabled in preferences
 				if ( !AFCH.prefs.logCsd ) {
@@ -859,7 +859,7 @@
 				// - accept   = ยอมรับฉบับร่าง สร้างเป็นบทความ
 
 				var deferred = $.Deferred(),
-					logPage = new AFCH.Page( 'ผู้ใช้:' + mw.config.get( 'wgUserName' ) + '/ปูม AfC' );
+					logPage = new AFCH.Page( 'ผู้ใช้:' + mw.config.get( 'wgUserName' ) + '/บันทึก AfC' );
 
 				// Abort if user disabled in preferences
 				if ( !AFCH.prefs.logAfc ) {
