@@ -1668,7 +1668,7 @@
 			} );
 
 			// delete shell already on page
-			var bannerShellTemplates = 'WikiProject banner shell|WikiProjectBanners|WikiProject Banners|WPB|WPBS|WikiProject cooperation shell|Wikiprojectbannershell|WikiProject Banner Shell|Wpb|WPBannerShell|Wpbs|Wikiprojectbanners|WP Banner Shell|WP banner shell|Bannershell|Wikiproject banner shell|WIkiProjectBanner Shell|WikiProjectBannerShell|WikiProject BannerShell|Coopshell|WikiprojectBannerShell|WikiProject Shell|Scope shell|Project shell|WikiProject shell|WikiProject banner|Wpbannershell|Multiple wikiprojects|Wikiproject banner holder|Project banner holder|WikiProject banner shell\\/test1|Article assessment|WikiProject bannershell';
+			var bannerShellTemplates = 'WikiProject banner shell|WikiProjectBanners|WikiProject Banners|WPB|WPBS|WikiProject cooperation shell|Wikiprojectbannershell|WikiProject Banner Shell|Wpb|WPBannerShell|Wpbs|Wikiprojectbanners|WP Banner Shell|WP banner shell|Bannershell|Wikiproject banner shell|WIkiProjectBanner Shell|WikiProjectBannerShell|WikiProject BannerShell|Coopshell|WikiprojectBannerShell|WikiProject Shell|Scope shell|Project shell|WikiProject shell|WikiProject banner|Wpbannershell|Multiple wikiprojects|Wikiproject banner holder|Project banner holder|WikiProject banner shell\\/test1|Article assessment|WikiProject bannershell|รวมป้ายโครงการ';
 			var bannerShellRegEx = new RegExp( '{{(?:' + bannerShellTemplates + ')[^}]*}}', 'is' );
 			wikicode = wikicode.replace( bannerShellRegEx, '' );
 
@@ -1683,24 +1683,24 @@
 			);
 
 			// delete existing biography banner. when accepting, reviewer is forced to choose if it's a biography or not, so we'll add (or not add) our own biography banner later
-			banners = banners.filter( function ( value ) {
-				return !value.match( /^{{WikiProject Biography/i );
-			} );
+			// banners = banners.filter( function ( value ) {
+			// 	return !value.match( /^{{WikiProject Biography/i );
+			// } );
 
-			// add biography banner to array
-			if ( isBiography ) {
-				banners.push(
-					'{{WikiProject Biography|living=' +
-					( lifeStatus !== 'unknown' ? ( lifeStatus === 'living' ? 'yes' : 'no' ) : '' ) +
-					'|listas=' + subjectName +
-					'}}'
-				);
-			}
+			// // add biography banner to array
+			// if ( isBiography ) {
+			// 	banners.push(
+			// 		'{{WikiProject Biography|living=' +
+			// 		( lifeStatus !== 'unknown' ? ( lifeStatus === 'living' ? 'yes' : 'no' ) : '' ) +
+			// 		'|listas=' + subjectName +
+			// 		'}}'
+			// 	);
+			// }
 
 			// add disambiguation banner to array
-			if ( newAssessment === 'disambig' ) {
-				banners.push( '{{WikiProject Disambiguation}}' );
-			}
+			// if ( newAssessment === 'disambig' ) {
+			// 	banners.push( '{{WikiProject Disambiguation}}' );
+			// }
 
 			// add banners selected in UI to array
 			for ( var key in newWikiProjects ) {
