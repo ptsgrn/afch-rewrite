@@ -2104,9 +2104,9 @@
 							// current reviewer is not an admin, also display an error
 							// FIXME: offer one-click request unprotection?
 							$.each( infoResult.query.pages[ '-1' ].protection, ( _, entry ) => {
-								if ( entry.type === 'create' && entry.level === 'sysop' &&
-									$.inArray( 'sysop', mw.config.get( 'wgUserGroups' ) ) === -1 ) {
-									errorHtml = 'แย่แล้ว บทความ "' + linkToPage + '" ถูกล็อกสร้าง คุณจำเป็นต้องส่งคำขอยกเลิกการป้องกันสร้างหน้า';
+								if ( entry.type === 'create' && entry.level === 'sysop' && $.inArray( 'sysop', mw.config.get( 'wgUserGroups' ) ) === -1 ) {
+									const linkToAN = AFCH.jQueryToHtml( AFCH.makeLinkElementToPage( 'WP:AN' ) );
+									errorHtml = 'แย่แล้ว บทความ "' + linkToPage + '" ถูกล็อกสร้าง คุณจำเป็นต้องส่งคำขอยกเลิกการป้องกันสร้างหน้ากับผู้ดูแลระบบหรือส่งคำขอที่ ' + linkToRfup;
 									buttonText = 'ชื่อหน้าที่เสนอมาถูกล็อกสร้าง';
 								}
 							} );
