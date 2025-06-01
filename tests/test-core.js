@@ -281,8 +281,8 @@ I have a question. Can you help answer it? –[[User:Novem Linguae|<span style="
 		const subjectName = 'Lazarut, Raluca';
 		const output = AFCH.addTalkPageBanners( wikicode, newAssessment, revId, isBiography, newWikiProjects, lifeStatus, subjectName );
 		expect( output ).toBe(
-`{{WikiProject banner shell|1=
-{{subst:WPAFC/article|oldid=592507}}
+`{{WikiProject banner shell |blp=yes |listas=Lazarut, Raluca |1=
+{{subst:WPAFC/article |oldid=592507}}
 {{WikiProject Film}}
 {{WikiProject Women}}
 {{WikiProject Television}}
@@ -326,9 +326,9 @@ I have a question. Can you help answer it? –[[User:Novem Linguae|<span style="
 		const subjectName = 'Jones, Bob';
 		const output = AFCH.addTalkPageBanners( wikicode, newAssessment, revId, isBiography, newWikiProjects, lifeStatus, subjectName );
 		expect( output ).toBe(
-`{{WikiProject banner shell|class=B|1=
-{{subst:WPAFC/article|oldid=592496}}
-{{WikiProject Biography|living=yes|listas=Jones, Bob}}
+`{{WikiProject banner shell |class=B |blp=yes |listas=Jones, Bob |1=
+{{subst:WPAFC/article |oldid=592496}}
+{{WikiProject Biography}}
 {{WikiProject Africa}}
 {{WikiProject Alabama}}
 }}`
@@ -345,16 +345,16 @@ I have a question. Can you help answer it? –[[User:Novem Linguae|<span style="
 		const subjectName = '';
 		const output = AFCH.addTalkPageBanners( wikicode, newAssessment, revId, isBiography, newWikiProjects, lifeStatus, subjectName );
 		expect( output ).toBe(
-`{{WikiProject banner shell|1=
-{{subst:WPAFC/article|oldid=592496}}
-{{WikiProject Biography|living=no|listas=}}
+`{{WikiProject banner shell |blp=no |1=
+{{subst:WPAFC/article |oldid=592496}}
+{{WikiProject Biography}}
 }}`
 		);
 	} );
 
 	it.skip( 'talk page has {{wikiproject biography}}, and user selects that it\'s not a biography, so should remove {{wikiproject biography}}', () => {
 		const wikicode =
-`{{wikiproject biography|living=yes|class=B|listas=Jones, Bob}}
+`{{wikiproject biography|blp=yes|class=B|listas=Jones, Bob}}
 {{WikiProject Somalia}}`;
 		const newAssessment = '';
 		const revId = 592496;

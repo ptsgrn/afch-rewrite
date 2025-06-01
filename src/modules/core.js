@@ -1677,14 +1677,22 @@
 			// THWIKI - No biography banner in Thai Wikipedia
 			// banners = banners.filter( ( value ) => !value.match( /^{{WikiProject Biography/i ) );
 
-			// // add biography banner to array
+			// // add biography banner to array. and add |blp= and |listas= to banner shell
+			// let bannerShellExtraParams = '';
 			// if ( isBiography ) {
 			// 	banners.push(
-			// 		'{{WikiProject Biography|living=' +
-			// 		( lifeStatus !== 'unknown' ? ( lifeStatus === 'living' ? 'yes' : 'no' ) : '' ) +
-			// 		'|listas=' + subjectName +
-			// 		'}}'
+			// 		'{{WikiProject Biography}}'
 			// 	);
+
+			// 	if ( lifeStatus === 'living' ) {
+			// 		bannerShellExtraParams += ' |blp=yes';
+			// 	} else if ( lifeStatus === 'dead' ) {
+			// 		bannerShellExtraParams += ' |blp=no';
+			// 	}
+
+			// 	if ( subjectName ) {
+			// 		bannerShellExtraParams += ' |listas=' + subjectName;
+			// 	}
 			// }
 
 			// add disambiguation banner to array
